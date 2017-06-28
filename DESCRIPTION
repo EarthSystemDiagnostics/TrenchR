@@ -1,0 +1,14 @@
+Package: TrenchR
+Title: Perform Analyses of Kohnen Stable Water Isotope Trench Data
+Version: 0.0.0.9000
+Authors@R: person("Thomas", "Münch", email = "thomas.muench@awi.de",
+	role = c("aut", "cre"))
+Description: This package implements all main analyses and the plotting of
+	results for the publication Münch et al.: "Constraints on post-
+	depositional isotope modifications in East Antarctic firn from
+	analysing temporal changes of isotope profiles". The Cryosphere
+	Discuss., https://doi.org/10.5194/tc-2017-35, 2017.
+Depends: R (>= 3.3.1)
+License: CC BY 4.0
+Encoding: UTF-8
+LazyData: true
