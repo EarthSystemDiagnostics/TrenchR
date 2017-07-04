@@ -154,7 +154,7 @@ prepareTrenchData <- function(index.range = 1 : 59, LoRes = 3, HiRes = 0.5,
         trench13.2_HiRes <- apply(trench13.2, 2, function(prf) {
             approx(depth[1:38], prf, depth_HiRes)$y})
 
-        mean15.1_HiRes <- approx(depth, mean15.1, depth_HiRes)$y#rowMeans(trench15.1_HiRes)
+        mean15.1_HiRes <- approx(depth, mean15.1, depth_HiRes)$y
         mean15.2_HiRes <- approx(depth, mean15.2, depth_HiRes)$y
         mean13.1_HiRes <- approx(depth[1:38], mean13.1, depth_HiRes)$y
         mean13.2_HiRes <- approx(depth[1:38], mean13.2, depth_HiRes)$y
