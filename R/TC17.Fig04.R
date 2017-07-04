@@ -49,10 +49,10 @@ TC17.Fig04 <- function(TR, path = file.path(getwd(), "plots"),
     minor.tick(nx = 1, ny = 2, side = 2)
     text(-35, -44,
          labels = expression(delta^bold("18") * bold("O")*bold(" (\u2030)")),
-         srt = 90, xpd = NA, cex = my.par$cex.lab, font = my.par$font.lab,
+         srt = 90, xpd = NA, cex = plot.par$cex.lab, font = plot.par$font.lab,
          col = "black")
     text(17.5, -37, "T15 (2015)",
-         cex = my.par$cex.lab, font = my.par$font.lab)
+         cex = plot.par$cex.lab, font = plot.par$font.lab)
 
     par(new = TRUE)
 
@@ -70,12 +70,12 @@ TC17.Fig04 <- function(TR, path = file.path(getwd(), "plots"),
 
     text(210, -44,
          labels = expression(delta^bold("18") * bold("O") * bold(" (\u2030)")),
-         srt = -90, xpd = NA, cex = my.par$cex.lab, font = my.par$font.lab,
+         srt = -90, xpd = NA, cex = plot.par$cex.lab, font = plot.par$font.lab,
          col = "dodgerblue")
     mtext("Depth (cm)", side = 1, line = 3.5,
-          cex = my.par$cex.lab, font = my.par$font.lab)
+          cex = plot.par$cex.lab, font = plot.par$font.lab)
     text(175 - 17.5, -40.75, "T13 (2013)",
-         cex = my.par$cex.lab, font = my.par$font.lab, col = "dodgerblue")
+         cex = plot.par$cex.lab, font = plot.par$font.lab, col = "dodgerblue")
 
     if (save.plot) dev.off()
 

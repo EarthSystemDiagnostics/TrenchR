@@ -69,10 +69,10 @@ TC17.Fig03 <- function(TR, path = file.path(getwd(), "plots"),
                        lines(TR$oxy$SPRF.t1$x, TR$oxy$SPRF.t1$y / 100)},
                    zlim = c(MIN, MAX), ylim = c(bottom, top) / 100)
     mtext("Depth (m)", side = 2, line = 3.5,
-          cex = my.par$cex.lab, font = my.par$font.lab, las = 0)
+          cex = plot.par$cex.lab, font = plot.par$font.lab, las = 0)
     text(51, mean(c(bottom, top)) / 100,
          labels = expression(delta^bold("18") * bold("O") * bold(" (\u2030)")),
-         srt = -90, xpd = NA, cex = my.par$cex.lab, font = my.par$font.lab)
+         srt = -90, xpd = NA, cex = plot.par$cex.lab, font = plot.par$font.lab)
 
     if (save.plot) dev.off()
 
@@ -95,7 +95,7 @@ TC17.Fig03 <- function(TR, path = file.path(getwd(), "plots"),
                    zlim = c(MIN, MAX), ylim = c(bottom, top) / 100)
     text(51, mean(c(bottom, top)) / 100,
          labels = expression(delta^bold("18") * bold("O") * bold(" (\u2030)")),
-         srt = -90, xpd = NA, cex = my.par$cex.lab, font = my.par$font.lab)
+         srt = -90, xpd = NA, cex = plot.par$cex.lab, font = plot.par$font.lab)
 
     if (save.plot) dev.off()
 
@@ -127,10 +127,10 @@ TC17.Fig03 <- function(TR, path = file.path(getwd(), "plots"),
     abline(v = c(0, 50, 100, 150), col = "black", lty = "dotted")
 
     mtext("Depth (cm)", side = 1, line = 3.5,
-          cex = my.par$cex.lab, font = my.par$font.lab)
+          cex = plot.par$cex.lab, font = plot.par$font.lab)
     mtext(expression(delta^bold("18") * bold("O") * bold("  (\u2030)")),
           side = 2, line = 3.25, las = 0,
-          cex = my.par$cex.lab, font = my.par$font.lab)
+          cex = plot.par$cex.lab, font = plot.par$font.lab)
 
     lines(TR$oxy$depth, v1, col = "black")
     lines(TR$oxy$depth + TR$oxy$k15, v2, col = "firebrick3")
