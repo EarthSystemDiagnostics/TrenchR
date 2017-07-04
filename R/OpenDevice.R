@@ -14,7 +14,7 @@
 ##' without specying a \code{file.path} results in an error.
 ##' @author Thomas Münch
 ##' @export
-OpenDevice <- function(device = "quartz", plot.file,
+OpenDevice <- function(device = "quartz", plot.file, type = "pdf",
                        height = 6, width = 8, save.plot = FALSE) {
 
     if (save.plot == TRUE & is.null(plot.file)) {
@@ -24,8 +24,14 @@ OpenDevice <- function(device = "quartz", plot.file,
     if (device == "quartz") {
 
         if (save.plot) {
-            quartz(file = plot.file, type = "pdf",
-                   height = height, width = width)
+            plot.file <- paste(plot.file, type, sep = ".")
+            if (type == "png") {
+                quartz(file = plot.file, type = type,
+                       height = height, width = width, dpi = 300)
+            } else {
+                quartz(file = plot.file, type = type,
+                       height = height, width = width)
+            }
         } else {
             quartz(height = height, width = width)
         }

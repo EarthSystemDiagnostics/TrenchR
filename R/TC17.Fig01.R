@@ -12,7 +12,7 @@
 ##' @author Thomas Münch
 ##' @export
 TC17.Fig01 <- function(TR, path = file.path(getwd(), "plots"),
-                       file.name = "tc17_fig_01.pdf", device = "quartz",
+                       file.name = "tc17_fig_01", device = "quartz",
                        dev.size = list(h = 6, w = 8), save.plot = FALSE) {
 
     plot.par <- SetPlotPar()
@@ -27,14 +27,14 @@ TC17.Fig01 <- function(TR, path = file.path(getwd(), "plots"),
         quartzFonts(optima = c("Optima Regular", "Optima Bold",
                                "Optima Italic", "Optima Bold Italic"))
     }
+
     OpenDevice(device = device, plot.file = plot.file,
                height = dev.size$h + 0.75, width = 2 * dev.size$w,
                save.plot = save.plot)
-
     par(plot.par)
     par(mfrow = c(1, 2))
     par(mar = c(5, 5, 4, 2))
-    if (device == "quartz") par(family = 'optima')
+    if (device == "quartz") par(family = "optima")
 
 
     #---------------------------------------------------------------------------

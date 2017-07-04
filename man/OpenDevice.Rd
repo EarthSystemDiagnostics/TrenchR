@@ -4,8 +4,8 @@
 \alias{OpenDevice}
 \title{Open a graphics device.}
 \usage{
-OpenDevice(device = "quartz", plot.file, height = 6, width = 8,
-  save.plot = FALSE)
+OpenDevice(device = "quartz", plot.file, type = "pdf", height = 6,
+  width = 8, save.plot = FALSE)
 }
 \arguments{
 \item{device}{Character string specifying the plotting device; defaults to
