@@ -46,7 +46,7 @@ LoopParamSpace <- function(TR,
     
                 diff.stretch <- TR$mean13_HiRes
                 diff.stretch[noNA] <- approx(depth.stretch, diff, depth_HiRes)$y
-                diff.stretch.adv <- BinShift(k, diff.stretch)
+                diff.stretch.adv <- Hmisc::Lag(diff.stretch, k)
 
                 iX <- which(advSpace == k)
                 iR <- which(sigmaSpace == s)

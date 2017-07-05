@@ -19,8 +19,8 @@ TC17.Fig01 <- function(TR, path = file.path(getwd(), "plots"),
     plot.file <- file.path(path, file.name)
 
     T13.annual <- T13AnnualMeans(t1 = TR$oxy$mean13.1,
-                                 t2 = BinShift(TR$oxy$k13 / TR$oxy$LoRes,
-                                               TR$oxy$mean13.2),
+                                 t2 = Hmisc::Lag(TR$oxy$mean13.2,
+                                                 TR$oxy$k13 / TR$oxy$LoRes),
                                  depth = TR$oxy$depth)
 
     if (device == "quartz") {
@@ -63,7 +63,7 @@ TC17.Fig01 <- function(TR, path = file.path(getwd(), "plots"),
 
     lines(TR$oxy$depth[1 : 38], TR$oxy$mean13.1, lty = 1, col = "black")
     lines(TR$oxy$depth[1 : 38],
-          BinShift(TR$oxy$k13 / TR$oxy$LoRes, TR$oxy$mean13.2),
+          Hmisc::Lag(TR$oxy$mean13.2, TR$oxy$k13 / TR$oxy$LoRes),
           col = "firebrick3")
 
     lines(T13.annual$means$depth, T13.annual$means$T1,
