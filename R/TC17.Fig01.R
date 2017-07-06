@@ -16,19 +16,13 @@ TC17.Fig01 <- function(TR, path = file.path(getwd(), "plots"),
                        dev.size = list(h = 6, w = 8), save.plot = FALSE) {
 
     plot.par <- SetPlotPar()
-    plot.file <- file.path(path, file.name)
-
-    T13.annual <- T13AnnualMeans(t1 = TR$oxy$mean13.1,
-                                 t2 = Hmisc::Lag(TR$oxy$mean13.2,
-                                                 TR$oxy$k13 / TR$oxy$LoRes),
-                                 depth = TR$oxy$depth)
 
     if (device == "quartz") {
         quartzFonts(optima = c("Optima Regular", "Optima Bold",
                                "Optima Italic", "Optima Bold Italic"))
     }
 
-    OpenDevice(device = device, plot.file = plot.file,
+    OpenDevice(device = device, path = path, file.name = file.name,
                height = dev.size$h + 0.75, width = 2 * dev.size$w,
                save.plot = save.plot)
     par(plot.par)
@@ -36,6 +30,11 @@ TC17.Fig01 <- function(TR, path = file.path(getwd(), "plots"),
     par(mar = c(5, 5, 4, 2))
     if (device == "quartz") par(family = "optima")
 
+    T13.annual <- T13AnnualMeans(t1 = TR$oxy$mean13.1,
+                                 t2 = Hmisc::Lag(TR$oxy$mean13.2,
+                                                 TR$oxy$k13 / TR$oxy$LoRes),
+                                 depth = TR$oxy$depth)
+    
 
     #---------------------------------------------------------------------------
     # Fig01-a

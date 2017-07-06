@@ -4,7 +4,7 @@
 \alias{OpenDevice}
 \title{Open a graphics device.}
 \usage{
-OpenDevice(device = "quartz", plot.file, type = "pdf", height = 6,
+OpenDevice(device = "quartz", path, file.name, type = "pdf", height = 6,
   width = 8, save.plot = FALSE)
 }
 \arguments{
@@ -12,7 +12,11 @@ OpenDevice(device = "quartz", plot.file, type = "pdf", height = 6,
 "quartz" which is suitable for macOS systems. Currently, no other devices
 are implemented.}
 
-\item{plot.file}{The file path specifying where to save the plot.}
+\item{path}{The path specifying where to save the plot.}
+
+\item{file.name}{The name of the file under which to save the plot.}
+
+\item{type}{The type of output to use.}
 
 \item{height}{The height of the graphics device; defaults to 6 inches.}
 

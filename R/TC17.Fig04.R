@@ -18,14 +18,13 @@ TC17.Fig04 <- function(TR, path = file.path(getwd(), "plots"),
                        dev.size = list(h = 6, w = 8), save.plot = FALSE) {
     
     plot.par <- SetPlotPar()
-    plot.file <- file.path(path, file.name)
 
     if (device == "quartz") {
         quartzFonts(optima = c("Optima Regular", "Optima Bold",
                                "Optima Italic", "Optima Bold Italic"))
     }
 
-    OpenDevice(device = device, plot.file = plot.file,
+    OpenDevice(device = device, path = path, file.name = file.name,
                height = dev.size$h, width = dev.size$w,
                save.plot = save.plot)
     par(plot.par)

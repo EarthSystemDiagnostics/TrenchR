@@ -18,7 +18,6 @@ TC17.Fig03 <- function(TR, path = file.path(getwd(), "plots"),
                        dev.size = list(h = 6, w = 8), save.plot = FALSE) {
 
     plot.par <- SetPlotPar()
-    plot.file <- file.path(path, file.name)
 
     if (device == "quartz") {
         quartzFonts(optima = c("Optima Regular", "Optima Bold",
@@ -29,7 +28,8 @@ TC17.Fig03 <- function(TR, path = file.path(getwd(), "plots"),
     #---------------------------------------------------------------------------
     # Fig03-a
     adj <- 1.75
-    OpenDevice(device = device, plot.file = paste(plot.file, "a", sep = ""),
+    OpenDevice(device = device, path = path,
+               file.name = paste(file.name, "a", sep = ""),
                type = "png", height = dev.size$h, width = dev.size$w + adj,
                save.plot = save.plot)
     par(plot.par)
@@ -78,7 +78,8 @@ TC17.Fig03 <- function(TR, path = file.path(getwd(), "plots"),
 
     #---------------------------------------------------------------------------
     # Fig03-b
-    OpenDevice(device = device, plot.file = paste(plot.file, "b", sep = ""),
+    OpenDevice(device = device, path = path,
+               file.name = paste(file.name, "b", sep = ""),
                type = "png", height = dev.size$h, width = dev.size$w + adj,
                save.plot = save.plot)
     par(plot.par)
@@ -101,7 +102,8 @@ TC17.Fig03 <- function(TR, path = file.path(getwd(), "plots"),
 
     #---------------------------------------------------------------------------
     # Fig03-c
-    OpenDevice(device = device, plot.file = paste(plot.file, "c", sep = ""),
+    OpenDevice(device = device, path = path,
+               file.name = paste(file.name, "c", sep = ""),
                type = "png", height = dev.size$h, width = dev.size$w,
                save.plot = save.plot)
     par(plot.par)
