@@ -4,7 +4,7 @@
 
 ## Introduction
 
-**TrenchR** implements all main analyses and the plotting of results of the publication Münch et al. (2017). Please note that currently the package implements all plotting but only the main analyses performed in the paper and only minimum desriptions of the data and funcionalities are available. Corresponding updates will be made in due course. Please contact Thomas Münch <<thomas.muench@awi.de>> at the Alfred-Wegener-Institute, Helmholtz Centre for Polar and Marine Research, Germany, for more information.
+**TrenchR** implements all main analyses and the plotting of results of the publication Münch et al. (2017). Please note that currently the package implements all plotting but only the main analyses performed in the paper and only minimum desriptions of the data and functionalities are available. Corresponding updates will be made in due course. Please contact Thomas Münch <<thomas.muench@awi.de>> at the Alfred-Wegener-Institute, Helmholtz Centre for Polar and Marine Research, Germany, for more information.
 
  
 ## Installation
