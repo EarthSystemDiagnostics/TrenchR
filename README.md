@@ -1,10 +1,10 @@
-# Sedproxy: Simulation of Sediment Archived Climate Proxy Records.
+# TrenchR: Package to Analyse and Plot Trench Isotope Records.
 
 ------------------------------
 
 ## Introduction
 
-**TrenchR** provides a forward model for sediment archived climate proxies. It is based on work described in Laepple and Huybers (2013). A manuscript is in preparation, Dolman and Laepple (in prep.), which will more fully describe the forward model and its applications. Please contact Dr Andrew Dolman <<andrew.dolman@awi.de>>, or Dr Thomas Laepple <<tlaepple@awi.de>>, at the Alfred-Wegener-Institute, Helmholtz Centre for Polar and Marine Research, Germany, for more information.
+**TrenchR** implements all main analyses and the plotting of results of the publication Münch et al. (2017). Please note that currently the package implements all plotting but only the main analyses performed in the paper and only minimum desriptions of the data and funcionalities are available. Corresponding updates will be made in due course. Please contact Thomas Münch <<thomas.muench@awi.de>> at the Alfred-Wegener-Institute, Helmholtz Centre for Polar and Marine Research, Germany, for more information.
 
  
 ## Installation
@@ -22,40 +22,15 @@ devtools::install_bitbucket("ecus/trenchr")
 
 ## Dependencies
 
-The following packages are needed for **TrenchR** to function properly:
-* geosphere
-* GISTools
-* Hmisc
-* RColorBrewer
+The following packages are needed for **TrenchR** to function properly
 
-These packages are available on CRAN and are automatically installed on your system, if not yet present, when installing **TrenchR**.
+* `geosphere`
+* `GISTools`
+* `Hmisc`
+* `RColorBrewer`
 
-# README #
+These packages are available on **CRAN** and are, if not yet present, automatically installed on your system when installing **TrenchR**.
 
-This README would normally document whatever steps are necessary to get your application up and running.
+## Literature cited
 
-### What is this repository for? ###
-
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
-
-### How do I get set up? ###
-
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+Münch, T., Kipfstuhl, S., Freitag, J., Meyer, H., and Laepple, T.: Constraints on post-depositional isotope modifications in East Antarctic firn from analysing temporal changes of isotope profiles, The Cryosphere Discuss., 2017, 1–21, doi:10.5194/tc-2017-35, 2017.
