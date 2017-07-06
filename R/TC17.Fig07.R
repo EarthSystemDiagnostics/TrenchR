@@ -6,11 +6,13 @@
 ##' @param file.name 
 ##' @param device 
 ##' @param dev.size 
-##' @param save.plot 
+##' @param save.plot
+##' @param mod.param 
 ##' @author Thomas Münch
 TC17.Fig07 <- function(TR, path = file.path(getwd(), "plots"),
                        file.name = "tc17_fig_07", device = "quartz",
-                       dev.size = list(h = 6, w = 8), save.plot = FALSE) {
+                       dev.size = list(h = 6, w = 8), save.plot = FALSE,
+                       mod.param) {
 
     plot.par <- SetPlotPar()
     plot.file <- file.path(path, file.name)
@@ -21,23 +23,23 @@ TC17.Fig07 <- function(TR, path = file.path(getwd(), "plots"),
     }
 
     OpenDevice(device = device, plot.file = plot.file,
-               height = dev.size$h, width = 2 * dev.size$w,
+               height = dev.size$w, width = 2 * dev.size$w,
                save.plot = save.plot)
     par(plot.par)
     par(mfrow = c(1, 2), xaxs = "r", yaxs = "i", lwd = 1.5,
         mar = c(5, 5.5, 0.5, 0.5))
     if (device == "quartz") par(family = "optima")
 
-    T12.mod.oxy <- ModifyT13(TR$oxy, param$oxy)
+    T13.mod.oxy <- ModifyT13(TR$oxy, mod.param)
 
     diff.13 <- TR$oxy$mean13.1 -
-        Hmisc::Lag(TR$oxy$mean13.2, k = TR$oxy$k12/TR$oxy$LoRes)
+        Hmisc::Lag(TR$oxy$mean13.2, shift = TR$oxy$k13 / TR$oxy$LoRes)
 
     diff.15 <- TR$oxy$mean15.1_HiRes -
-        Hmisc::Lag(TR$oxy$mean15.2_HiRes, k = TR$oxy$k14/TR$oxy$HiRes)
+        Hmisc::Lag(TR$oxy$mean15.2_HiRes, shift = TR$oxy$k15 / TR$oxy$HiRes)
     diff.15 <- diff.15[match(TR$oxy$depth, TR$oxy$depth_HiRes)]
 
-    diff.2yr <- TR$oxy$mean15 - T12.mod.oxy$mean13.diff.stretch.adv
+    diff.2yr <- TR$oxy$mean15 - T13.mod.oxy$mean13.diff.stretch.adv
 
     
     #---------------------------------------------------------------------------
