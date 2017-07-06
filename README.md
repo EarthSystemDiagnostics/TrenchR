@@ -23,10 +23,10 @@ devtools::install_bitbucket("ecus/trenchr")
 ## Dependencies
 
 The following packages are needed for **TrenchR** to function properly:
-* `geosphere`
-* `GISTools`
-* `Hmisc`
-* `RColorBrewer`
+* geosphere
+* GISTools
+* Hmisc
+* RColorBrewer
 
 These packages are available on CRAN and are automatically installed on your system, if not yet present, when installing **TrenchR**.
 
