@@ -1,4 +1,4 @@
-# TrenchR: Package to Analyse and Plot Trench Isotope Records.
+# TrenchR: Analyse and Plot Trench Isotope Records.
 
 ------------------------------
 
