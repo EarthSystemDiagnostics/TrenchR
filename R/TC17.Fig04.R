@@ -56,7 +56,7 @@ TC17.Fig04 <- function(TR, path = file.path(getwd(), "plots"),
 
     par(yaxp = c(-52, -36, 4))
     axis(2)
-    minor.tick(nx = 1, ny = 2, side = 2)
+    MinorTick(nx = 1, ny = 2, side = 2)
     text(-35, -44,
          labels = expression(delta^bold("18") * bold("O")*bold(" (\u2030)")),
          srt = 90, xpd = NA, cex = plot.par$cex.lab, font = plot.par$font.lab,
@@ -74,7 +74,7 @@ TC17.Fig04 <- function(TR, path = file.path(getwd(), "plots"),
 
     par(yaxp = c(-48, -40, 2))
     axis(4, col = "dodgerblue", col.axis = "dodgerblue")
-    minor.tick(nx = 1, ny = 2, side = 4, col = "dodgerblue")
+    MinorTick(nx = 1, ny = 2, side = 4, col = "dodgerblue")
     par(xaxp = c(0, 175, 7))
     axis(1)
 
