@@ -82,10 +82,10 @@ TC17.Fig01 <- function(TR, path = file.path(getwd(), "plots"),
     lines(T13.annual$means$depth, T13.annual$means$T2,
           type = 'b', lty = 1, pch = 19, col = "firebrick3")
 
-    polyplot(T13.annual$means$depth,
+    Polyplot(T13.annual$means$depth,
              rbind(T13.annual$means$min.T1, T13.annual$means$max.T1),
              col = adjustcolor("black", 0.15))
-    polyplot(T13.annual$means$depth,
+    Polyplot(T13.annual$means$depth,
              rbind(T13.annual$means$min.T2, T13.annual$means$max.T2),
              col = adjustcolor("firebrick3", 0.15))
 
