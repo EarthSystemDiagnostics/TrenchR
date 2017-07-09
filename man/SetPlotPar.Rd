@@ -7,7 +7,9 @@
 SetPlotPar()
 }
 \value{
-A list with the following plotting parameters set:
+A list of two components:
+\itemize{
+\item The list 'par' with the following default plotting parameters:
     \itemize{
     \item mar = c(5, 5, 0.5, 0.5)
     \item lwd = 2
@@ -16,7 +18,11 @@ A list with the following plotting parameters set:
     \item font.axis = 2
     \item cex.main = 1.5
     \item cex.lab = 1.5
-    \item cex.axis = 1.25
+    \item cex.axis = 1.25}
+\item The list 'dev.size' with the following default device sizes:
+    \itemize{
+    \item h = 6: the device height
+    \item w = 8: the device width}
 }
 }
 \description{

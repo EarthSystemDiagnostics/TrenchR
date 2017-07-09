@@ -5,7 +5,7 @@
 \title{title}
 \usage{
 TC17.Fig02(path = file.path(getwd(), "plots"), file.name = "tc17_fig_02",
-  device = "quartz", dev.size = list(h = 6, w = 8), save.plot = FALSE)
+  device = "quartz", save.plot = FALSE)
 }
 \arguments{
 \item{path}{}
@@ -13,8 +13,6 @@ TC17.Fig02(path = file.path(getwd(), "plots"), file.name = "tc17_fig_02",
 \item{file.name}{}
 
 \item{device}{}
-
-\item{dev.size}{}
 
 \item{save.plot}{}
 }

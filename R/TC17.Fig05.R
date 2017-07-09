@@ -6,16 +6,17 @@
 ##" @param ParamSpace
 ##" @param path 
 ##" @param file.name 
-##" @param device 
 ##" @param dev.size 
 ##" @param save.plot
 ##" @author Thomas Münch
 ##" @export
 TC17.Fig05 <- function(ParamSpace, path = file.path(getwd(), "plots"),
                        file.name = "tc17_fig_05", device = "quartz",
-                       dev.size = list(h = 6, w = 8), save.plot = FALSE) {
+                       save.plot = FALSE) {
 
-    plot.par <- SetPlotPar()
+    param <- SetPlotPar()
+    plot.par <- param$par
+    dev.size <- param$dev.size
 
     if (device == "quartz") {
         quartzFonts(optima = c("Optima Regular", "Optima Bold",
