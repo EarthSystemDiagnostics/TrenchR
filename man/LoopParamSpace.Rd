@@ -16,11 +16,14 @@ LoopParamSpace(TR, advSpace = seq(40, 60, 0.5)/TR$HiRes, sigmaSpace = seq(0,
 
 \item{densfSpace}{}
 }
+\value{
+value.
+}
 \description{
-.. content for \description{} (no empty lines) ..
+Description.
 }
 \details{
-.. content for \details{} ..
+Details.
 }
 \author{
 Thomas Münch

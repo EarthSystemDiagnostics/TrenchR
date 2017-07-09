@@ -2,20 +2,33 @@
 % Please edit documentation in R/MakeTC17Figures.R
 \name{MakeTC17Figures}
 \alias{MakeTC17Figures}
-\title{Produce TC17 Figures.}
+\title{Produce all TC17 Figures.}
 \usage{
 MakeTC17Figures(path = file.path(getwd(), "plots"), device = "quartz",
   save.plot = FALSE)
 }
 \arguments{
-\item{path}{}
+\item{path}{The path to the directory in which to save the plots (for
+\code{save.plot = TRUE}). Defaults to the folder \code{plots} in the current
+working directory. If this folder does not exist, it is attempted to create
+with a warning (see also \code{\link{OpenDevice}}).}
 
-\item{device}{}
+\item{device}{The graphics device to be used to display and save the
+plots. Defaults to the \code{quartz} device which is the only currently
+implemented device option.}
 
-\item{save.plot}{}
+\item{save.plot}{if \code{TRUE}, the plots are saved as files in the
+folder specified by \code{path}. Defaults to \code{FALSE} which results in
+on-screen display of the plots.}
 }
 \description{
-Details
+This function is a wrapper to produce all figures shown in Muench et
+al. (2017).
+}
+\references{
+Muench, T., et al., Constraints on post-depositional isotope modifications
+in East Antarctic firn from analysing temporal changes of isotope profiles,
+The Cryosphere Discussions, doi:10.5194/tc-2017-35, 2017.
 }
 \author{
 Thomas Münch

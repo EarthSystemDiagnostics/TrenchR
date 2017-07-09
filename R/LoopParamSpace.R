@@ -1,13 +1,13 @@
-##'  Loop over parameter space to find minimum RMSD.
+##' Loop over parameter space to find minimum RMSD.
 ##'
-##' .. content for \description{} (no empty lines) ..
+##' Description.
 ##'
-##' .. content for \details{} ..
+##' Details.
 ##' @param TR 
 ##' @param advSpace 
 ##' @param sigmaSpace 
 ##' @param densfSpace 
-##' @return 
+##' @return value.
 ##' @author Thomas Münch
 ##' @export
 LoopParamSpace <- function(TR,

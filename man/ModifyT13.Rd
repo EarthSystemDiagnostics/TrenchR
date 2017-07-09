@@ -2,7 +2,7 @@
 % Please edit documentation in R/ModifyT13.R
 \name{ModifyT13}
 \alias{ModifyT13}
-\title{Title}
+\title{Modify the T13 mean isotope profile.}
 \usage{
 ModifyT13(TR = prepareTrenchData(na.treat = TRUE)$oxy, mod.param)
 }
@@ -10,6 +10,9 @@ ModifyT13(TR = prepareTrenchData(na.treat = TRUE)$oxy, mod.param)
 \item{TR}{}
 
 \item{mod.param}{}
+}
+\value{
+A list.
 }
 \description{
 Details

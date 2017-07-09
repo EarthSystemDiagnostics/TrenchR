@@ -2,7 +2,7 @@
 % Please edit documentation in R/MinorTick.R
 \name{MinorTick}
 \alias{MinorTick}
-\title{Title.}
+\title{Make aesthetic minor ticks.}
 \usage{
 MinorTick(nx = 2, ny = 2, tick.ratio = 0.5, side = 1, col = "black")
 }
@@ -18,10 +18,7 @@ MinorTick(nx = 2, ny = 2, tick.ratio = 0.5, side = 1, col = "black")
 \item{col}{}
 }
 \description{
-.. content for \description{} (no empty lines) ..
-}
-\details{
-.. content for \details{} ..
+Description.
 }
 \author{
 Thomas Münch

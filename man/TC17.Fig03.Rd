@@ -2,29 +2,39 @@
 % Please edit documentation in R/TC17.Fig03.R
 \name{TC17.Fig03}
 \alias{TC17.Fig03}
-\title{TC17 Figure 03.}
+\title{Produce TC17 Figure 03.}
 \usage{
 TC17.Fig03(TR, path = file.path(getwd(), "plots"),
   file.name = "tc17_fig_03", device = "quartz", save.plot = FALSE)
 }
 \arguments{
-\item{TR}{}
+\item{TR}{The results from a call to \code{\link{prepareTrenchData(na.treat
+= TRUE)}}.}
 
-\item{path}{}
+\item{path}{The path to the directory in which to save the plot (for
+\code{save.plot = TRUE}). Defaults to the folder \code{plots} in the current
+working directory. If this folder does not exist, it is attempted to create
+with a warning (see also \code{\link{OpenDevice}}).}
 
-\item{file.name}{}
+\item{file.name}{The name of the file (excluding extension) to save the
+plot in.}
 
-\item{device}{}
+\item{device}{The graphics device to be used to display and save the
+plot. Defaults to the \code{quartz} device which is the only currently
+implemented device option.}
 
-\item{save.plot}{}
-
-\item{"plots")}{}
+\item{save.plot}{if \code{TRUE}, the plot is saved as a png file in the
+folder specified by \code{path}. Defaults to \code{FALSE} which results in
+on-screen display of the plot.}
 }
 \description{
-.. content for \description{} (no empty lines) ..
+This function makes all necessary calculations and plots the results for
+Figure 03 shown in Muench et al. (2017).
 }
-\details{
-.. content for \details{} ..
+\references{
+Muench, T., et al., Constraints on post-depositional isotope modifications
+in East Antarctic firn from analysing temporal changes of isotope profiles,
+The Cryosphere Discussions, doi:10.5194/tc-2017-35, 2017.
 }
 \author{
 Thomas Münch

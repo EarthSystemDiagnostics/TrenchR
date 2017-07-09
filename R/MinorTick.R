@@ -1,14 +1,11 @@
-##'  Title.
+##' Make aesthetic minor ticks.
 ##'
-##' .. content for \description{} (no empty lines) ..
-##'
-##' .. content for \details{} ..
+##' Description.
 ##' @param nx 
 ##' @param ny 
 ##' @param tick.ratio 
 ##' @param side 
 ##' @param col 
-##' @return 
 ##' @author Thomas Münch
 ##' @export
 MinorTick <- function(nx = 2,ny = 2, tick.ratio = 0.5,

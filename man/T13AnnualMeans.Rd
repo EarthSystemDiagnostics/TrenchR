@@ -8,17 +8,23 @@ T13AnnualMeans(t1, t2, depth, i.max = c(5, 11, 19, 24, 33, 38), i.min = c(7,
   14, 21, 26, 37), start.year = 2013)
 }
 \arguments{
-\item{t1}{}
+\item{t1}{t1}
 
-\item{t2}{}
+\item{t2}{t2}
 
-\item{depth}{}
+\item{depth}{depth}
+
+\item{i.max}{i.max}
+
+\item{i.min}{i.min}
+
+\item{start.year}{start.year}
+}
+\value{
+A list.
 }
 \description{
-.. content for \description{} (no empty lines) ..
-}
-\details{
-.. content for \details{} ..
+Description.
 }
 \author{
 Thomas Muench

@@ -1,12 +1,10 @@
-##' Custom legend.
+##' Produce a custom legend.
 ##'
-##' .. content for \description{} (no empty lines) ..
-##'
-##' .. content for \details{} ..
-##' @param end.pch 
-##' @param pch.xoff 
-##' @return 
+##' Description.
+##' @param end.pch The character symbol for the legend end points.
+##' @param pch.xoff Horizontal offset of the legend end points.
 ##' @author Thomas Münch
+##' @export
 MyLegend <- function (x, y = NULL, legend, fill = NULL, col = par("col"), 
     border = "black", lty, lwd, pch, angle = 45, density = NULL, 
     bty = "o", bg = par("bg"), box.lwd = par("lwd"), box.lty = par("lty"), 

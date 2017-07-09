@@ -1,15 +1,13 @@
 ##' T13 annual mean isotope time series.
 ##'
-##' .. content for \description{} (no empty lines) ..
-##'
-##' .. content for \details{} ..
-##' @param t1 
-##' @param t2 
-##' @param depth 
-##' @param i.max
-##' @param i.min
-##' @param start.year
-##' @return 
+##' Description.
+##' @param t1 t1
+##' @param t2 t2
+##' @param depth depth 
+##' @param i.max i.max
+##' @param i.min i.min
+##' @param start.year start.year
+##' @return A list.
 ##' @author Thomas Muench
 ##' @export
 T13AnnualMeans <- function(t1, t2, depth,

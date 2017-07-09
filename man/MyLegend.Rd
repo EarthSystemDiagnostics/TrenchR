@@ -2,7 +2,7 @@
 % Please edit documentation in R/MyLegend.R
 \name{MyLegend}
 \alias{MyLegend}
-\title{Custom legend.}
+\title{Produce a custom legend.}
 \usage{
 MyLegend(x, y = NULL, legend, fill = NULL, col = par("col"),
   border = "black", lty, lwd, pch, angle = 45, density = NULL,
@@ -16,15 +16,12 @@ MyLegend(x, y = NULL, legend, fill = NULL, col = par("col"),
   pch.xoff = 0.2)
 }
 \arguments{
-\item{end.pch}{}
+\item{end.pch}{The character symbol for the legend end points.}
 
-\item{pch.xoff}{}
+\item{pch.xoff}{Horizontal offset of the legend end points.}
 }
 \description{
-.. content for \description{} (no empty lines) ..
-}
-\details{
-.. content for \details{} ..
+Description.
 }
 \author{
 Thomas Münch

@@ -1,10 +1,11 @@
-##' Title
+##' Modify the T13 mean isotope profile.
 ##'
 ##' Details
 ##' @param TR 
 ##' @param mod.param 
-##' @return 
+##' @return A list.
 ##' @author Thomas Münch
+##' @export
 ModifyT13 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy, mod.param) {
 
     

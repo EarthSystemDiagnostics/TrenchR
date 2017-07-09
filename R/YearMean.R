@@ -1,12 +1,13 @@
 ##' Annual means from binning.
 ##'
-##' .. content for \description{} (no empty lines) ..
-##'
-##' .. content for \details{} ..
-##' @param x 
-##' @param ind
-##' @param na.rm
-##' @return 
+##' Description.
+##' @param x The vector for which to compute the annual means according to the
+##'     binning specified by \code{ind}.
+##' @param ind A vector of indices specifying the binning windows for
+##'     calculating annual means.
+##' @param na.rm a logical value indicating whether ‘NA’ values should be
+##'     stripped before the computation proceeds. Defaults to \code{TRUE}.
+##' @return A vector of annual means.
 ##' @author Thomas Münch
 ##' @export
 YearMean <- function(x, ind, na.rm = TRUE) {

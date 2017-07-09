@@ -6,6 +6,7 @@
 ##' @param decreasing 
 ##' @return The indices of the maxima or minima of x.
 ##' @author Thomas Münch
+##' @export
 which.peaks <- function(x, partial = TRUE, decreasing = FALSE) {
 
     x.diff <- diff(x)

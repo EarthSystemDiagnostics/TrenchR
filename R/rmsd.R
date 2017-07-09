@@ -11,6 +11,7 @@
 ##'     \code{NA} if any of the elements of the vectors is \code{NA} and if
 ##'     \code{na.rm = FALSE}.
 ##' @author Thomas Münch
+##' @export
 rmsd <- function(v1, v2, na.rm = FALSE) {
 
     if (length(v1) != length(v2)) {

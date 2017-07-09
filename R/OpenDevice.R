@@ -1,13 +1,16 @@
 ##' Open a graphics device.
 ##'
 ##' This is a wrapper function to open a graphics device for plotting, or a file
-##' stream to save the plot into a pdf file.
+##' stream to save the plot into file of type specified by \code{type}.
 ##' @param device Character string specifying the plotting device; defaults to
 ##' "quartz" which is suitable for macOS systems. Currently, no other devices
 ##' are implemented.
-##' @param path The path specifying where to save the plot.
+##' @param path The path to the directory in which to save the plot (for
+##' \code{save.plot = TRUE}). If the specified directory does not exist, a
+##' warning is issed but nevertheless the function attempts to create the
+##' directory.
 ##' @param file.name The name of the file under which to save the plot.
-##' @param type The type of output to use.
+##' @param type The type of output to use. Defaults to \code{pdf}.
 ##' @param height The height of the graphics device; defaults to 6 inches.
 ##' @param width The width of the graphics device; defaults to 8 inches.
 ##' @param save.plot if \code{TRUE} a file stream is opened according to

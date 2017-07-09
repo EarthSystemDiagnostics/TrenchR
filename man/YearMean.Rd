@@ -7,13 +7,20 @@
 YearMean(x, ind, na.rm = TRUE)
 }
 \arguments{
-\item{x}{}
+\item{x}{The vector for which to compute the annual means according to the
+binning specified by \code{ind}.}
+
+\item{ind}{A vector of indices specifying the binning windows for
+calculating annual means.}
+
+\item{na.rm}{a logical value indicating whether ‘NA’ values should be
+stripped before the computation proceeds. Defaults to \code{TRUE}.}
+}
+\value{
+A vector of annual means.
 }
 \description{
-.. content for \description{} (no empty lines) ..
-}
-\details{
-.. content for \details{} ..
+Description.
 }
 \author{
 Thomas Münch
