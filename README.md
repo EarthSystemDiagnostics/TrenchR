@@ -4,13 +4,12 @@
 
 ## Introduction
 
-**TrenchR** implements all main analyses and the plotting of results of the publication Münch et al. (2017). Please note that currently the package implements all plotting but only the main analyses performed in the paper and only minimum desriptions of the data and functionalities are available. Corresponding updates will be made in due course. Please contact Thomas Münch <<thomas.muench@awi.de>> at the Alfred-Wegener-Institute, Helmholtz Centre for Polar and Marine Research, Germany, for more information.
+**TrenchR** implements all main analyses and the plotting of results of the publication Münch et al. (2017). Please note that currently the package implements all plotting but only the major analyses performed in the paper and only minimum desriptions of the data and functionalities are available. Corresponding updates will be made in due course. Please contact Thomas Münch <<thomas.muench@awi.de>> at the Alfred-Wegener-Institute, Helmholtz Centre for Polar and Marine Research, Germany, for more information.
 
  
 ## Installation
 
-**TrenchR** can be installed directly from bitbucket
-
+**TrenchR** can be installed directly from bitbucket:
 
 ```r
 if (!require("devtools")) {
@@ -20,9 +19,18 @@ if (!require("devtools")) {
 devtools::install_bitbucket("ecus/trenchr")
 ```
 
+After installation, load the package by running
+
+```r
+library("TrenchR")
+```
+
+to get full functionality.
+
+
 ## Dependencies
 
-The following packages are needed for **TrenchR** to function properly
+The following packages are needed for **TrenchR** to function properly:
 
 * `geosphere`
 * `GISTools`
