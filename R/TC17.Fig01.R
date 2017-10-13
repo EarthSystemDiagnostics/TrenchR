@@ -29,18 +29,12 @@ TC17.Fig01 <- function(TR, path = file.path(getwd(), "plots"),
     plot.par <- param$par
     dev.size <- param$dev.size
 
-    if (device == "quartz") {
-        quartzFonts(optima = c("Optima Regular", "Optima Bold",
-                               "Optima Italic", "Optima Bold Italic"))
-    }
-
     OpenDevice(device = device, path = path, file.name = file.name,
                height = dev.size$h + 0.75, width = 2 * dev.size$w,
                save.plot = save.plot)
     par(plot.par)
     par(mfrow = c(1, 2))
     par(mar = c(5, 5, 4, 2))
-    if (device == "quartz") par(family = "optima")
 
     T13.annual <- T13AnnualMeans(t1 = TR$oxy$mean13.1,
                                  t2 = Hmisc::Lag(TR$oxy$mean13.2,
@@ -60,13 +54,13 @@ TC17.Fig01 <- function(TR, path = file.path(getwd(), "plots"),
     axis(3, labels = T13.annual$summer.max$years,
          at = T13.annual$summer.max$depth,
          cex.axis = 0.75 * plot.par$cex.lab)
-    mtext('Depth (cm)', side = 1, line = 3.5, cex = plot.par$cex.lab,
+    mtext('Depth (cm)', side = 1, line = 3.25, cex = plot.par$cex.lab,
           font = plot.par$font.lab)
     mtext(expression(bold("Trench ") *
                      delta^bold("18") * bold("O") * bold(" (\u2030)")),
-          side = 2, line = 3.5, las = 0,
+          side = 2, line = 3.25, las = 0,
           cex = plot.par$cex.lab, font = plot.par$font.lab)
-    mtext("Year", side = 3, line = 2.85,
+    mtext("Year", side = 3, line = 2.5,
           cex = plot.par$cex.lab, font = plot.par$font.lab)
 
     abline(v = T13.annual$summer.max$depth,
@@ -123,10 +117,10 @@ TC17.Fig01 <- function(TR, path = file.path(getwd(), "plots"),
     axis(2)
     box()
 
-    mtext("Year", side = c(1, 3), line = c(3.5, 2.85),
+    mtext("Year", side = c(1, 3), line = c(3.25, 2.5),
           cex = plot.par$cex.lab, font = plot.par$font.lab)
     mtext(bquote(bold("AWS 2m air temperature"~paste('(',degree,'C)'))),
-          side = 2, line = 3.5, las = 0,
+          side = 2, line = 3.25, las = 0,
           cex = plot.par$cex.lab, font = plot.par$font.lab)
 
     legend("bottomright", c("monthly mean", "annual mean"),

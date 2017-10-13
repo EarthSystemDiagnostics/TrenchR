@@ -30,17 +30,11 @@ TC17.Fig04 <- function(TR, path = file.path(getwd(), "plots"),
     plot.par <- param$par
     dev.size <- param$dev.size
     
-    if (device == "quartz") {
-        quartzFonts(optima = c("Optima Regular", "Optima Bold",
-                               "Optima Italic", "Optima Bold Italic"))
-    }
-
     OpenDevice(device = device, path = path, file.name = file.name,
                height = dev.size$h, width = dev.size$w,
                save.plot = save.plot)
     par(plot.par)
     par(oma = c(5, 0, 0.5, 0), mar = c(0, 6, 0, 6))
-    if (device == "quartz") par(family = "optima")
 
     ind1 <- which(TR$oxy$depth <= TR$oxy$SRF.b$t15)
     ind2 <- which(TR$oxy$depth <= TR$oxy$SRF.b$t13)

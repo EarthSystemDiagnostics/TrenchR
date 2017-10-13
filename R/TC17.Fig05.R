@@ -29,16 +29,10 @@ TC17.Fig05 <- function(ParamSpace, path = file.path(getwd(), "plots"),
     plot.par <- param$par
     dev.size <- param$dev.size
 
-    if (device == "quartz") {
-        quartzFonts(optima = c("Optima Regular", "Optima Bold",
-                               "Optima Italic", "Optima Bold Italic"))
-    }
-
     OpenDevice(device = device, path = path, file.name = file.name,
                type = "png", height = dev.size$h, width = dev.size$w,
                save.plot = save.plot)
     par(plot.par)
-    if (device == "quartz") par(family = "optima")
 
     palette <- colorRampPalette(rev(RColorBrewer::brewer.pal(10, "RdYlBu")))
 

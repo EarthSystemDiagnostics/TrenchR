@@ -34,18 +34,12 @@ TC17.Fig06 <- function(TR, path = file.path(getwd(), "plots"),
     plot.par <- param$par
     dev.size <- param$dev.size
 
-    if (device == "quartz") {
-        quartzFonts(optima = c("Optima Regular", "Optima Bold",
-                               "Optima Italic", "Optima Bold Italic"))
-    }
-
     OpenDevice(device = device, path = path, file.name = file.name,
                height = dev.size$h, width = 2 * dev.size$w,
                save.plot = save.plot)
     par(plot.par)
     par(mfrow = c(1, 2))
     par(oma = c(5, 0, 0.5, 0), mar = c(0, 6, 0, 6))    
-    if (device == "quartz") par(family = "optima")
 
     T13.mod.oxy <- ModifyT13(TR$oxy, mod.param)
     

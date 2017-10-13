@@ -30,11 +30,6 @@ TC17.Fig03 <- function(TR, path = file.path(getwd(), "plots"),
     plot.par <- param$par
     dev.size <- param$dev.size
 
-    if (device == "quartz") {
-        quartzFonts(optima = c("Optima Regular", "Optima Bold",
-                               "Optima Italic", "Optima Bold Italic"))
-    }
-
 
     #---------------------------------------------------------------------------
     # Fig03-a
@@ -45,7 +40,6 @@ TC17.Fig03 <- function(TR, path = file.path(getwd(), "plots"),
                save.plot = save.plot)
     par(plot.par)
     par(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2))
-    if (device == "quartz") par(family = "optima")
 
     # limit the colorscale
     MAX <- -35
@@ -95,8 +89,6 @@ TC17.Fig03 <- function(TR, path = file.path(getwd(), "plots"),
                save.plot = save.plot)
     par(plot.par)
     par(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2))
-    if (device == "quartz") par(family = "optima")
-
 
     filled.contour(TR$oxy$XPOS, TR$oxy$depth / 100, t(T2),
                    color.palette = palette,
@@ -118,7 +110,6 @@ TC17.Fig03 <- function(TR, path = file.path(getwd(), "plots"),
                type = "png", height = dev.size$h, width = dev.size$w,
                save.plot = save.plot)
     par(plot.par)
-    if (device == "quartz") par(family = "optima")
 
     ind1 <- which(TR$oxy$depth <= TR$oxy$SRF.b$t15.1)
     ind2 <- which(TR$oxy$depth <= TR$oxy$SRF.b$t15.2)

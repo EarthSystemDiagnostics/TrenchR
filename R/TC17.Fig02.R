@@ -28,17 +28,11 @@ TC17.Fig02 <- function(path = file.path(getwd(), "plots"),
     plot.par <- param$par
     dev.size <- param$dev.size
 
-    if (device == "quartz") {
-        quartzFonts(optima = c("Optima Regular", "Optima Bold",
-                               "Optima Italic", "Optima Bold Italic"))
-    }
-
     OpenDevice(device = device, path = path, file.name = file.name,
                height = dev.size$w, width = dev.size$w,
                save.plot = save.plot)
     par(plot.par)
     par(mar = c(6, 6, 6, 6))
-    if (device == "quartz") par(family = "optima")
 
     # lat/lon for relevant sites
     edml <- c(-75.0025, 0.0684)
