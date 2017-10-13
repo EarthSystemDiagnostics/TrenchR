@@ -50,7 +50,7 @@ TC17.Fig05 <- function(ParamSpace, path = file.path(getwd(), "plots"),
                               bg = "black", cex = 1.25);
                        axis(1); axis(2)})
     
-    text(8.1, 5, labels = "Optimal downward-advection (cm)",
+    text(8.1, 5, labels = "Optimal downward advection (cm)",
          srt = -90, xpd = NA, cex = plot.par$cex.lab, font = plot.par$font.lab)
 
     if (save.plot) dev.off()
