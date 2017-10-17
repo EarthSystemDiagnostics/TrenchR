@@ -120,33 +120,35 @@ TC17.Fig03 <- function(TR, path = file.path(getwd(), "plots"),
     v1[ind1[-length(ind1)]] <- NA
     v2[ind2[-length(ind2)]] <- NA
 
-    plot(TR$oxy$depth, TR$oxy$mean15.1, type = "n", las = 1,
-         xlim = c(-5, 175), ylim = c(-52, -34),
+    plot(TR$oxy$depth / 100, TR$oxy$mean15.1, type = "n", las = 1,
+         xlim = c(-5, 175) / 100, ylim = c(-52, -34),
          axes = FALSE, xlab = "", ylab = "")
-    par(xaxp = c(0, 175, 7))
-    axis(1)
+    par(xaxp = c(0, 1.75, 7))
+    axis(1, at = c(0.0, 0.5, 1.0, 1.5))
+    axis(1, at = c(0.25, 0.75, 1.25, 1.75), tcl = 0.75 * par("tcl"),
+         labels = FALSE)
     axis(2, at = seq(-52, -34, 4))
     axis(2, at = seq(-50, -34, 4), tcl = 0.5 * par("tcl"), labels = FALSE)
     box()
-    abline(v = c(0, 50, 100, 150), col = "black", lty = "dotted")
+    abline(v = c(0, 50, 100, 150) / 100, col = "black", lty = "dotted")
 
-    mtext("Depth (cm)", side = 1, line = 3.5,
+    mtext("Depth (m)", side = 1, line = 3.5,
           cex = plot.par$cex.lab, font = plot.par$font.lab)
     mtext(expression(delta^bold("18") * bold("O") * bold("  (\u2030)")),
           side = 2, line = 3.25, las = 0,
           cex = plot.par$cex.lab, font = plot.par$font.lab)
 
-    lines(TR$oxy$depth, v1, col = "black")
-    lines(TR$oxy$depth + TR$oxy$k15, v2, col = "firebrick3")
+    lines(TR$oxy$depth / 100, v1, col = "black")
+    lines((TR$oxy$depth + TR$oxy$k15) / 100, v2, col = "firebrick3")
 
-    lines(TR$oxy$depth[ind1], TR$oxy$mean15.1[ind1],
+    lines(TR$oxy$depth[ind1] / 100, TR$oxy$mean15.1[ind1],
           col = "black", lwd = 1.5, lty = 5)
-    lines(TR$oxy$depth[ind2] + TR$oxy$k15, TR$oxy$mean15.2[ind2],
+    lines((TR$oxy$depth[ind2] + TR$oxy$k15) / 100, TR$oxy$mean15.2[ind2],
           col = "firebrick3", lwd = 1.5, lty = 5)
 
-    points(TR$oxy$depth[p1], TR$oxy$mean15.1[p1],
+    points(TR$oxy$depth[p1] / 100, TR$oxy$mean15.1[p1],
            col = "black", pch = 1, lwd = 1.5, cex = 0.75)
-    points(TR$oxy$depth[p2] + TR$oxy$k15, TR$oxy$mean15.2[p2],
+    points((TR$oxy$depth[p2] + TR$oxy$k15) / 100, TR$oxy$mean15.2[p2],
            col = "firebrick3", pch = 23, lwd = 1.5, cex = 0.75)
 
     MyLegend("bottomright", legend = c("T15-1", "T15-2"),
