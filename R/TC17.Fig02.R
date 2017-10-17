@@ -104,16 +104,16 @@ TC17.Fig02 <- function(path = file.path(getwd(), "plots"),
     axis(side = 4, at = ylat, labels = ydist)
     box(lwd = 1.5)
 
-    mtext(bquote(paste(bold("Longitude"), degree, bold("E"))),
+    mtext(bquote(paste(bold("Longitude ("), degree, bold("E)"))),
           side = 1, line = 4.5,
           cex = plot.par$cex.lab, font = plot.par$font.lab)
-    mtext(bquote(paste(bold("Latitude"), degree, bold("N"))), las = 0,
+    mtext(bquote(paste(bold("Latitude ("), degree, bold("N)"))), las = 0,
           side = 2, line = 4.5,
           cex = plot.par$cex.lab, font = plot.par$font.lab)
     mtext("Distance (m)", side = 3, line = 4,
           cex = plot.par$cex.lab, font = plot.par$font.lab)
-    mtext("Distance (m)", side = 4, line = 4, las = 0,
-          cex = plot.par$cex.lab, font = plot.par$font.lab)
+    text(0.108, -75.005, labels = "Distance (m)", srt = -90, xpd = NA,
+         cex = plot.par$cex.lab, font = plot.par$font.lab)
 
     points(edml[2], edml[1], pch = 24, col = "black", bg = "black")
     points(edml[2], edml[1], pch = 25, col = "black", bg = "black")
