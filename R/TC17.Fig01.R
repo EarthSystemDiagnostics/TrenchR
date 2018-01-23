@@ -19,7 +19,7 @@
 ##' @references
 ##' Muench, T., et al., Constraints on post-depositional isotope modifications
 ##' in East Antarctic firn from analysing temporal changes of isotope profiles,
-##' The Cryosphere Discussions, doi:10.5194/tc-2017-35, 2017.
+##' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
 ##' @export
 TC17.Fig01 <- function(TR, path = file.path(getwd(), "plots"),
                        file.name = "tc17_fig_01", device = "quartz",
