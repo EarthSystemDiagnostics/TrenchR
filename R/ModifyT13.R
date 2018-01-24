@@ -1,77 +1,66 @@
-##' Modify the T13 mean isotope profile.
+##' Model T13 temporal changes.
 ##'
-##' Details
+##' Modify the T13 mean isotope profile. (Details)
 ##' @param TR 
-##' @param mod.param 
+##' @param SIGMA
+##' @param STRETCH
+##' @param ADV
 ##' @return A list.
 ##' @author Thomas Münch
 ##' @export
-ModifyT13 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy, mod.param) {
+ModifyT13 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy,
+                      SIGMA = NULL, STRETCH = NULL, ADV = NULL) {
 
+    ret <- input <- TR$mean13_HiRes
     
-    # non-NA range of high-resolution trench T13 data;
-    # needed for diffusion function
-    noNA <- which(!is.na(TR$mean13_HiRes))
+    # non-NA range of high-resolution trench T13 data
+    noNA <- which(!is.na(input))
     n <- length(noNA)
 
-    # T13 DENSIFICATION
+    # DIFFUSION
+    
+    if (!is.null(SIGMA)) {
 
-    # depth scale according to compression (independent estimate)
-    depth.stretch <- seq(TR$depth_HiRes[noNA][1],
-                         TR$depth_HiRes[noNA][n] - mod.param$stretch,
-                         length.out = n)
-    # depth scale according to compression (optimal estimate)
-    depth.stretchOPT <- seq(TR$depth_HiRes[noNA][1],
-                            TR$depth_HiRes[noNA][n] - mod.param$stretchOPT,
-                            length.out = n)
+        diff <- DiffuseRecord(input[noNA], sigma = rep(SIGMA, n),
+                              res = TR$HiRes)
 
-    # approximate record on compressed depth scales
-    mean13_HiRes.stretch <- approx(depth.stretch, TR$mean13_HiRes[noNA],
-                                   TR$depth_HiRes[noNA])$y
-    mean13_HiRes.stretchOPT <- approx(depth.stretchOPT, TR$mean13_HiRes[noNA],
-                                      TR$depth_HiRes[noNA])$y
+        ret[noNA] <- diff
+        
+    }
 
-    # T13 ADVECTED, DIFFUSED AND COMPRESSED
+    # DENSIFICATION
 
-    tmp <- DiffuseRecord(TR$mean13_HiRes[noNA],
-                         sigma = rep(mod.param$SIGMA, n),
-                         res = TR$HiRes)
+    if (!is.null(STRETCH)) {
 
-    mean13_HiRes.diff.stretch <- TR$mean13_HiRes
-    mean13_HiRes.diff.stretch[noNA] <- approx(depth.stretch, tmp,
-                                              TR$depth_HiRes[noNA])$y
-    mean13_HiRes.diff.stretch.adv <- Hmisc::Lag(mean13_HiRes.diff.stretch,
-                                                shift = mod.param$ADV)
+        # depth scale after densification
+        depth.stretch <- seq(TR$depth_HiRes[noNA][1],
+                             TR$depth_HiRes[noNA][n] - STRETCH,
+                             length.out = n)
 
-    tmp <- DiffuseRecord(TR$mean13_HiRes[noNA],
-                         sigma = rep(mod.param$SIGMAopt, n),
-                         res = TR$HiRes)
+        # approximate record on compressed depth scale
+        stretched <- approx(depth.stretch, ret[noNA],
+                            TR$depth_HiRes[noNA])$y
 
-    mean13_HiRes.diff.stretch_OPT <- TR$mean13_HiRes
-    mean13_HiRes.diff.stretch_OPT[noNA] <- approx(depth.stretchOPT, tmp,
-                                                  TR$depth_HiRes[noNA])$y
-    mean13_HiRes.diff.stretch.adv_OPT <-
-        Hmisc::Lag(mean13_HiRes.diff.stretch_OPT, shift = mod.param$ADVopt)
+        ret[noNA] <- stretched
+        
+    }
 
+    # ADVECTION
 
-    # T13 ONLY OPTIMALLY ADVECTED
-    adv.only.opt <- 97
-    mean13_HiRes.adv_OPT <- Hmisc::Lag(TR$mean13_HiRes, adv.only.opt)
+    if (!is.null(ADV)) {
+
+        ret <- Hmisc::Lag(ret, shift = ADV)
+
+    }
 
     # EXTRACT 3CM RESOLUTION
-    mean13.diff.stretch.adv <-
-        mean13_HiRes.diff.stretch.adv[match(TR$depth, TR$depth_HiRes)]
-    mean13.diff.stretch.adv_OPT <- 
-        mean13_HiRes.diff.stretch.adv_OPT[match(TR$depth, TR$depth_HiRes)]
-    mean13.adv_OPT <- mean13_HiRes.adv_OPT[match(TR$depth, TR$depth_HiRes)]
+    ret.HiRes <- ret
+    ret.LoRes <- ret[match(TR$depth, TR$depth_HiRes)]
 
     return(list(
-        mean13_HiRes.diff.stretch.adv = mean13_HiRes.diff.stretch.adv,
-        mean13_HiRes.diff.stretch.adv_OPT = mean13_HiRes.diff.stretch.adv_OPT,
-        mean13_HiRes.adv_OPT = mean13_HiRes.adv_OPT,
-        mean13.diff.stretch.adv = mean13.diff.stretch.adv,
-        mean13.diff.stretch.adv_OPT = mean13.diff.stretch.adv_OPT,
-        mean13.adv_OPT = mean13.adv_OPT
+        HiRes = ret.HiRes,
+        LoRes = ret.LoRes
     ))
-        
+
 }
+
