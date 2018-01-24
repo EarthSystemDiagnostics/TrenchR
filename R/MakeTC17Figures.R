@@ -23,13 +23,15 @@ MakeTC17Figures <- function(path = file.path(getwd(), "plots"),
 
     TR1 <- prepareTrenchData()
     TR2 <- prepareTrenchData(na.treat = TRUE)
+
+    # modification parameters (optimal and independent) for temporal changes of T13
     mod.param <- list()
-    mod.param$ADV        <- 100
-    mod.param$ADVopt     <- 101
-    mod.param$SIGMA      <- 1.9
-    mod.param$SIGMAopt   <- 2.3
-    mod.param$stretch    <- 2.2
-    mod.param$stretchOPT <- 3.5
+    mod.param$ADV.ind     <- 100
+    mod.param$ADV.opt     <- 101
+    mod.param$SIGMA.ind   <- 1.9
+    mod.param$SIGMA.opt   <- 2.3
+    mod.param$STRETCH.ind <- 2.2
+    mod.param$STRETCH.opt <- 3.5
 
     TC17.Fig01(TR1, path = path, device = device, save.plot = save.plot)
 

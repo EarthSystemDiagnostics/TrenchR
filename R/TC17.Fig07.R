@@ -40,8 +40,13 @@ TC17.Fig07 <- function(TR, path = file.path(getwd(), "plots"),
     par(mfrow = c(1, 2), xaxs = "r", yaxs = "i", lwd = 1.5,
         mar = c(5, 5.5, 0.5, 0.5))
 
-    T13.mod.oxy <- ModifyT13(TR$oxy, mod.param)
+    # T13**
+    T13.starstar <- ModifyT13(TR$oxy,
+                              SIGMA = mod.param$SIGMA.ind,
+                              STRETCH = mod.param$STRETCH.ind,
+                              ADV = mod.param$ADV.ind)
 
+    # profile differences
     diff.13 <- TR$oxy$mean13.1 -
         Hmisc::Lag(TR$oxy$mean13.2, shift = TR$oxy$k13 / TR$oxy$LoRes)
 
@@ -49,7 +54,7 @@ TC17.Fig07 <- function(TR, path = file.path(getwd(), "plots"),
         Hmisc::Lag(TR$oxy$mean15.2_HiRes, shift = TR$oxy$k15 / TR$oxy$HiRes)
     diff.15 <- diff.15[match(TR$oxy$depth, TR$oxy$depth_HiRes)]
 
-    diff.2yr <- TR$oxy$mean15 - T13.mod.oxy$mean13.diff.stretch.adv
+    diff.2yr <- TR$oxy$mean15 - T13.starstar$LoRes
 
     
     #---------------------------------------------------------------------------
