@@ -41,7 +41,7 @@ MakeTC17Figures <- function(path = file.path(getwd(), "plots"),
 
     TC17.Fig04(TR2, path = path, device = device, save.plot = save.plot)
 
-    TC17.Fig05(ParamSpace, path = path, device = device, save.plot = save.plot)
+    TC17.Fig05(path = path, device = device, save.plot = save.plot)
 
     TC17.Fig06(TR2, path = path, device = device, save.plot = save.plot,
                mod.param = mod.param)

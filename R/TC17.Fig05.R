@@ -2,7 +2,10 @@
 ##'
 ##' This function makes all necessary calculations and plots the results for
 ##' Figure 05 shown in Muench et al. (2017).
-##' @param ParamSpace See \code{\link{ParamSpace}}.
+##' @param dat Data resulting from a call of \code{\link{LoopParamSpace}}; if
+##' \code{NULL} (the default), the original data presented in Muench et
+##' al. (2017) is used for plotting which is supplied with this package under
+##' \code{\link{ParamSpace}}.
 ##' @param path The path to the directory in which to save the plot (for
 ##' \code{save.plot = TRUE}). Defaults to the folder \code{plots} in the current
 ##' working directory. If this folder does not exist, it is attempted to create
@@ -21,9 +24,15 @@
 ##' in East Antarctic firn from analysing temporal changes of isotope profiles,
 ##' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
 ##' @export
-TC17.Fig05 <- function(ParamSpace, path = file.path(getwd(), "plots"),
+TC17.Fig05 <- function(dat = NULL, path = file.path(getwd(), "plots"),
                        file.name = "tc17_fig_05", device = "quartz",
                        save.plot = FALSE) {
+
+    if (is.null(dat)) {
+        message(paste("Fig05: No specific input data supplied --",
+                      "using data of paper for plotting."))
+        dat <- ParamSpace
+    }
 
     param <- SetPlotPar()
     plot.par <- param$par
@@ -36,15 +45,15 @@ TC17.Fig05 <- function(ParamSpace, path = file.path(getwd(), "plots"),
 
     palette <- colorRampPalette(rev(RColorBrewer::brewer.pal(10, "RdYlBu")))
 
-    filled.contour(ParamSpace$sigma, ParamSpace$densf, ParamSpace$adv.opt.arr,
+    filled.contour(dat$sigma, dat$densf, dat$adv.opt.arr,
                    color.palette = palette, zlim = c(40, 60),
                    plot.title =
                        title(xlab = "Differential diffusion length (cm)",
                              ylab = "Compression (cm)"),
                    plot.axes = {
-                       contour(ParamSpace$sigma,
-                               ParamSpace$densf,
-                               ParamSpace$RMSD.opt,
+                       contour(dat$sigma,
+                               dat$densf,
+                               dat$RMSD.opt,
                                add = TRUE, labcex = 1);
                        points(2.3, 3.5, pch = 21, col = "black",
                               bg = "black", cex = 1.25);
