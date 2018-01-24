@@ -4,11 +4,14 @@
 \alias{TC17.Fig05}
 \title{Produce TC17 Figure 05.}
 \usage{
-TC17.Fig05(ParamSpace, path = file.path(getwd(), "plots"),
+TC17.Fig05(dat = NULL, path = file.path(getwd(), "plots"),
   file.name = "tc17_fig_05", device = "quartz", save.plot = FALSE)
 }
 \arguments{
-\item{ParamSpace}{See \code{\link{ParamSpace}}.}
+\item{dat}{Data resulting from a call of \code{\link{LoopParamSpace}}; if
+\code{NULL} (the default), the original data presented in Muench et
+al. (2017) is used for plotting which is supplied with this package under
+\code{\link{ParamSpace}}.}
 
 \item{path}{The path to the directory in which to save the plot (for
 \code{save.plot = TRUE}). Defaults to the folder \code{plots} in the current
@@ -33,7 +36,7 @@ Figure 05 shown in Muench et al. (2017).
 \references{
 Muench, T., et al., Constraints on post-depositional isotope modifications
 in East Antarctic firn from analysing temporal changes of isotope profiles,
-The Cryosphere Discussions, doi:10.5194/tc-2017-35, 2017.
+The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
 }
 \author{
 Thomas Münch

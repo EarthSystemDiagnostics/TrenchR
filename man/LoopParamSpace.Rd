@@ -4,8 +4,8 @@
 \alias{LoopParamSpace}
 \title{Loop over parameter space to find minimum RMSD.}
 \usage{
-LoopParamSpace(TR, advSpace = seq(40, 60, 0.5)/TR$HiRes, sigmaSpace = seq(0,
-  8, 0.1), densfSpace = seq(0, 10, 0.1))
+LoopParamSpace(TR = prepareTrenchData()$oxy, advSpace = seq(40, 60,
+  0.5)/TR$HiRes, sigmaSpace = seq(0, 8, 0.1), densfSpace = seq(0, 10, 0.1))
 }
 \arguments{
 \item{TR}{}
