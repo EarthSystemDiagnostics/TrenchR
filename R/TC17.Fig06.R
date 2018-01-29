@@ -18,8 +18,8 @@
 ##' on-screen display of the plot.
 ##' @param mod.param A list with the parameters according to which the T13 mean
 ##' profile shall be modified. It must containt the following elements:
-##' \code{ADV}, \code{ADVopt}, \code{SIGMA}, \code{SIGMAopt}, \code{stretch},
-##' and \code{stretchOPT}.
+##' \code{ADV}, \code{ADVopt}, \code{ADVonly}, \code{SIGMA}, \code{SIGMAopt},
+##' \code{stretch}, and \code{stretchOPT}.
 ##' @author Thomas Münch
 ##' @references
 ##' Muench, T., et al., Constraints on post-depositional isotope modifications
@@ -157,7 +157,7 @@ TC17.Fig06 <- function(TR, path = file.path(getwd(), "plots"),
     v11 <- v1 <- TR$oxy$mean15
     v22 <- v2 <- T13.star$LoRes
     v33 <- v3 <- T13.starstar$LoRes
-    v4 <- ModifyT13(ADV = 97)$LoRes # only optimal advection
+    v4 <- ModifyT13(ADV = mod.param$ADV.only)$LoRes # only optimal advection
 
     p1 <- (p1 <- which(!is.na(v2)))[c(1, length(p1))]
     p2 <- (p2 <- which(!is.na(v3)))[c(1, length(p2))]
