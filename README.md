@@ -41,4 +41,4 @@ These packages are available on **CRAN** and are, if not yet present, automatica
 
 ## Literature cited
 
-Münch, T., Kipfstuhl, S., Freitag, J., Meyer, H., and Laepple, T.: Constraints on post-depositional isotope modifications in East Antarctic firn from analysing temporal changes of isotope profiles, The Cryosphere Discuss., 2017, 1–21, doi:10.5194/tc-2017-35, 2017.
+Münch, T., Kipfstuhl, S., Freitag, J., Meyer, H., and Laepple, T.: Constraints on post-depositional isotope modifications in East Antarctic firn from analysing temporal changes of isotope profiles, The Cryosphere, 11, 2175-2188, doi: [10.5194/tc-11-2175-2017](https://doi.org/10.5194/tc-11-2175-2017), 2017.
