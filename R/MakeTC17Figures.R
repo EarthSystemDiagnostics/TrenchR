@@ -45,20 +45,20 @@ MakeTC17Figures <- function(adv.opt = ParamSpace$adv.opt,
     mod.param$STRETCH.ind <- stretch.ind
     mod.param$STRETCH.opt <- stretch.opt
 
-    TC17.Fig01(TR1, path = path, device = device, save.plot = save.plot)
+    TC17.Fig01(TR1$oxy, path = path, device = device, save.plot = save.plot)
 
     TC17.Fig02(path = path, device = device, save.plot = save.plot)
 
-    TC17.Fig03(TR2, path = path, device = device, save.plot = save.plot)
+    TC17.Fig03(TR2$oxy, path = path, device = device, save.plot = save.plot)
 
-    TC17.Fig04(TR2, path = path, device = device, save.plot = save.plot)
+    TC17.Fig04(TR2$oxy, path = path, device = device, save.plot = save.plot)
 
     TC17.Fig05(path = path, device = device, save.plot = save.plot)
 
-    TC17.Fig06(TR2, path = path, device = device, save.plot = save.plot,
+    TC17.Fig06(TR2$oxy, path = path, device = device, save.plot = save.plot,
                mod.param = mod.param)
 
-    TC17.Fig07(TR1, path = path, device = device, save.plot = save.plot,
+    TC17.Fig07(TR1$oxy, path = path, device = device, save.plot = save.plot,
                mod.param = mod.param)
 
 }

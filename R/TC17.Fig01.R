@@ -21,7 +21,8 @@
 ##' in East Antarctic firn from analysing temporal changes of isotope profiles,
 ##' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
 ##' @export
-TC17.Fig01 <- function(TR, path = file.path(getwd(), "plots"),
+TC17.Fig01 <- function(TR = prepareTrenchData()$oxy,
+                       path = file.path(getwd(), "plots"),
                        file.name = "tc17_fig_01", device = "quartz",
                        save.plot = FALSE) {
 
@@ -36,16 +37,16 @@ TC17.Fig01 <- function(TR, path = file.path(getwd(), "plots"),
     par(mfrow = c(1, 2))
     par(mar = c(5, 5, 4, 2))
 
-    T13.annual <- T13AnnualMeans(t1 = TR$oxy$mean13.1,
-                                 t2 = Hmisc::Lag(TR$oxy$mean13.2,
-                                                 TR$oxy$k13 / TR$oxy$LoRes),
-                                 depth = TR$oxy$depth)
+    T13.annual <- T13AnnualMeans(t1 = TR$mean13.1,
+                                 t2 = Hmisc::Lag(TR$mean13.2,
+                                                 TR$k13 / TR$LoRes),
+                                 depth = TR$depth)
     
 
     #---------------------------------------------------------------------------
     # Fig01-a
 
-    plot(TR$oxy$depth[1 : 38], TR$oxy$mean12.1, type = 'n',
+    plot(TR$depth[1 : 38], TR$mean12.1, type = 'n',
          xlim = c(0, 125), ylim = c(-49, -39), axes = FALSE,
          xlab = "", ylab = "")
     axis(1)
@@ -66,9 +67,9 @@ TC17.Fig01 <- function(TR, path = file.path(getwd(), "plots"),
     abline(v = T13.annual$summer.max$depth,
            lty = 5, lwd = 1.5, col = "darkgrey")
 
-    lines(TR$oxy$depth[1 : 38], TR$oxy$mean13.1, lty = 1, col = "black")
-    lines(TR$oxy$depth[1 : 38],
-          Hmisc::Lag(TR$oxy$mean13.2, TR$oxy$k13 / TR$oxy$LoRes),
+    lines(TR$depth[1 : 38], TR$mean13.1, lty = 1, col = "black")
+    lines(TR$depth[1 : 38],
+          Hmisc::Lag(TR$mean13.2, TR$k13 / TR$LoRes),
           col = "firebrick3")
 
     lines(T13.annual$means$depth, T13.annual$means$T1,

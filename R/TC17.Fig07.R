@@ -25,7 +25,8 @@
 ##' in East Antarctic firn from analysing temporal changes of isotope profiles,
 ##' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
 ##' @export
-TC17.Fig07 <- function(TR, path = file.path(getwd(), "plots"),
+TC17.Fig07 <- function(TR = prepareTrenchData()$oxy,
+                       path = file.path(getwd(), "plots"),
                        file.name = "tc17_fig_07", device = "quartz",
                        save.plot = FALSE, mod.param) {
 
@@ -41,20 +42,20 @@ TC17.Fig07 <- function(TR, path = file.path(getwd(), "plots"),
         mar = c(5, 5.5, 0.5, 0.5))
 
     # T13**
-    T13.starstar <- ModifyT13(TR$oxy,
+    T13.starstar <- ModifyT13(TR,
                               SIGMA = mod.param$SIGMA.ind,
                               STRETCH = mod.param$STRETCH.ind,
                               ADV = mod.param$ADV.ind)
 
     # profile differences
-    diff.13 <- TR$oxy$mean13.1 -
-        Hmisc::Lag(TR$oxy$mean13.2, shift = TR$oxy$k13 / TR$oxy$LoRes)
+    diff.13 <- TR$mean13.1 -
+        Hmisc::Lag(TR$mean13.2, shift = TR$k13 / TR$LoRes)
 
-    diff.15 <- TR$oxy$mean15.1_HiRes -
-        Hmisc::Lag(TR$oxy$mean15.2_HiRes, shift = TR$oxy$k15 / TR$oxy$HiRes)
-    diff.15 <- diff.15[match(TR$oxy$depth, TR$oxy$depth_HiRes)]
+    diff.15 <- TR$mean15.1_HiRes -
+        Hmisc::Lag(TR$mean15.2_HiRes, shift = TR$k15 / TR$HiRes)
+    diff.15 <- diff.15[match(TR$depth, TR$depth_HiRes)]
 
-    diff.2yr <- TR$oxy$mean15 - T13.starstar$LoRes
+    diff.2yr <- TR$mean15 - T13.starstar$LoRes
 
     
     #---------------------------------------------------------------------------

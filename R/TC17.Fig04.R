@@ -22,7 +22,8 @@
 ##' in East Antarctic firn from analysing temporal changes of isotope profiles,
 ##' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
 ##' @export
-TC17.Fig04 <- function(TR, path = file.path(getwd(), "plots"),
+TC17.Fig04 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy,
+                       path = file.path(getwd(), "plots"),
                        file.name = "tc17_fig_04", device = "quartz",
                        save.plot = FALSE) {
     
@@ -36,16 +37,16 @@ TC17.Fig04 <- function(TR, path = file.path(getwd(), "plots"),
     par(plot.par)
     par(oma = c(5, 0, 0.5, 0), mar = c(0, 6, 0, 6))
 
-    ind1 <- which(TR$oxy$depth <= TR$oxy$SRF.b$t15)
-    ind2 <- which(TR$oxy$depth <= TR$oxy$SRF.b$t13)
-    v1 <- TR$oxy$mean15
-    v2 <- TR$oxy$mean13
+    ind1 <- which(TR$depth <= TR$SRF.b$t15)
+    ind2 <- which(TR$depth <= TR$SRF.b$t13)
+    v1 <- TR$mean15
+    v2 <- TR$mean13
     v1[ind1[-length(ind1)]] <- NA
     v2[ind2[-length(ind2)]] <- NA
 
-    plot(TR$oxy$depth, v1, type = "l", axes = FALSE,
+    plot(TR$depth, v1, type = "l", axes = FALSE,
          xlab = "", ylab = "", xlim = c(0, 175), ylim = c(-58, -36))
-    lines(TR$oxy$depth[ind1], TR$oxy$mean15[ind1],
+    lines(TR$depth[ind1], TR$mean15[ind1],
           lwd = 1.5, lty = 5, col = "black")
 
     par(yaxp = c(-52, -36, 4))
@@ -60,10 +61,10 @@ TC17.Fig04 <- function(TR, path = file.path(getwd(), "plots"),
 
     par(new = TRUE)
 
-    plot(TR$oxy$depth[1:38], v2, type = "l", axes = FALSE,
+    plot(TR$depth[1:38], v2, type = "l", axes = FALSE,
          xlab = "", ylab = "", xlim = c(0, 175), ylim = c(-48, -26),
          col = "dodgerblue")
-    lines(TR$oxy$depth[ind2], TR$oxy$mean13[ind2], lwd = 1.5, lty = 5,
+    lines(TR$depth[ind2], TR$mean13[ind2], lwd = 1.5, lty = 5,
           col = "dodgerblue")
 
     par(yaxp = c(-48, -40, 2))

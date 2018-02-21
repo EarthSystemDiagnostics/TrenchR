@@ -22,7 +22,8 @@
 ##' in East Antarctic firn from analysing temporal changes of isotope profiles,
 ##' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
 ##' @export
-TC17.Fig03 <- function(TR, path = file.path(getwd(), "plots"),
+TC17.Fig03 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy,
+                       path = file.path(getwd(), "plots"),
                        file.name = "tc17_fig_03", device = "quartz",
                        save.plot = FALSE) {
 
@@ -44,10 +45,10 @@ TC17.Fig03 <- function(TR, path = file.path(getwd(), "plots"),
     # limit the colorscale
     MAX <- -35
     MIN <- -55
-    T1 <- TR$oxy$trench15.1
+    T1 <- TR$trench15.1
     T1[T1 > MAX] <- MAX
     T1[T1 < MIN] <- MIN
-    T2 <- TR$oxy$trench15.2
+    T2 <- TR$trench15.2
     T2[T2 > MAX] <- MAX
     T2[T2 < MIN] <- MIN
 
@@ -62,16 +63,16 @@ TC17.Fig03 <- function(TR, path = file.path(getwd(), "plots"),
         T2[first.not.na[i] - 1, i] <- T2[first.not.na[i], i]}
 
     top <- -15
-    bottom <- TR$oxy$depth[length(TR$oxy$depth)]
+    bottom <- TR$depth[length(TR$depth)]
     palette <- colorRampPalette(rev(RColorBrewer::brewer.pal(10, "RdYlBu")))
 
 
-    filled.contour(TR$oxy$XPOS, TR$oxy$depth / 100, t(T1),
+    filled.contour(TR$XPOS, TR$depth / 100, t(T1),
                    color.palette = palette,
                    plot.title = {
                        grid(col = "black", nx = NA, ny = NULL);
                        title(xlab = "Trench position (m)");
-                       lines(TR$oxy$SPRF.t1$x, TR$oxy$SPRF.t1$y / 100)},
+                       lines(TR$SPRF.t1$x, TR$SPRF.t1$y / 100)},
                    zlim = c(MIN, MAX), ylim = c(bottom, top) / 100)
     mtext("Depth (m)", side = 2, line = 3.5,
           cex = plot.par$cex.lab, font = plot.par$font.lab, las = 0)
@@ -90,12 +91,12 @@ TC17.Fig03 <- function(TR, path = file.path(getwd(), "plots"),
     par(plot.par)
     par(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2))
 
-    filled.contour(TR$oxy$XPOS, TR$oxy$depth / 100, t(T2),
+    filled.contour(TR$XPOS, TR$depth / 100, t(T2),
                    color.palette = palette,
                    plot.title = {
                        grid(col = "black", nx = NA, ny = NULL);
                        title(xlab = "Trench position (m)");
-                       lines(TR$oxy$SPRF.t2$x, TR$oxy$SPRF.t2$y / 100)},
+                       lines(TR$SPRF.t2$x, TR$SPRF.t2$y / 100)},
                    zlim = c(MIN, MAX), ylim = c(bottom, top) / 100)
     text(51, mean(c(bottom, top)) / 100,
          labels = expression(delta^bold("18") * bold("O") * bold(" (\u2030)")),
@@ -111,16 +112,16 @@ TC17.Fig03 <- function(TR, path = file.path(getwd(), "plots"),
                save.plot = save.plot)
     par(plot.par)
 
-    ind1 <- which(TR$oxy$depth <= TR$oxy$SRF.b$t15.1)
-    ind2 <- which(TR$oxy$depth <= TR$oxy$SRF.b$t15.2)
-    v1 <- TR$oxy$mean15.1
-    v2 <- TR$oxy$mean15.2
+    ind1 <- which(TR$depth <= TR$SRF.b$t15.1)
+    ind2 <- which(TR$depth <= TR$SRF.b$t15.2)
+    v1 <- TR$mean15.1
+    v2 <- TR$mean15.2
     p1 <- (p1 <- which(!is.na(v1)))[c(1, length(p1))]
     p2 <- (p2 <- which(!is.na(v2)))[c(1, length(p2))]
     v1[ind1[-length(ind1)]] <- NA
     v2[ind2[-length(ind2)]] <- NA
 
-    plot(TR$oxy$depth / 100, TR$oxy$mean15.1, type = "n", las = 1,
+    plot(TR$depth / 100, TR$mean15.1, type = "n", las = 1,
          xlim = c(-5, 175) / 100, ylim = c(-52, -34),
          axes = FALSE, xlab = "", ylab = "")
     par(xaxp = c(0, 1.75, 7))
@@ -138,17 +139,17 @@ TC17.Fig03 <- function(TR, path = file.path(getwd(), "plots"),
           side = 2, line = 3.25, las = 0,
           cex = plot.par$cex.lab, font = plot.par$font.lab)
 
-    lines(TR$oxy$depth / 100, v1, col = "black")
-    lines((TR$oxy$depth + TR$oxy$k15) / 100, v2, col = "firebrick3")
+    lines(TR$depth / 100, v1, col = "black")
+    lines((TR$depth + TR$k15) / 100, v2, col = "firebrick3")
 
-    lines(TR$oxy$depth[ind1] / 100, TR$oxy$mean15.1[ind1],
+    lines(TR$depth[ind1] / 100, TR$mean15.1[ind1],
           col = "black", lwd = 1.5, lty = 5)
-    lines((TR$oxy$depth[ind2] + TR$oxy$k15) / 100, TR$oxy$mean15.2[ind2],
+    lines((TR$depth[ind2] + TR$k15) / 100, TR$mean15.2[ind2],
           col = "firebrick3", lwd = 1.5, lty = 5)
 
-    points(TR$oxy$depth[p1] / 100, TR$oxy$mean15.1[p1],
+    points(TR$depth[p1] / 100, TR$mean15.1[p1],
            col = "black", pch = 1, lwd = 1.5, cex = 0.75)
-    points((TR$oxy$depth[p2] + TR$oxy$k15) / 100, TR$oxy$mean15.2[p2],
+    points((TR$depth[p2] + TR$k15) / 100, TR$mean15.2[p2],
            col = "firebrick3", pch = 23, lwd = 1.5, cex = 0.75)
 
     MyLegend("bottomright", legend = c("T15-1", "T15-2"),
