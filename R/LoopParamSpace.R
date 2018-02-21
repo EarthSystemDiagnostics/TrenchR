@@ -18,7 +18,6 @@ LoopParamSpace <- function(TR = prepareTrenchData()$oxy,
     res <- TR$HiRes
 
     noNA <- which(!is.na(TR$mean13_HiRes))
-    N <- length(noNA)
 
     depth <- TR$depth
     depth_HiRes <- TR$depth_HiRes[noNA]
@@ -39,13 +38,9 @@ LoopParamSpace <- function(TR = prepareTrenchData()$oxy,
 
             for (d in densfSpace){
 
-                stretch <- d
-
-                depth.stretch <- seq(depth_HiRes[1], depth_HiRes[N] - stretch,
-                                     length.out = N)
-    
                 diff.stretch <- TR$mean13_HiRes
-                diff.stretch[noNA] <- approx(depth.stretch, diff, depth_HiRes)$y
+                diff.stretch[noNA] <- CompressRecord(depth_HiRes,
+                                                     diff, stretch = d)$rec
                 diff.stretch.adv <- Hmisc::Lag(diff.stretch, k)
 
                 iX <- which(advSpace == k)

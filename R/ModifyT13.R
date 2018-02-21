@@ -19,7 +19,6 @@ ModifyT13 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy,
 
     # non-NA range of high-resolution trench T13 data
     noNA <- which(!is.na(input))
-    n <- length(noNA)
 
     # DIFFUSION
     
@@ -29,7 +28,7 @@ ModifyT13 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy,
             stop("No valid diffusion parameter.")
         }
 
-        diff <- DiffuseRecord(input[noNA], sigma = rep(SIGMA, n),
+        diff <- DiffuseRecord(input[noNA], sigma = rep(SIGMA, length(noNA)),
                               res = TR$HiRes)
 
         ret[noNA] <- diff
@@ -44,15 +43,9 @@ ModifyT13 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy,
             stop("No valid densification parameter.")
         }
 
-        # depth scale after densification
-        depth.stretch <- seq(TR$depth_HiRes[noNA][1],
-                             TR$depth_HiRes[noNA][n] - STRETCH,
-                             length.out = n)
-
-        # approximate record on compressed depth scale
-        stretched <- approx(depth.stretch, ret[noNA],
-                            TR$depth_HiRes[noNA])$y
-
+        stretched <- CompressRecord(TR$depth_HiRes[noNA],
+                                    ret[noNA], STRETCH)$rec
+        
         ret[noNA] <- stretched
         
     }
