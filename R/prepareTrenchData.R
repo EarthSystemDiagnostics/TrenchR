@@ -82,6 +82,11 @@
 prepareTrenchData <- function(index.range = 1 : 59, LoRes = 3, HiRes = 0.5,
                               k13 = 3, k15 = -0.5, na.treat = FALSE) {
 
+    # extract full T15 record if desired
+    if (is.null(index.range)) {
+        index.range <- seq(1, length(t15.trench1$depth))
+    }
+
     # horizontal profile positions and surface height profile
     XPOS <- t15.trench1$meta$profilePos[-7]
     SPRF.t1 <- list(x = t15.trench1$meta$profilePos,
@@ -166,7 +171,7 @@ prepareTrenchData <- function(index.range = 1 : 59, LoRes = 3, HiRes = 0.5,
         mean15_HiRes <- rowMeans(cbind(mean15.1_HiRes,
                                        Hmisc::Lag(mean15.2_HiRes,
                                                   shift = k15 / HiRes)))
-        mean15 <- mean15_HiRes[match(depth, depth_HiRes)]
+        mean15 <- approx(depth_HiRes, mean15_HiRes, depth)$y
 
         mean13_HiRes <- rowMeans(cbind(mean13.1_HiRes,
                                        Hmisc::Lag(mean13.2_HiRes,
