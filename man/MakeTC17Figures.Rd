@@ -2,28 +2,28 @@
 % Please edit documentation in R/MakeTC17Figures.R
 \name{MakeTC17Figures}
 \alias{MakeTC17Figures}
-\title{Produce all TC17 Figures.}
+\title{Produce TC2017 Figures.}
 \usage{
-MakeTC17Figures(path = file.path(getwd(), "plots"), device = "quartz",
-  save.plot = FALSE)
+MakeTC17Figures(save = FALSE, path = file.path(getwd(), "plots"),
+  height = 6, width = 8)
 }
 \arguments{
-\item{path}{The path to the directory in which to save the plots (for
-\code{save.plot = TRUE}). Defaults to the folder \code{plots} in the current
-working directory. If this folder does not exist, it is attempted to create
-with a warning (see also \code{\link{OpenDevice}}).}
-
-\item{device}{The graphics device to be used to display and save the
-plots. Defaults to the \code{quartz} device which is the only currently
-implemented device option.}
-
-\item{save.plot}{if \code{TRUE}, the plots are saved as files in the
+\item{save}{if \code{TRUE}, the plots are saved as files in the
 folder specified by \code{path}. Defaults to \code{FALSE} which results in
 on-screen display of the plots.}
+
+\item{path}{path to the directory in which to save the plots (for
+\code{save = TRUE}). Defaults to \code{plots} in the current working
+directory. If this folder does not exist, it is attempted to create it
+with a warning (see also \code{\link{OpenDevice}}).}
+
+\item{height}{height of the plotting area in inches. Default '6'.}
+
+\item{width}{width of the plotting area in inches. Default '8'.}
 }
 \description{
-This function is a wrapper to produce all figures shown in Muench et
-al. (2017).
+This function is a wrapper to produce all figures in Muench et al. (2017)
+using the \code{quartz} graphics device for Mac OS X systems.
 }
 \references{
 Muench, T., et al., Constraints on post-depositional isotope modifications

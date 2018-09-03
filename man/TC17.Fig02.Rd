@@ -4,25 +4,7 @@
 \alias{TC17.Fig02}
 \title{Produce TC17 Figure 02.}
 \usage{
-TC17.Fig02(path = file.path(getwd(), "plots"), file.name = "tc17_fig_02",
-  device = "quartz", save.plot = FALSE)
-}
-\arguments{
-\item{path}{The path to the directory in which to save the plot (for
-\code{save.plot = TRUE}). Defaults to the folder \code{plots} in the current
-working directory. If this folder does not exist, it is attempted to create
-with a warning (see also \code{\link{OpenDevice}}).}
-
-\item{file.name}{The name of the file (excluding extension) to save the
-plot in.}
-
-\item{device}{The graphics device to be used to display and save the
-plot. Defaults to the \code{quartz} device which is the only currently
-implemented device option.}
-
-\item{save.plot}{if \code{TRUE}, the plot is saved as a pdf file in the
-folder specified by \code{path}. Defaults to \code{FALSE} which results in
-on-screen display of the plot.}
+TC17.Fig02()
 }
 \description{
 This function makes all necessary calculations and plots the results for

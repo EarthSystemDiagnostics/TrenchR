@@ -2,37 +2,34 @@
 % Please edit documentation in R/OpenDevice.R
 \name{OpenDevice}
 \alias{OpenDevice}
-\title{Open a graphics device.}
+\title{Open quartz graphics device.}
 \usage{
-OpenDevice(device = "quartz", path, file.name, type = "pdf", height = 6,
-  width = 8, save.plot = FALSE)
+OpenDevice(file = NULL, path = getwd(), height = 6, width = 8, ...)
 }
 \arguments{
-\item{device}{Character string specifying the plotting device; defaults to
-"quartz" which is suitable for macOS systems. Currently, no other devices
-are implemented.}
+\item{file}{filename for saving the plot. Must include the desired file
+extension for setting the \code{type} parameter to \code{quartz}. Setting to
+\code{NULL} (the default) opens a \code{quartz} device for on-screen
+plotting.}
 
-\item{path}{The path to the directory in which to save the plot (for
-\code{save.plot = TRUE}). If the specified directory does not exist, a
-warning is issed but nevertheless the function attempts to create the
-directory.}
+\item{path}{path to the directory in which to save the plot. If the
+specified directory does not exist, a warning is issued but nevertheless the
+function attempts to create the directory. Default path is the current
+working directory.}
 
-\item{file.name}{The name of the file under which to save the plot.}
+\item{height}{height of the plotting area in inches. Default '6'.}
 
-\item{type}{The type of output to use. Defaults to \code{pdf}.}
+\item{width}{width of the plotting area in inches. Default '8'.}
 
-\item{height}{The height of the graphics device; defaults to 6 inches.}
-
-\item{width}{The width of the graphics device; defaults to 8 inches.}
-
-\item{save.plot}{if \code{TRUE} a file stream is opened according to
-\code{file.path} to save the plot as a pdf file. Defaults to \code{FALSE}
-which simply opens a device window. Setting \code{save.plot} to \code{TRUE}
-without specying a \code{file.path} results in an error.}
+\item{...}{further arguments to \code{quartz}, e.g., dpi resolution in case
+of png output.}
 }
 \description{
-This is a wrapper function to open a graphics device for plotting, or a file
-stream to save the plot into file of type specified by \code{type}.
+This is a wrapper function to open a \code{quartz} graphics device for
+on-screen plotting or saving to a file.
+}
+\seealso{
+\code{quartz}
 }
 \author{
 Thomas Münch

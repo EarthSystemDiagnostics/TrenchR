@@ -15,7 +15,7 @@
 ##'   \item font.axis = 2
 ##'   \item cex.main = 1.5
 ##'   \item cex.lab = 1.5
-##'   \item cex.axis = 1.25}
+##'   \item cex.axis = 1.25
 ##' }
 ##' @author Thomas Münch
 ##' @seealso \code{\link{par}}

@@ -4,32 +4,37 @@
 \alias{TC17.Fig03}
 \title{Produce TC17 Figure 03.}
 \usage{
-TC17.Fig03(TR, path = file.path(getwd(), "plots"),
-  file.name = "tc17_fig_03", device = "quartz", save.plot = FALSE)
+TC17.Fig03(graphics.dev = NULL, path = NULL, file = NULL, height = 6,
+  width = 8, adj.width = 1.75, ...)
 }
 \arguments{
-\item{TR}{The results from a call to \code{\link{prepareTrenchData(na.treat
-= TRUE)}}.}
+\item{graphics.dev}{graphics device to be used for saving the plots, see
+details. Defaults to \code{NULL} for on-screen plotting.}
 
-\item{path}{The path to the directory in which to save the plot (for
-\code{save.plot = TRUE}). Defaults to the folder \code{plots} in the current
-working directory. If this folder does not exist, it is attempted to create
-with a warning (see also \code{\link{OpenDevice}}).}
+\item{path}{path to the directory in which to save the plots. Defaults to
+\code{NULL} for on-screen plotting but needs to be specified for saving the
+plot using the supplied device in \code{graphics.dev}.}
 
-\item{file.name}{The name of the file (excluding extension) to save the
-plot in.}
+\item{file}{name of the file for saving. Defaults to \code{NULL} for
+on-screen plotting but needs to be specified for saving the plot using the
+supplied device in \code{graphics.dev}.}
 
-\item{device}{The graphics device to be used to display and save the
-plot. Defaults to the \code{quartz} device which is the only currently
-implemented device option.}
+\item{height}{height of the plotting area in inches. Default '6'.}
 
-\item{save.plot}{if \code{TRUE}, the plot is saved as a png file in the
-folder specified by \code{path}. Defaults to \code{FALSE} which results in
-on-screen display of the plot.}
+\item{width}{width of the plotting area in inches. Default '8'.}
+
+\item{adj.width}{extension of the width of the plotting area in inches for
+subplots (a) and (b). Default '1.75'.}
 }
 \description{
 This function makes all necessary calculations and plots the results for
 Figure 03 shown in Muench et al. (2017).
+}
+\details{
+Note that this function will not use the R Studio Graphics device for
+on-screen plotting even if it is your default device in order to preserve
+the setting of the default size of the plotting region (see also
+\code{\link{dev.new}}).
 }
 \references{
 Muench, T., et al., Constraints on post-depositional isotope modifications

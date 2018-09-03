@@ -4,30 +4,13 @@
 \alias{TC17.Fig05}
 \title{Produce TC17 Figure 05.}
 \usage{
-TC17.Fig05(dat = NULL, path = file.path(getwd(), "plots"),
-  file.name = "tc17_fig_05", device = "quartz", save.plot = FALSE)
+TC17.Fig05(dat = NULL)
 }
 \arguments{
-\item{dat}{Data resulting from a call of \code{\link{LoopParamSpace}}; if
-\code{NULL} (the default), the original data presented in Muench et
-al. (2017) is used for plotting which is supplied with this package under
-\code{\link{ParamSpace}}.}
-
-\item{path}{The path to the directory in which to save the plot (for
-\code{save.plot = TRUE}). Defaults to the folder \code{plots} in the current
-working directory. If this folder does not exist, it is attempted to create
-with a warning (see also \code{\link{OpenDevice}}).}
-
-\item{file.name}{The name of the file (excluding extension) to save the
-plot in.}
-
-\item{save.plot}{if \code{TRUE}, the plot is saved as a png file in the
-folder specified by \code{path}. Defaults to \code{FALSE} which results in
-on-screen display of the plot.}
-
-\item{dev.size}{The graphics device to be used to display and save the
-plot. Defaults to the \code{quartz} device which is the only currently
-implemented device option.}
+\item{dat}{input data structure resulting from a call of
+\code{\link{LoopParamSpace}}; if \code{NULL} (the default), the original
+data presented in Muench et al. (2017) is used for plotting which is
+supplied with this package in the variable \code{\link{ParamSpace}}.}
 }
 \description{
 This function makes all necessary calculations and plots the results for

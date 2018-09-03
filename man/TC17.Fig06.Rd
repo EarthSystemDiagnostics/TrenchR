@@ -4,34 +4,16 @@
 \alias{TC17.Fig06}
 \title{Produce TC17 Figure 06.}
 \usage{
-TC17.Fig06(TR, path = file.path(getwd(), "plots"),
-  file.name = "tc17_fig_06", device = "quartz", save.plot = FALSE,
-  mod.param)
+TC17.Fig06(mod.param = NULL)
 }
 \arguments{
-\item{TR}{The results from a call to \code{\link{prepareTrenchData(na.treat
-= TRUE)}}.}
-
-\item{path}{The path to the directory in which to save the plot (for
-\code{save.plot = TRUE}). Defaults to the folder \code{plots} in the current
-working directory. If this folder does not exist, it is attempted to create
-with a warning (see also \code{\link{OpenDevice}}).}
-
-\item{file.name}{The name of the file (excluding extension) to save the
-plot in.}
-
-\item{device}{The graphics device to be used to display and save the
-plot. Defaults to the \code{quartz} device which is the only currently
-implemented device option.}
-
-\item{save.plot}{if \code{TRUE}, the plot is saved as a pdf file in the
-folder specified by \code{path}. Defaults to \code{FALSE} which results in
-on-screen display of the plot.}
-
-\item{mod.param}{A list with the parameters according to which the T13 mean
-profile shall be modified. It must containt the following elements:
-\code{ADV}, \code{ADVopt}, \code{SIGMA}, \code{SIGMAopt}, \code{stretch},
-and \code{stretchOPT}.}
+\item{mod.param}{list of the parameters according to which the original
+T13 mean profile is modified to model the temporal changes. It must containt
+the following elements: \code{ADV.ind}, \code{ADV.opt}, \code{ADV.only},
+\code{SIGMA.ind}, \code{SIGMA.opt}, \code{STRETCH.ind}, and
+\code{STRETCH.opt} (see also \code{\link{SetModificationPar}}). If
+\code{NULL} (the default), the original data from Muench et al. (2017) is
+used for plotting.}
 }
 \description{
 This function makes all necessary calculations and plots the results for
@@ -41,6 +23,9 @@ Figure 06 shown in Muench et al. (2017).
 Muench, T., et al., Constraints on post-depositional isotope modifications
 in East Antarctic firn from analysing temporal changes of isotope profiles,
 The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
+}
+\seealso{
+\code{\link{SetModificationPar}}
 }
 \author{
 Thomas Münch
