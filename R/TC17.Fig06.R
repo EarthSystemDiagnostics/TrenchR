@@ -2,45 +2,31 @@
 ##'
 ##' This function makes all necessary calculations and plots the results for
 ##' Figure 06 shown in Muench et al. (2017).
-##' @param TR The results from a call to \code{\link{prepareTrenchData(na.treat
-##' = TRUE)}}.
-##' @param path The path to the directory in which to save the plot (for
-##' \code{save.plot = TRUE}). Defaults to the folder \code{plots} in the current
-##' working directory. If this folder does not exist, it is attempted to create
-##' with a warning (see also \code{\link{OpenDevice}}).
-##' @param file.name The name of the file (excluding extension) to save the
-##' plot in.
-##' @param device The graphics device to be used to display and save the
-##' plot. Defaults to the \code{quartz} device which is the only currently
-##' implemented device option.
-##' @param save.plot if \code{TRUE}, the plot is saved as a pdf file in the
-##' folder specified by \code{path}. Defaults to \code{FALSE} which results in
-##' on-screen display of the plot.
-##' @param mod.param A list with the parameters according to which the T13 mean
-##' profile shall be modified. It must containt the following elements:
-##' \code{ADV}, \code{ADVopt}, \code{ADVonly}, \code{SIGMA}, \code{SIGMAopt},
-##' \code{stretch}, and \code{stretchOPT}.
+##' @param mod.param list of the parameters according to which the original
+##' T13 mean profile is modified to model the temporal changes. It must containt
+##' the following elements: \code{ADV.ind}, \code{ADV.opt}, \code{ADV.only},
+##' \code{SIGMA.ind}, \code{SIGMA.opt}, \code{STRETCH.ind}, and
+##' \code{STRETCH.opt} (see also \code{\link{SetModificationPar}}). If
+##' \code{NULL} (the default), the original data from Muench et al. (2017) is
+##' used for plotting.
 ##' @author Thomas Münch
 ##' @references
 ##' Muench, T., et al., Constraints on post-depositional isotope modifications
 ##' in East Antarctic firn from analysing temporal changes of isotope profiles,
 ##' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
+##' @seealso \code{\link{SetModificationPar}}
 ##' @export
-TC17.Fig06 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy,
-                       path = file.path(getwd(), "plots"),
-                       file.name = "tc17_fig_06", device = "quartz",
-                       save.plot = FALSE, mod.param) {
+TC17.Fig06 <- function(mod.param = NULL) {
 
-    param <- SetPlotPar()
-    plot.par <- param$par
-    dev.size <- param$dev.size
+    if (is.null(mod.param)) {
+        mod.param <- SetModificationPar()
+    }
 
-    OpenDevice(device = device, path = path, file.name = file.name,
-               height = dev.size$h, width = 2 * dev.size$w,
-               save.plot = save.plot)
-    par(plot.par)
-    par(mfrow = c(1, 2))
-    par(oma = c(5, 0, 0.5, 0), mar = c(0, 6, 0, 6))    
+    TR = prepareTrenchData(na.treat = TRUE)$oxy
+
+    pars <- SetPlotPar(oma = c(5, 0, 0.5, 0), mar = c(0, 6, 0, 6),
+                       mfrow = c(1, 2))
+    op <- par(pars)
 
     # color scale
     my.col <- c("dodgerblue", "#1b9e77", "#d95f02", "#7570b3")
@@ -73,7 +59,7 @@ TC17.Fig06 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy,
     ind1 <- which(TR$depth <= TR$SRF.b$t13)
     ind2 <- which(TR$depth_HiRes <= TR$SRF.b$t13)
     ind4 <- which(TR$depth <= TR$SRF.b$t13 +
-                  ceiling(mod.param$ADV.opt * TR$HiRes))
+                  ceiling(mod.param$ADV.opt))
 
     # profiles w/o surface region
     v11[ind1[-length(ind1)]]  <- NA
@@ -104,7 +90,7 @@ TC17.Fig06 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy,
 
     text(-27.5, -44,
          labels = expression(delta^bold("18") * bold("O") * bold(" (\u2030)")),
-         srt = 90, xpd = NA, cex = plot.par$cex.lab, font = plot.par$font.lab,
+         srt = 90, xpd = NA, cex = pars$cex.lab, font = pars$font.lab,
          col = "black")
 
     legend("topleft", "T13 record", lwd = 2, col = my.col[1],
@@ -125,10 +111,10 @@ TC17.Fig06 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy,
     lines(TR$depth[ind1], v1[ind1],
           lwd = 1.5, lty = 5, col = my.col[1])
 
-    lines(TR$depth - mod.param$ADV.opt * TR$HiRes, v44, col = my.col[2])
-    lines(TR$depth[ind4] - mod.param$ADV.opt * TR$HiRes,
+    lines(TR$depth - mod.param$ADV.opt, v44, col = my.col[2])
+    lines(TR$depth[ind4] - mod.param$ADV.opt,
           v4[ind4], lwd = 1.5, lty = 5, col = my.col[2])
-    points(TR$depth[p3] - mod.param$ADV.opt * TR$HiRes,
+    points(TR$depth[p3] - mod.param$ADV.opt,
            v4[p3], col = my.col[2], pch = 23, lwd = 1.5, cex = 0.75)
 
     par(yaxp = c(-48, -40, 4))
@@ -136,14 +122,14 @@ TC17.Fig06 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy,
 
     text(152.5,-44,
          labels = expression(delta^bold("18") * bold("O") * bold(" (\u2030)")),
-         srt = -90, xpd = NA, cex = plot.par$cex.lab, font = plot.par$font.lab,
+         srt = -90, xpd = NA, cex = pars$cex.lab, font = pars$font.lab,
          col = "black")
 
     par(xaxp=c(0, 125, 5))
     axis(1)
 
     mtext("Depth (cm)", side = 1, line = 3.5,
-          cex = plot.par$cex.lab, font = plot.par$font.lab)
+          cex = pars$cex.lab, font = pars$font.lab)
 
     MyLegend("bottomright", "T13* record",
              lwd = 1.5, col = my.col[2], lty = 1, cex = 1.1, text.font = 1,
@@ -158,7 +144,8 @@ TC17.Fig06 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy,
     v11 <- v1 <- TR$mean15
     v22 <- v2 <- T13.star$LoRes
     v33 <- v3 <- T13.starstar$LoRes
-    v4 <- ModifyT13(ADV = mod.param$ADV.only)$LoRes # only optimal advection
+    # only optimal advection
+    v4 <- ModifyT13(ADV = mod.param$ADV.only)$LoRes
 
     p1 <- (p1 <- which(!is.na(v2)))[c(1, length(p1))]
     p2 <- (p2 <- which(!is.na(v3)))[c(1, length(p2))]
@@ -166,7 +153,7 @@ TC17.Fig06 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy,
     # define surface region
     ind1 <- which(TR$depth <= TR$SRF.b$t15)
     ind2 <- which(TR$depth <= TR$SRF.b$t13 +
-                  ceiling(mod.param$ADV.opt * TR$HiRes))
+                  ceiling(mod.param$ADV.opt))
     ind3 <- ind2 # force consistency
 
     # profiles w/o surface region
@@ -209,10 +196,10 @@ TC17.Fig06 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy,
     axis(1)
 
     mtext("Depth (cm)", side = 1, line = 3.5,
-          cex = plot.par$cex.lab, font = plot.par$font.lab)
+          cex = pars$cex.lab, font = pars$font.lab)
     mtext(expression(delta^bold("18") * bold("O") * bold(" (\u2030)")),
           side = 2, line = 3.5, las = 0,
-          cex = plot.par$cex.lab, font = plot.par$font.lab)
+          cex = pars$cex.lab, font = pars$font.lab)
 
     MyLegend("topleft", c("T15", "T13* (opt. param.)", "T13** (ind. param.)"),
               lwd = 1.5, lty = 1, col = c("black", my.col[2], my.col[3]),
@@ -236,9 +223,9 @@ TC17.Fig06 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy,
     axis(4, col = my.col[4], col.axis = my.col[4])
 
     text(205, 0, "T15 - T13** (\u2030)",
-         cex = plot.par$cex.lab, font = plot.par$font.lab,
+         cex = pars$cex.lab, font = pars$font.lab,
          col = my.col[4], srt = -90, xpd = NA)
 
-    if (save.plot) dev.off()
+    par(op)
 
 }

@@ -2,45 +2,58 @@
 ##'
 ##' This function makes all necessary calculations and plots the results for
 ##' Figure 03 shown in Muench et al. (2017).
-##' @param TR The results from a call to \code{\link{prepareTrenchData(na.treat
-##' = TRUE)}}.
-##' @param path The path to the directory in which to save the plot (for
-##' \code{save.plot = TRUE}). Defaults to the folder \code{plots} in the current
-##' working directory. If this folder does not exist, it is attempted to create
-##' with a warning (see also \code{\link{OpenDevice}}). 
-##' @param file.name The name of the file (excluding extension) to save the
-##' plot in.
-##' @param device The graphics device to be used to display and save the
-##' plot. Defaults to the \code{quartz} device which is the only currently
-##' implemented device option.
-##' @param save.plot if \code{TRUE}, the plot is saved as a png file in the
-##' folder specified by \code{path}. Defaults to \code{FALSE} which results in
-##' on-screen display of the plot.
+##'
+##' Note that this function will not use the R Studio Graphics device for
+##' on-screen plotting even if it is your default device in order to preserve
+##' the setting of the default size of the plotting region (see also
+##' \code{\link{dev.new}}).
+##' @param path path to the directory in which to save the plots. Defaults to
+##' \code{NULL} for on-screen plotting but needs to be specified for saving the
+##' plot using the supplied device in \code{graphics.dev}.
+##' @param file name of the file for saving. Defaults to \code{NULL} for
+##' on-screen plotting but needs to be specified for saving the plot using the
+##' supplied device in \code{graphics.dev}.
+##' @param graphics.dev graphics device to be used for saving the plots, see
+##' details. Defaults to \code{NULL} for on-screen plotting.
+##' @param height height of the plotting area in inches. Default '6'.
+##' @param width width of the plotting area in inches. Default '8'.
+##' @param adj.width extension of the width of the plotting area in inches for
+##' subplots (a) and (b). Default '1.75'.
 ##' @author Thomas Münch
 ##' @references
 ##' Muench, T., et al., Constraints on post-depositional isotope modifications
 ##' in East Antarctic firn from analysing temporal changes of isotope profiles,
 ##' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
 ##' @export
-TC17.Fig03 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy,
-                       path = file.path(getwd(), "plots"),
-                       file.name = "tc17_fig_03", device = "quartz",
-                       save.plot = FALSE) {
+TC17.Fig03 <- function(graphics.dev = NULL, path = NULL, file = NULL,
+                       height = 6, width = 8, adj.width = 1.75, ...) {
 
-    param <- SetPlotPar()
-    plot.par <- param$par
-    dev.size <- param$dev.size
+    if (!is.null(graphics.dev)) {
+        if (is.null(path)) {
+            stop("path argument missing for saving the plots.")
+        }
+        if (is.null(file)) {
+            stop("file argument missing for saving the plots.")
+        }
+    }
 
+    TR = prepareTrenchData(na.treat = TRUE)$oxy
+    
+    pars <- SetPlotPar()
+    
 
     #---------------------------------------------------------------------------
     # Fig03-a
-    adj <- 1.75
-    OpenDevice(device = device, path = path,
-               file.name = paste(file.name, "a", sep = ""),
-               type = "png", height = dev.size$h, width = dev.size$w + adj,
-               save.plot = save.plot)
-    par(plot.par)
-    par(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2))
+    if (is.null(graphics.dev)) {
+        dev.new(height = height, width = width + adj.width, ...,
+                noRStudioGD = TRUE)
+    } else {
+        file.a <- paste(paste(tools::file_path_sans_ext(file), "a", sep = ""),
+                      tools::file_ext(file), sep = ".")
+        graphics.dev(file = file.a, path, height = height,
+                     width = width + adj.width, ...)
+    }
+    op <- par(SetPlotPar(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2)))
 
     # limit the colorscale
     MAX <- -35
@@ -75,21 +88,25 @@ TC17.Fig03 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy,
                        lines(TR$SPRF.t1$x, TR$SPRF.t1$y / 100)},
                    zlim = c(MIN, MAX), ylim = c(bottom, top) / 100)
     mtext("Depth (m)", side = 2, line = 3.5,
-          cex = plot.par$cex.lab, font = plot.par$font.lab, las = 0)
+          cex = pars$cex.lab, font = pars$font.lab, las = 0)
     text(51, mean(c(bottom, top)) / 100,
          labels = expression(delta^bold("18") * bold("O") * bold(" (\u2030)")),
-         srt = -90, xpd = NA, cex = plot.par$cex.lab, font = plot.par$font.lab)
+         srt = -90, xpd = NA, cex = pars$cex.lab, font = pars$font.lab)
 
-    if (save.plot) dev.off()
 
     #---------------------------------------------------------------------------
     # Fig03-b
-    OpenDevice(device = device, path = path,
-               file.name = paste(file.name, "b", sep = ""),
-               type = "png", height = dev.size$h, width = dev.size$w + adj,
-               save.plot = save.plot)
-    par(plot.par)
-    par(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2))
+    if (is.null(graphics.dev)) {
+        dev.new(height = height, width = width + adj.width, ...,
+                noRStudioGD = TRUE)
+    } else {
+        dev.off()
+        file.b <- paste(paste(tools::file_path_sans_ext(file), "b", sep = ""),
+                        tools::file_ext(file), sep = ".")
+        graphics.dev(file = file.b, path, height = height,
+                     width = width + adj.width, ...)
+    }
+    par(SetPlotPar(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2)))
 
     filled.contour(TR$XPOS, TR$depth / 100, t(T2),
                    color.palette = palette,
@@ -100,17 +117,22 @@ TC17.Fig03 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy,
                    zlim = c(MIN, MAX), ylim = c(bottom, top) / 100)
     text(51, mean(c(bottom, top)) / 100,
          labels = expression(delta^bold("18") * bold("O") * bold(" (\u2030)")),
-         srt = -90, xpd = NA, cex = plot.par$cex.lab, font = plot.par$font.lab)
+         srt = -90, xpd = NA, cex = pars$cex.lab, font = pars$font.lab)
 
-    if (save.plot) dev.off()
 
     #---------------------------------------------------------------------------
     # Fig03-c
-    OpenDevice(device = device, path = path,
-               file.name = paste(file.name, "c", sep = ""),
-               type = "png", height = dev.size$h, width = dev.size$w,
-               save.plot = save.plot)
-    par(plot.par)
+    if (is.null(graphics.dev)) {
+        dev.new(height = height, width = width, ...,
+                noRStudioGD = TRUE)
+    } else {
+        dev.off()
+        file.c <- paste(paste(tools::file_path_sans_ext(file), "c", sep = ""),
+                        tools::file_ext(file), sep = ".")
+        graphics.dev(file = file.c, path, height = height,
+                     width = width, ...)
+    }
+    par(pars)
 
     ind1 <- which(TR$depth <= TR$SRF.b$t15.1)
     ind2 <- which(TR$depth <= TR$SRF.b$t15.2)
@@ -134,10 +156,10 @@ TC17.Fig03 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy,
     abline(v = c(0, 50, 100, 150) / 100, col = "black", lty = "dotted")
 
     mtext("Depth (m)", side = 1, line = 3.5,
-          cex = plot.par$cex.lab, font = plot.par$font.lab)
+          cex = pars$cex.lab, font = pars$font.lab)
     mtext(expression(delta^bold("18") * bold("O") * bold("  (\u2030)")),
           side = 2, line = 3.25, las = 0,
-          cex = plot.par$cex.lab, font = plot.par$font.lab)
+          cex = pars$cex.lab, font = pars$font.lab)
 
     lines(TR$depth / 100, v1, col = "black")
     lines((TR$depth + TR$k15) / 100, v2, col = "firebrick3")
@@ -157,7 +179,10 @@ TC17.Fig03 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy,
              cex = 1.25, text.font = 2, pt.cex = 0.75, pt.lwd = 1.5, bty = "n",
              end.pch = TRUE, pch.xoff = 0.2)
 
-    if (save.plot) dev.off()
+    par(op)
+    if (!is.null(graphics.dev)) {
+        dev.off()
+    }
 
 }
     

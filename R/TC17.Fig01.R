@@ -2,45 +2,22 @@
 ##'
 ##' This function makes all necessary calculations and plots the results for
 ##' Figure 01 shown in Muench et al. (2017).
-##' @param TR The results from a call to \code{\link{prepareTrenchData()}}.
-##' @param path The path to the directory in which to save the plot (for
-##' \code{save.plot = TRUE}). Defaults to the folder \code{plots} in the current
-##' working directory. If this folder does not exist, it is attempted to create
-##' with a warning (see also \code{\link{OpenDevice}}).
-##' @param file.name The name of the file (excluding extension) to save the
-##' plot in.
-##' @param device The graphics device to be used to display and save the
-##' plot. Defaults to the \code{quartz} device which is the only currently
-##' implemented device option.
-##' @param save.plot if \code{TRUE}, the plot is saved as a pdf file in the
-##' folder specified by \code{path}. Defaults to \code{FALSE} which results in
-##' on-screen display of the plot.
 ##' @author Thomas Münch
 ##' @references
 ##' Muench, T., et al., Constraints on post-depositional isotope modifications
 ##' in East Antarctic firn from analysing temporal changes of isotope profiles,
 ##' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
 ##' @export
-TC17.Fig01 <- function(TR = prepareTrenchData()$oxy,
-                       path = file.path(getwd(), "plots"),
-                       file.name = "tc17_fig_01", device = "quartz",
-                       save.plot = FALSE) {
+TC17.Fig01 <- function() {
 
-    param <- SetPlotPar()
-    plot.par <- param$par
-    dev.size <- param$dev.size
-
-    OpenDevice(device = device, path = path, file.name = file.name,
-               height = dev.size$h + 0.75, width = 2 * dev.size$w,
-               save.plot = save.plot)
-    par(plot.par)
-    par(mfrow = c(1, 2))
-    par(mar = c(5, 5, 4, 2))
-
+    TR <- prepareTrenchData()$oxy
     T13.annual <- T13AnnualMeans(t1 = TR$mean13.1,
                                  t2 = Hmisc::Lag(TR$mean13.2,
                                                  TR$k13 / TR$LoRes),
                                  depth = TR$depth)
+
+    pars <- SetPlotPar(mar = c(5, 5, 4, 2), mfrow = c(1, 2))
+    op <- par(pars)
     
 
     #---------------------------------------------------------------------------
@@ -54,15 +31,15 @@ TC17.Fig01 <- function(TR = prepareTrenchData()$oxy,
     box()
     axis(3, labels = T13.annual$summer.max$years,
          at = T13.annual$summer.max$depth,
-         cex.axis = 0.75 * plot.par$cex.lab)
-    mtext('Depth (cm)', side = 1, line = 3.25, cex = plot.par$cex.lab,
-          font = plot.par$font.lab)
+         cex.axis = 0.75 * pars$cex.lab)
+    mtext("Depth (cm)", side = 1, line = 3.5, cex = pars$cex.lab,
+          font = pars$font.lab)
     mtext(expression(bold("Trench ") *
                      delta^bold("18") * bold("O") * bold(" (\u2030)")),
           side = 2, line = 3.25, las = 0,
-          cex = plot.par$cex.lab, font = plot.par$font.lab)
-    mtext("Year", side = 3, line = 2.5,
-          cex = plot.par$cex.lab, font = plot.par$font.lab)
+          cex = pars$cex.lab, font = pars$font.lab)
+    mtext("Year", side = 3, line = 2.75,
+          cex = pars$cex.lab, font = pars$font.lab)
 
     abline(v = T13.annual$summer.max$depth,
            lty = 5, lwd = 1.5, col = "darkgrey")
@@ -88,7 +65,7 @@ TC17.Fig01 <- function(TR = prepareTrenchData()$oxy,
            legend = c("T13-1", "T13-2"),
            col = c(1, "firebrick3"),
            cex = 1.25, text.font = 2, text.col = c(1, "firebrick3"), bty = "n")
-    legend("bottomright", c("3 cm resolution", "annual mean"),
+    legend("bottomright", c("3 cm resolution", "Annual mean"),
            col = "darkgrey", lty = c(1, NA), pch = c(NA, 19), cex = 1.25,
            text.font = 2, bty = "n")
 
@@ -111,24 +88,24 @@ TC17.Fig01 <- function(TR = prepareTrenchData()$oxy,
     abline(v = y.lines, lty = 5, lwd = 1.5, col = "darkgrey")
     axis(1, at = y.lines,
          labels = c("2013", "2012", "2011", "2010", "2009", "2008"),
-         cex.axis = 0.75 * plot.par$cex.lab)
+         cex.axis = 0.75 * pars$cex.lab)
     axis(3, at = y.lines,
          labels = c("2013", "2012", "2011", "2010", "2009", "2008"),
-         cex.axis = 0.75 * plot.par$cex.lab)
+         cex.axis = 0.75 * pars$cex.lab)
     axis(2)
     box()
 
-    mtext("Year", side = c(1, 3), line = c(3.25, 2.5),
-          cex = plot.par$cex.lab, font = plot.par$font.lab)
+    mtext("Year", side = c(1, 3), line = c(3.5, 2.75),
+          cex = pars$cex.lab, font = pars$font.lab)
     mtext(bquote(bold("AWS 2m air temperature"~paste('(',degree,'C)'))),
           side = 2, line = 3.25, las = 0,
-          cex = plot.par$cex.lab, font = plot.par$font.lab)
+          cex = pars$cex.lab, font = pars$font.lab)
 
-    legend("bottomright", c("monthly mean", "annual mean"),
+    legend("bottomright", c("Monthly mean", "Annual mean"),
            col = c("black", "dodgerblue"), lty = c(1, NA), pch = c(NA, 19),
            cex = 1.25, text.font = 2, bty = "n")
 
-    if (save.plot) dev.off()
+    par(op)
 
 }
 

@@ -2,37 +2,16 @@
 ##'
 ##' This function makes all necessary calculations and plots the results for
 ##' Figure 02 shown in Muench et al. (2017).
-##' @param path The path to the directory in which to save the plot (for
-##' \code{save.plot = TRUE}). Defaults to the folder \code{plots} in the current
-##' working directory. If this folder does not exist, it is attempted to create
-##' with a warning (see also \code{\link{OpenDevice}}).
-##' @param file.name The name of the file (excluding extension) to save the
-##' plot in.
-##' @param device The graphics device to be used to display and save the
-##' plot. Defaults to the \code{quartz} device which is the only currently
-##' implemented device option.
-##' @param save.plot if \code{TRUE}, the plot is saved as a pdf file in the
-##' folder specified by \code{path}. Defaults to \code{FALSE} which results in
-##' on-screen display of the plot.
 ##' @author Thomas Münch
 ##' @references
 ##' Muench, T., et al., Constraints on post-depositional isotope modifications
 ##' in East Antarctic firn from analysing temporal changes of isotope profiles,
 ##' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
 ##' @export
-TC17.Fig02 <- function(path = file.path(getwd(), "plots"),
-                       file.name = "tc17_fig_02", device = "quartz",
-                       save.plot = FALSE) {
+TC17.Fig02 <- function() {
 
-    param <- SetPlotPar()
-    plot.par <- param$par
-    dev.size <- param$dev.size
-
-    OpenDevice(device = device, path = path, file.name = file.name,
-               height = dev.size$w, width = dev.size$w,
-               save.plot = save.plot)
-    par(plot.par)
-    par(mar = c(6, 6, 6, 6))
+    pars <- SetPlotPar(mar = c(6, 6, 6, 6))
+    op <- par(pars)
 
     # lat/lon for relevant sites
     edml <- c(-75.0025, 0.0684)
@@ -106,14 +85,14 @@ TC17.Fig02 <- function(path = file.path(getwd(), "plots"),
 
     mtext(bquote(paste(bold("Longitude ("), degree, bold("E)"))),
           side = 1, line = 4.5,
-          cex = plot.par$cex.lab, font = plot.par$font.lab)
+          cex = pars$cex.lab, font = pars$font.lab)
     mtext(bquote(paste(bold("Latitude ("), degree, bold("N)"))), las = 0,
           side = 2, line = 4.5,
-          cex = plot.par$cex.lab, font = plot.par$font.lab)
+          cex = pars$cex.lab, font = pars$font.lab)
     mtext("Distance (m)", side = 3, line = 4,
-          cex = plot.par$cex.lab, font = plot.par$font.lab)
+          cex = pars$cex.lab, font = pars$font.lab)
     text(0.108, -75.005, labels = "Distance (m)", srt = -90, xpd = NA,
-         cex = plot.par$cex.lab, font = plot.par$font.lab)
+         cex = pars$cex.lab, font = pars$font.lab)
 
     points(edml[2], edml[1], pch = 24, col = "black", bg = "black")
     points(edml[2], edml[1], pch = 25, col = "black", bg = "black")
@@ -158,6 +137,6 @@ TC17.Fig02 <- function(path = file.path(getwd(), "plots"),
                           lab = "N", lwd = 1, cex.lab = 1.25)
     arrows(x1, y1, x2, y2, code = 1, length = 0.15, angle = 25, lwd = 1)
 
-    if (save.plot) dev.off()
+    par(op)
 
 }
