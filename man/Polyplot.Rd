@@ -4,22 +4,22 @@
 \alias{Polyplot}
 \title{Draw error shading.}
 \usage{
-Polyplot(x, y2, col = "grey", ...)
+Polyplot(x, y1, y2, col = "black", alpha = 0.2, ...)
 }
 \arguments{
 \item{x}{numeric vector of x values of the error band.}
+
+\item{y1}{numeric vector for the upper bound of the error band; must be of
+the same length as \code{x}.}
 
 \item{y2}{numeric vector for the lower bound of the error band; must be of
 the same length as \code{x}.}
 
 \item{col}{colour of the error band.}
 
-\item{...}{additional parameters which are passed to \code{polygon}.}
-
-\item{y1}{numeric vector for the upper bound of the error band; must be of
-the same length as \code{x}.}
-
 \item{alpha}{opacity factor for \code{col} within [0,1].}
+
+\item{...}{additional parameters which are passed to \code{polygon}.}
 }
 \description{
 A wrapper function for the \code{polygon} function to draw error shadings
