@@ -32,7 +32,6 @@
 ##' Münch, T., et al., Regional climate signal vs. local noise: a
 ##' two-dimensional view of water isotopes in Antarctic firn at Kohnen Station,
 ##' Dronning Maud Land, Clim. Past, doi:10.5194/cp-12-1565-2016, 2016.
-##' @export
 T13AnnualMeans <- function(t1, t2, depth,
                            i.max = c(5, 11, 19, 24, 33, 38),
                            i.min = c(7, 14, 21, 26, 37),

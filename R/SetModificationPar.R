@@ -32,7 +32,6 @@
 ##' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
 ##' @examples
 ##' mod.par <- SetModificationPar()
-##' @export
 SetModificationPar <- function(ADV.opt = ParamSpace$adv.opt,
                                SIGMA.opt = ParamSpace$sigma.opt,
                                STRETCH.opt = ParamSpace$densf.opt,

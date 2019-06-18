@@ -13,7 +13,6 @@
 ##' 4=right.
 ##' @param col color of the minor ticks.
 ##' @author Frank Harrell, Earl Bellinger, Viktor Horvath, Thomas Münch
-##' @export
 MinorTick <- function(nx = 2,ny = 2, tick.ratio = 0.5,
                       side = 1, col = "black") {
 

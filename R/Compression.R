@@ -15,6 +15,7 @@
 ##' @return the relative compression of a depth increment when transported from
 ##' depth \code{z1} to depth \code{z2} in dimensionless units.
 ##' @author Thomas Münch
+##' @export
 Compression <- function(z1, z2, rate) {
 
     if (z2 < z1) stop("'z2' must be larger than 'z1'.")
