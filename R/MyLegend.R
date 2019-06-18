@@ -1,8 +1,20 @@
-##' Produce a custom legend.
-##'
-##' Description.
-##' @param end.pch The character symbol for the legend end points.
-##' @param pch.xoff Horizontal offset of the legend end points.
+##' Add Legends to Plots
+##' 
+##' This is a modified version of the base R function \code{legend()} to add
+##' legends to a point plot connected by lines. For such a plot, the base
+##' version adds the point character in the middle of the legend line; in this
+##' modified version, the point characters are added to both ends of the legend
+##' line. These end points can be set and adjusted according to the parameters
+##' \code{end.pch} and \code{pch.xoff}.
+##' @param end.pch if \code{TRUE}, character symbols as specified by \code{pch}
+##' are added to the end of the legend lines specified by \code{lty}. Defaults
+##' to \code{FALSE} which reproduces the base behaviour.
+##' @param pch.xoff horizontal adjustment of the point characters at the end
+##' points of the legend lines to improve visual appearance; in units of
+##' character widths (defaults to 0.2).
+##' @inheritParams graphics::legend
+##' @return the value returned by \code{legend}.
+##' @seealso \code{\link{legend}}
 ##' @author Thomas Münch
 ##' @export
 MyLegend <- function (x, y = NULL, legend, fill = NULL, col = par("col"), 

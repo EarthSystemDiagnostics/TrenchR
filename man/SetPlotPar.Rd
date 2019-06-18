@@ -5,7 +5,8 @@
 \title{Load plotting parameters.}
 \usage{
 SetPlotPar(mar = c(5, 5, 0.5, 0.5), lwd = 2, las = 1, font.lab = 2,
-  font.axis = 2, cex.main = 1.5, cex.lab = 1.5, cex.axis = 1.25, ...)
+  font.axis = 2, cex.main = 1.5, cex.lab = 1.5, cex.axis = 1.25,
+  ...)
 }
 \value{
 A list of plotting parameters to be used with \code{par()}.
@@ -23,7 +24,7 @@ A list of plotting parameters to be used with \code{par()}.
 \description{
 This function returns a list of the plotting parameters specified as its
 function arguments, which can then be set via a call to \code{par}. The
-default function parameters are used for the plots of the TC paper;
+default function parameters are used for the plots in Münch et al. (2017);
 additional parameters can be specified via \code{...}. This wrapper function
 provides a convenient way to set new graphics parameters and save their old
 values for later restoring at the same time; see the example.
@@ -32,6 +33,11 @@ values for later restoring at the same time; see the example.
 op <- par(SetPlotPar())
 plot(1 : 10, xlab = "X title", ylab = "Y title", type = "l")
 par(op)
+}
+\references{
+Münch, T., et al., Constraints on post-depositional isotope modifications
+in East Antarctic firn from analysing temporal changes of isotope profiles,
+The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
 }
 \seealso{
 \code{\link{par}}

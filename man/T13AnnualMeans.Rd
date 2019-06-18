@@ -2,30 +2,54 @@
 % Please edit documentation in R/T13AnnualMeans.R
 \name{T13AnnualMeans}
 \alias{T13AnnualMeans}
-\title{T13 annual mean isotope time series.}
+\title{T13 annual-mean isotope time series.}
 \usage{
-T13AnnualMeans(t1, t2, depth, i.max = c(5, 11, 19, 24, 33, 38), i.min = c(7,
-  14, 21, 26, 37), start.year = 2013)
+T13AnnualMeans(t1, t2, depth, i.max = c(5, 11, 19, 24, 33, 38),
+  i.min = c(7, 14, 21, 26, 37), start.year = 2013)
 }
 \arguments{
-\item{t1}{t1}
+\item{t1}{numeric vector of the T13--1 isotope record.}
 
-\item{t2}{t2}
+\item{t2}{numeric vector of the T13--2 isotope record.}
 
-\item{depth}{depth}
+\item{depth}{depth numeric vector of the common T13 depth scale (i.e. after
+the optimal shift of T13--2 to maximise the inter-trench correlation; see
+Münch et al. (2016)).}
 
-\item{i.max}{i.max}
+\item{i.max}{index positions of the summer maxima of the trench mean isotope
+record; default indices are the ones used in Münch et al. (2016).}
 
-\item{i.min}{i.min}
+\item{i.min}{index positions of the winter minima of the trench mean isotope
+record; default indices are the ones used in Münch et al. (2016).}
 
-\item{start.year}{start.year}
+\item{start.year}{assumed year of the first summer maximum where the maximum
+is defined to occur in January of the year; defaults to \code{2013}.}
 }
 \value{
-A list.
+A list of three data frames:
+\describe{
+  \item{means:}{the annual-mean time series of the T13--1, T13--2 and mean
+  T13 isotope records together with the range of annual means from the
+  different binning methods;}
+  \item{summer.max:}{the annual time series of summer maximum values for the
+  T13--1, T13--2 and mean T13 isotope records;}
+  \item{winter.min:}{the annual time series of winter minimum values for the
+  T13--1, T13--2 and mean T13 isotope records.}
+}
 }
 \description{
-Description.
+Calculate annual-mean time series of the T13 trench isotope records defined
+by binning the records according to the isotopic maxima and minima. From
+this, four different time series are created: averages from bins defined by
+(1) the summer maxima, (2) the winter minima, (3) the midpoints of the
+ascending slopes flanking the maxima and (4) the midpoints of the descending
+slopes.
+}
+\references{
+Münch, T., et al., Regional climate signal vs. local noise: a
+two-dimensional view of water isotopes in Antarctic firn at Kohnen Station,
+Dronning Maud Land, Clim. Past, doi:10.5194/cp-12-1565-2016, 2016.
 }
 \author{
-Thomas Muench
+Thomas Münch
 }

@@ -1,16 +1,16 @@
 ##' Produce TC17 Figure 07.
 ##'
 ##' This function makes all necessary calculations and plots the results for
-##' Figure 07 shown in Muench et al. (2017).
+##' Figure 07 shown in Münch et al. (2017).
 ##' @param mod.param  list of the parameters according to which the original
 ##' T13 mean profile is modified to model the temporal changes. It must containt
 ##' the following elements: \code{ADV.ind}, \code{SIGMA.ind} and
 ##' \code{STRETCH.ind} (see also \code{\link{SetModificationPar}}). If
-##' \code{NULL} (the default), the original data from Muench et al. (2017) is
+##' \code{NULL} (the default), the original data from Münch et al. (2017) is
 ##' used for plotting.
 ##' @author Thomas Münch
 ##' @references
-##' Muench, T., et al., Constraints on post-depositional isotope modifications
+##' Münch, T., et al., Constraints on post-depositional isotope modifications
 ##' in East Antarctic firn from analysing temporal changes of isotope profiles,
 ##' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
 ##' @seealso \code{\link{SetModificationPar}}

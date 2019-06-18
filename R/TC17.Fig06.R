@@ -1,17 +1,17 @@
 ##' Produce TC17 Figure 06.
 ##'
 ##' This function makes all necessary calculations and plots the results for
-##' Figure 06 shown in Muench et al. (2017).
+##' Figure 06 shown in Münch et al. (2017).
 ##' @param mod.param list of the parameters according to which the original
 ##' T13 mean profile is modified to model the temporal changes. It must containt
 ##' the following elements: \code{ADV.ind}, \code{ADV.opt}, \code{ADV.only},
 ##' \code{SIGMA.ind}, \code{SIGMA.opt}, \code{STRETCH.ind}, and
 ##' \code{STRETCH.opt} (see also \code{\link{SetModificationPar}}). If
-##' \code{NULL} (the default), the original data from Muench et al. (2017) is
+##' \code{NULL} (the default), the original data from Münch et al. (2017) is
 ##' used for plotting.
 ##' @author Thomas Münch
 ##' @references
-##' Muench, T., et al., Constraints on post-depositional isotope modifications
+##' Münch, T., et al., Constraints on post-depositional isotope modifications
 ##' in East Antarctic firn from analysing temporal changes of isotope profiles,
 ##' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
 ##' @seealso \code{\link{SetModificationPar}}
@@ -161,7 +161,7 @@ TC17.Fig06 <- function(mod.param = NULL) {
     v22[ind2[-length(ind2)]] <- NA
     v33[ind3[-length(ind3)]] <- NA
 
-    sum.max <- which.peaks(v11)[3 : 6]
+    sum.max <- which.peaks(v11, partial = TRUE)[3 : 6]
 
     plot(TR$depth, v1, type = "n",
          xlim = c(0, 175), ylim = c(-52, -36),

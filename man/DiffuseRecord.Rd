@@ -55,5 +55,5 @@ legend('topleft', c("original record", "diffused record"),
        lty = 1, col = 1 : 2, bty = "n")
 }
 \author{
-Thomas Muench, modified by Thomas Laepple
+Thomas Münch, modified by Thomas Laepple
 }

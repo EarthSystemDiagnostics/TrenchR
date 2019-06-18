@@ -1,4 +1,3 @@
-
 ##' Diffuse a record.
 ##' 
 ##' This function diffuses a time series or record with a given depth-dependent
@@ -28,7 +27,7 @@
 ##' record which are potentially affected by the finite record length are set to
 ##' \code{NA}. Defaults to \code{FALSE}. See also Details.
 ##' @return Numeric vector containing the diffused version of \code{rec}.
-##' @author Thomas Muench, modified by Thomas Laepple
+##' @author Thomas Münch, modified by Thomas Laepple
 ##' @examples
 ##' ## Diffuse white noise with a linearly increasing diffusion length
 ##' rec <- rnorm(n = 1000)

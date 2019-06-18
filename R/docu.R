@@ -159,20 +159,20 @@
 #'
 #' This file contains the data displayed in Figure 5 of the TC17 paper and is
 #' the result of a call to \code{\link{LoopParamSpace}} for the parameter ranges
-#' of downward-advection, differential diffusion and compression from
+#' of downward advection, differential diffusion and compression from
 #' densification as described in the paper.
 #'
 #' @format A list with nine components:
 #' \describe{
-#'   \item{adv:}{A vector with the range of advection values for which the RMSD
-#'     is computed.}
-#'   \item{sigma:}{A vector with the range of differential diffusion lengths
-#'     for which the RMSD is computed.}
-#'   \item{densf:}{A vector with the range of compression values for which the
-#'     RMSD is computed.}
-#'   \item{adv.opt:}{The optimal advection value.}
-#'   \item{sigma.opt:}{The optimal differential diffusion length.}
-#'   \item{densf.opt:}{The optimal compression value.}
+#'   \item{adv:}{Numeric vector with the range of advection values in cm for
+#'     which the RMSD is computed.}
+#'   \item{sigma:}{Numeric vector with the range of differential diffusion
+#'     lengths in cm for which the RMSD is computed.}
+#'   \item{densf:}{Numeric vector with the range of compression values in cm for
+#'     which the RMSD is computed.}
+#'   \item{adv.opt:}{The optimal advection value in cm.}
+#'   \item{sigma.opt:}{The optimal differential diffusion length in cm.}
+#'   \item{densf.opt:}{The optimal compression value in cm.}
 #'   \item{adv.opt.arr:}{An array of dimension \code{length(sigma)} x
 #'     \code{length(densf)} which contains the optimal advection values at
 #'     which, for fixed compression and differential diffusion, the RMSD between
@@ -180,14 +180,14 @@
 #'   \item{RMSD:}{An array of dimension \code{length(adv)} x
 #'     \code{length(sigma)} x \code{length(densf)} which contains the RMSD value
 #'     between T15 and the modified T13 mean profile for every combination of
-#'     downward-advection, differential diffusion and compression.}
+#'     downward advection, differential diffusion and compression.}
 #'   \item{RMSD.opt:}{The array \code{RMSD} projected onto the optimal
 #'     downward-advection value.}
 #' }
 #' @references
-#' Muench, T., et al., Constraints on post-depositional isotope modifications in
-#'     East Antarctic firn from analysing temporal changes of isotope profiles,
-#'     The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
+#' Münch, T., et al., Constraints on post-depositional isotope modifications
+#' in East Antarctic firn from analysing temporal changes of isotope profiles,
+#' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
 #' @source
 #' A call to \code{LoopParamSpace}.
 #' @seealso \code{\link{LoopParamSpace}}

@@ -9,20 +9,19 @@ rmsd(v1, v2, na.rm = FALSE)
 \arguments{
 \item{v1}{Numeric vector for which to compute the rmsd with \code{v2}.}
 
-\item{v2}{Numeric vector for which to compute the rmsd with \code{v1}. Must
-have the same length as \code{v1}.}
+\item{v2}{Numeric vector for which to compute the rmsd with \code{v1}; must
+be of the same length as \code{v1}.}
 
-\item{na.rm}{a logical value indicating whether ‘NA’ values should be
+\item{na.rm}{a logical value indicating whether \code{NA} values should be
 stripped before the computation proceeds. Defaults to \code{FALSE}.}
 }
 \value{
-The root-mean square deviation of \code{v1} and \code{v2}, or
-    \code{NA} if any of the elements of the vectors is \code{NA} and if
-    \code{na.rm = FALSE}.
+The root-mean-square deviation of \code{v1} and \code{v2}, or
+\code{NA} (for \code{na.rm = FALSE}) if any of their elements is \code{NA}.
 }
 \description{
-This function calculates the root-mean square deviation of two numeric
-vectors.
+This function calculates the root-mean-square deviation (rmsd) of two
+numeric vectors.
 }
 \author{
 Thomas Münch

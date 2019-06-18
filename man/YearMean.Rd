@@ -2,25 +2,31 @@
 % Please edit documentation in R/YearMean.R
 \name{YearMean}
 \alias{YearMean}
-\title{Annual means from binning.}
+\title{Means from index binning.}
 \usage{
 YearMean(x, ind, na.rm = TRUE)
 }
 \arguments{
-\item{x}{The vector for which to compute the annual means according to the
-binning specified by \code{ind}.}
+\item{x}{numeric vector for which to compute bin means according to the
+indices given in \code{ind}.}
 
-\item{ind}{A vector of indices specifying the binning windows for
-calculating annual means.}
+\item{ind}{numeric vector of indices specifying the binning windows to
+average over; i.e. first binning window is from index number 1 to 2, second
+binning window from index number 2 to 3, etc.}
 
 \item{na.rm}{a logical value indicating whether ‘NA’ values should be
 stripped before the computation proceeds. Defaults to \code{TRUE}.}
 }
 \value{
-A vector of annual means.
+a numeric vector of length \code{length(ind) - 1} with the mean
+values of each bin with end points defined by \code{ind}.
 }
 \description{
-Description.
+Calculate bin means defined by vector index positions.
+}
+\examples{
+x <- rnorm(20)
+x.bin <- YearMean(x, ind = c(1, 7, 13, 17, 20))
 }
 \author{
 Thomas Münch

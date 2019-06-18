@@ -2,22 +2,37 @@
 % Please edit documentation in R/Polyplot.R
 \name{Polyplot}
 \alias{Polyplot}
-\title{Wrapper for polygon plot.}
+\title{Draw error shading.}
 \usage{
 Polyplot(x, y2, col = "grey", ...)
 }
 \arguments{
-\item{x}{x}
+\item{x}{numeric vector of x values of the error band.}
 
-\item{y2}{y2}
+\item{y2}{numeric vector for the lower bound of the error band; must be of
+the same length as \code{x}.}
 
-\item{col}{colour.}
+\item{col}{colour of the error band.}
 
-\item{...}{Further graphical parameters passed to the \code{polygon}
-function.}
+\item{...}{additional parameters which are passed to \code{polygon}.}
+
+\item{y1}{numeric vector for the upper bound of the error band; must be of
+the same length as \code{x}.}
+
+\item{alpha}{opacity factor for \code{col} within [0,1].}
 }
 \description{
-Description.
+A wrapper function for the \code{polygon} function to draw error shadings
+(or confidence intervals) on a line plot.
+}
+\examples{
+x <- 1 : 10
+plot(x, type = "n", xlab = "x", ylab = "y")
+Polyplot(x, y1 = x + 2, y2 = x - 2)
+lines(x, lwd = 2)
+}
+\seealso{
+\code{\link{polygon}}
 }
 \author{
 Thomas Münch

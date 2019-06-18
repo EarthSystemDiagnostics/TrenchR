@@ -4,18 +4,18 @@
 \alias{prepareTrenchData}
 \title{Process T13 and T15 Trench Data.}
 \usage{
-prepareTrenchData(index.range = 1:59, LoRes = 3, HiRes = 0.5, k13 = 3,
-  k15 = -0.5, na.treat = FALSE)
+prepareTrenchData(index.range = 1:59, LoRes = 3, HiRes = 0.5,
+  k13 = 3, k15 = -0.5, na.treat = FALSE)
 }
 \arguments{
-\item{index.range}{Vector of indices to subset the T15 trench dataset;
-defaults to the range used in the TC paper.}
+\item{index.range}{Vector of depth indices to subset the T15 trench dataset;
+defaults to the range used in Münch et al. (2017).}
 
 \item{LoRes}{Depth resolution of trench dataset in cm; defaults to the
 original T13 and T15 sampling resolution (3 cm).}
 
 \item{HiRes}{Higher depth resolution to interpolate trench data onto;
-defaults to 0.5 cm as used in the TC paper.}
+defaults to 0.5 cm as used in Münch et al. (2017).}
 
 \item{k13}{Vertical shift [cm] of the mean T13-2 relative to the mean T13-1
 profile; defaults to the optimal shift that maximizes the profile
@@ -25,13 +25,13 @@ correlation.}
 profile; defaults to the optimal shift that maximizes the profile
 correlation.}
 
-\item{na.treat}{if \code{TRUE} include the incomplete surface region of the
+\item{na.treat}{if \code{TRUE}, include the incomplete surface region of the
 trenches when calculating the mean profiles; defaults to \code{FALSE}.}
 }
 \value{
-A list with three elements corresponding to the three measured
+A list of three sub-lists corresponding to the three measured
     isotopologue data (index i = 1: d18O, i = 2: d2H, i = 3: d-excess). Each
-    element again is a list with the following components:
+    sub-list has the following components:
     \itemize{
     \item trench13.1: Data of isotope species \code{i} for trench T13-1.
     \item trench13.2: Data of isotope species \code{i} for trench T13-2.
@@ -71,9 +71,9 @@ A list with three elements corresponding to the three measured
           linearly interpolated data on the higher resolution \code{HiRes}.
     \item XPOS: Horizontal profile positions in [m] of the T15-1 and T15-2
           profiles relative to the trench starting point (= profile #1).
-    \item XPOS.t13.1: Horizontal profile positions in [m] of the T15-1
+    \item XPOS.t13.1: Horizontal profile positions in [m] of the T13-1
           profiles relative to the trench starting point.
-    \item XPOS.t13.2: Horizontal profile positions in [m] of the T15-2
+    \item XPOS.t13.2: Horizontal profile positions in [m] of the T13-2
           profiles relative to the trench starting point.
     \item SPRF.t1: List: Horizontal position (component \code{x}) and
           corresponding surface height in [cm] (component \code{y})
@@ -93,7 +93,12 @@ A list with three elements corresponding to the three measured
 }
 \description{
 This function processes the T13 and T15 trench isotopologue data in a way
-that is suited for analysis and plotting used in the TC paper.
+that is suited for analysis and plotting used in Münch et al. (2017).
+}
+\references{
+Münch, T., et al., Constraints on post-depositional isotope modifications
+in East Antarctic firn from analysing temporal changes of isotope profiles,
+The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
 }
 \author{
 Thomas Münch

@@ -1,12 +1,25 @@
-##' Model T13 temporal changes.
+##' Model temporal change of isotope profile.
 ##'
-##' Modify the T13 mean isotope profile. (Details)
-##' @param TR 
-##' @param SIGMA
-##' @param STRETCH
-##' @param ADV
-##' @return A list.
+##' Modify an isotope profile to simulate changes over time given values of
+##' downward advection, compression by densification, and diffusional
+##' smoothing.
+##' @param TR tbd
+##' @param SIGMA diffusion length value to smooth the record; must be in the
+##' same units as \code{res}.
+##' @param STRETCH value of the amount of compression due to densification of
+##' the original depth scale of \code{record} over time; must be in the same
+##' units as \code{res}.
+##' @param ADV value of downward advection of the \code{record} over time; must
+##' be in the same units as \code{res}.
+##' @return A list with two elements:
+##' \describe{
+##'   \item{HiRes:}{the modified record on the high depth resolution
+##'     \code{res};}
+##'   \item{LoRes:}{the modified record on the low depth resolution according to
+##'     \code{depth.lores}.}
+##' }
 ##' @author Thomas Münch
+##' @seealso \code{\link{DiffuseRecord}}; \code{\link{CompressRecord}}
 ##' @export
 ModifyT13 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy,
                       SIGMA = NULL, STRETCH = NULL, ADV = NULL) {
@@ -14,7 +27,7 @@ ModifyT13 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy,
     if (is.null(c(SIGMA, STRETCH, ADV))) {
         warning("No modification parameters - returning input.")
     }
-
+    
     ret <- input <- TR$mean13_HiRes
 
     # non-NA range of high-resolution trench T13 data
@@ -58,7 +71,7 @@ ModifyT13 <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy,
             stop("No valid ADVECTION parameter.")
         }
 
-        ret <- Hmisc::Lag(ret, shift = ADV)
+        ret <- Hmisc::Lag(ret, shift = ADV / TR$HiRes)
 
     }
 

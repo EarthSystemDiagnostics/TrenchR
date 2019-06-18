@@ -4,20 +4,21 @@
 \alias{TC17.Fig03}
 \title{Produce TC17 Figure 03.}
 \usage{
-TC17.Fig03(graphics.dev = NULL, path = NULL, file = NULL, height = 6,
-  width = 8, adj.width = 1.75, ...)
+TC17.Fig03(graphics.dev = NULL, path = NULL, file = NULL,
+  height = 6, width = 8, adj.width = 1.75, ...)
 }
 \arguments{
-\item{graphics.dev}{graphics device to be used for saving the plots, see
-details. Defaults to \code{NULL} for on-screen plotting.}
+\item{graphics.dev}{graphics device (function name) to be used for saving
+the plots, see details. Defaults to \code{NULL} for on-screen plotting.}
 
 \item{path}{path to the directory in which to save the plots. Defaults to
 \code{NULL} for on-screen plotting but needs to be specified for saving the
 plot using the supplied device in \code{graphics.dev}.}
 
-\item{file}{name of the file for saving. Defaults to \code{NULL} for
-on-screen plotting but needs to be specified for saving the plot using the
-supplied device in \code{graphics.dev}.}
+\item{file}{name of the file for saving including the respective file
+extension. Defaults to \code{NULL} for on-screen plotting but needs to be
+specified for saving the plot using the supplied device in
+\code{graphics.dev}.}
 
 \item{height}{height of the plotting area in inches. Default '6'.}
 
@@ -28,7 +29,7 @@ subplots (a) and (b). Default '1.75'.}
 }
 \description{
 This function makes all necessary calculations and plots the results for
-Figure 03 shown in Muench et al. (2017).
+Figure 03 shown in Münch et al. (2017).
 }
 \details{
 Note that this function will not use the R Studio Graphics device for
@@ -37,7 +38,7 @@ the setting of the default size of the plotting region (see also
 \code{\link{dev.new}}).
 }
 \references{
-Muench, T., et al., Constraints on post-depositional isotope modifications
+Münch, T., et al., Constraints on post-depositional isotope modifications
 in East Antarctic firn from analysing temporal changes of isotope profiles,
 The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
 }

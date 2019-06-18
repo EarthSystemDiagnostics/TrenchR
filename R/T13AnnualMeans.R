@@ -1,14 +1,37 @@
-##' T13 annual mean isotope time series.
+##' T13 annual-mean isotope time series.
 ##'
-##' Description.
-##' @param t1 t1
-##' @param t2 t2
-##' @param depth depth 
-##' @param i.max i.max
-##' @param i.min i.min
-##' @param start.year start.year
-##' @return A list.
-##' @author Thomas Muench
+##' Calculate annual-mean time series of the T13 trench isotope records defined
+##' by binning the records according to the isotopic maxima and minima. From
+##' this, four different time series are created: averages from bins defined by
+##' (1) the summer maxima, (2) the winter minima, (3) the midpoints of the
+##' ascending slopes flanking the maxima and (4) the midpoints of the descending
+##' slopes.
+##' @param t1 numeric vector of the T13--1 isotope record. 
+##' @param t2 numeric vector of the T13--2 isotope record.
+##' @param depth depth numeric vector of the common T13 depth scale (i.e. after
+##' the optimal shift of T13--2 to maximise the inter-trench correlation; see
+##' Münch et al. (2016)).
+##' @param i.max index positions of the summer maxima of the trench mean isotope
+##' record; default indices are the ones used in Münch et al. (2016).
+##' @param i.min index positions of the winter minima of the trench mean isotope
+##' record; default indices are the ones used in Münch et al. (2016).
+##' @param start.year assumed year of the first summer maximum where the maximum
+##' is defined to occur in January of the year; defaults to \code{2013}.
+##' @return A list of three data frames:
+##' \describe{
+##'   \item{means:}{the annual-mean time series of the T13--1, T13--2 and mean
+##'   T13 isotope records together with the range of annual means from the
+##'   different binning methods;}
+##'   \item{summer.max:}{the annual time series of summer maximum values for the
+##'   T13--1, T13--2 and mean T13 isotope records;}
+##'   \item{winter.min:}{the annual time series of winter minimum values for the
+##'   T13--1, T13--2 and mean T13 isotope records.}
+##' }
+##' @author Thomas Münch
+##' @references
+##' Münch, T., et al., Regional climate signal vs. local noise: a
+##' two-dimensional view of water isotopes in Antarctic firn at Kohnen Station,
+##' Dronning Maud Land, Clim. Past, doi:10.5194/cp-12-1565-2016, 2016.
 ##' @export
 T13AnnualMeans <- function(t1, t2, depth,
                            i.max = c(5, 11, 19, 24, 33, 38),

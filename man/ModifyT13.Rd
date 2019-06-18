@@ -2,19 +2,40 @@
 % Please edit documentation in R/ModifyT13.R
 \name{ModifyT13}
 \alias{ModifyT13}
-\title{Model T13 temporal changes.}
+\title{Model temporal change of isotope profile.}
 \usage{
 ModifyT13(TR = prepareTrenchData(na.treat = TRUE)$oxy, SIGMA = NULL,
   STRETCH = NULL, ADV = NULL)
 }
 \arguments{
-\item{TR}{}
+\item{TR}{tbd}
+
+\item{SIGMA}{diffusion length value to smooth the record; must be in the
+same units as \code{res}.}
+
+\item{STRETCH}{value of the amount of compression due to densification of
+the original depth scale of \code{record} over time; must be in the same
+units as \code{res}.}
+
+\item{ADV}{value of downward advection of the \code{record} over time; must
+be in the same units as \code{res}.}
 }
 \value{
-A list.
+A list with two elements:
+\describe{
+  \item{HiRes:}{the modified record on the high depth resolution
+    \code{res};}
+  \item{LoRes:}{the modified record on the low depth resolution according to
+    \code{depth.lores}.}
+}
 }
 \description{
-Modify the T13 mean isotope profile. (Details)
+Modify an isotope profile to simulate changes over time given values of
+downward advection, compression by densification, and diffusional
+smoothing.
+}
+\seealso{
+\code{\link{DiffuseRecord}}; \code{\link{CompressRecord}}
 }
 \author{
 Thomas Münch

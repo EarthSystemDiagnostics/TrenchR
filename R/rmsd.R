@@ -1,15 +1,14 @@
 ##' Root-mean-square deviation.
 ##'
-##' This function calculates the root-mean square deviation of two numeric
-##' vectors.
+##' This function calculates the root-mean-square deviation (rmsd) of two
+##' numeric vectors.
 ##' @param v1 Numeric vector for which to compute the rmsd with \code{v2}.
-##' @param v2 Numeric vector for which to compute the rmsd with \code{v1}. Must
-##'     have the same length as \code{v1}.
-##' @param na.rm a logical value indicating whether ‘NA’ values should be
-##'     stripped before the computation proceeds. Defaults to \code{FALSE}.
-##' @return The root-mean square deviation of \code{v1} and \code{v2}, or
-##'     \code{NA} if any of the elements of the vectors is \code{NA} and if
-##'     \code{na.rm = FALSE}.
+##' @param v2 Numeric vector for which to compute the rmsd with \code{v1}; must
+##' be of the same length as \code{v1}.
+##' @param na.rm a logical value indicating whether \code{NA} values should be
+##' stripped before the computation proceeds. Defaults to \code{FALSE}.
+##' @return The root-mean-square deviation of \code{v1} and \code{v2}, or
+##' \code{NA} (for \code{na.rm = FALSE}) if any of their elements is \code{NA}.
 ##' @author Thomas Münch
 ##' @export
 rmsd <- function(v1, v2, na.rm = FALSE) {

@@ -2,22 +2,25 @@
 % Please edit documentation in R/which.peaks.R
 \name{which.peaks}
 \alias{which.peaks}
-\title{Find Locations of Maxima or Minima.}
+\title{Find Maxima or Minima.}
 \usage{
-which.peaks(x, partial = TRUE, decreasing = FALSE)
+which.peaks(x, minima = FALSE, partial = FALSE)
 }
 \arguments{
-\item{x}{}
+\item{x}{Numeric vector for which maxima (minima) shall be analysed.}
 
-\item{partial}{}
+\item{minima}{if \code{FALSE} (the default) return the positions of the
+maxima of \code{x}, else return the positions of the minima.}
 
-\item{decreasing}{}
+\item{partial}{if \code{TRUE}, the first and last data points of \code{x}
+are considered to be maxima or minima as well; defaults to \code{FALSE}.}
 }
 \value{
-The indices of the maxima or minima of x.
+Numeric vector with the index positions of the maxima (minima) of
+\code{x}.
 }
 \description{
-Details
+Find the positions of the maxima or minima in a data vector.
 }
 \author{
 Thomas Münch

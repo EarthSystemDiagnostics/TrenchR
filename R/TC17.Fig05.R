@@ -1,14 +1,14 @@
 ##' Produce TC17 Figure 05.
 ##'
 ##' This function makes all necessary calculations and plots the results for
-##' Figure 05 shown in Muench et al. (2017).
+##' Figure 05 shown in Münch et al. (2017).
 ##' @param dat input data structure resulting from a call of
 ##' \code{\link{LoopParamSpace}}; if \code{NULL} (the default), the original
-##' data presented in Muench et al. (2017) is used for plotting which is
+##' data presented in Münch et al. (2017) is used for plotting which is
 ##' supplied with this package in the variable \code{\link{ParamSpace}}.
 ##' @author Thomas Münch
 ##' @references
-##' Muench, T., et al., Constraints on post-depositional isotope modifications
+##' Münch, T., et al., Constraints on post-depositional isotope modifications
 ##' in East Antarctic firn from analysing temporal changes of isotope profiles,
 ##' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
 ##' @export

@@ -1,27 +1,28 @@
 ##' Produce TC17 Figure 03.
 ##'
 ##' This function makes all necessary calculations and plots the results for
-##' Figure 03 shown in Muench et al. (2017).
+##' Figure 03 shown in Münch et al. (2017).
 ##'
 ##' Note that this function will not use the R Studio Graphics device for
 ##' on-screen plotting even if it is your default device in order to preserve
 ##' the setting of the default size of the plotting region (see also
 ##' \code{\link{dev.new}}).
+##' @param graphics.dev graphics device (function name) to be used for saving
+##' the plots, see details. Defaults to \code{NULL} for on-screen plotting.
 ##' @param path path to the directory in which to save the plots. Defaults to
 ##' \code{NULL} for on-screen plotting but needs to be specified for saving the
 ##' plot using the supplied device in \code{graphics.dev}.
-##' @param file name of the file for saving. Defaults to \code{NULL} for
-##' on-screen plotting but needs to be specified for saving the plot using the
-##' supplied device in \code{graphics.dev}.
-##' @param graphics.dev graphics device to be used for saving the plots, see
-##' details. Defaults to \code{NULL} for on-screen plotting.
+##' @param file name of the file for saving including the respective file
+##' extension. Defaults to \code{NULL} for on-screen plotting but needs to be
+##' specified for saving the plot using the supplied device in
+##' \code{graphics.dev}.
 ##' @param height height of the plotting area in inches. Default '6'.
 ##' @param width width of the plotting area in inches. Default '8'.
 ##' @param adj.width extension of the width of the plotting area in inches for
 ##' subplots (a) and (b). Default '1.75'.
 ##' @author Thomas Münch
 ##' @references
-##' Muench, T., et al., Constraints on post-depositional isotope modifications
+##' Münch, T., et al., Constraints on post-depositional isotope modifications
 ##' in East Antarctic firn from analysing temporal changes of isotope profiles,
 ##' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
 ##' @export
