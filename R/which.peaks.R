@@ -14,7 +14,7 @@ which.peaks <- function(x, minima = FALSE, partial = FALSE) {
 
     x.diff <- diff(x)
     
-     if (decreasing) {
+     if (minima) {
          if (partial) {
              which(diff(c(FALSE, x.diff > 0, TRUE)) > 0)
          } else {
