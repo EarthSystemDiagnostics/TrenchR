@@ -10,7 +10,7 @@
 ##' function call. The default optimal parameters stem from the analysis in
 ##' \code{\link{LoopParamSpace}} stored in \code{ParamSpace}. The parameters
 ##' can be used to model the temporal change of the T13 mean profile using the
-##' function \code{\link{ModifyT13}}.
+##' function \code{\link{ModifyRecord}}.
 ##' @return A list of the following modification parameters:
 ##' \itemize{
 ##'   \item ADV.opt optimal 2-yr downward advection [cm];
@@ -24,7 +24,7 @@
 ##'   \item ADV.only optimal 2-yr downward advection [cm] allowing no diffusion
 ##'     and densification ("advection only").
 ##' }
-##' @seealso \code{\link{LoopParamSpace}}; \code{\link{ModifyT13}}
+##' @seealso \code{\link{LoopParamSpace}}; \code{\link{ModifyRecord}}
 ##' @author Thomas Münch
 ##' @references
 ##' Münch, T., et al., Constraints on post-depositional isotope modifications

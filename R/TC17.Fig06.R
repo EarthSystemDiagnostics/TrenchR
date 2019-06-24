@@ -21,8 +21,6 @@ TC17.Fig06 <- function(mod.param = NULL) {
         mod.param <- SetModificationPar()
     }
 
-    TR = prepareTrenchData(na.treat = TRUE)$oxy
-
     pars <- SetPlotPar(oma = c(5, 0, 0.5, 0), mar = c(0, 6, 0, 6),
                        mfrow = c(1, 2))
     op <- par(pars)
@@ -31,14 +29,21 @@ TC17.Fig06 <- function(mod.param = NULL) {
     my.col <- c("dodgerblue", "#1b9e77", "#d95f02", "#7570b3")
 
     # T13* and T13**
-    T13.star     <- ModifyT13(TR,
-                              SIGMA = mod.param$SIGMA.opt,
-                              STRETCH = mod.param$STRETCH.opt,
-                              ADV = mod.param$ADV.opt)
-    T13.starstar <- ModifyT13(TR,
-                              SIGMA = mod.param$SIGMA.ind,
-                              STRETCH = mod.param$STRETCH.ind,
-                              ADV = mod.param$ADV.ind)
+    TR <- prepareTrenchData(na.treat = TRUE)$oxy
+    T13.star     <- ModifyRecord(rec.in = TR$mean13_HiRes,
+                                 res = TR$HiRes,
+                                 depth.hires = TR$depth_HiRes,
+                                 depth.lores = TR$depth,
+                                 SIGMA = mod.param$SIGMA.opt,
+                                 STRETCH = mod.param$STRETCH.opt,
+                                 ADV = mod.param$ADV.opt)
+    T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes,
+                                 res = TR$HiRes,
+                                 depth.hires = TR$depth_HiRes,
+                                 depth.lores = TR$depth,
+                                 SIGMA = mod.param$SIGMA.ind,
+                                 STRETCH = mod.param$STRETCH.ind,
+                                 ADV = mod.param$ADV.ind)
 
 
     #---------------------------------------------------------------------------
@@ -46,8 +51,16 @@ TC17.Fig06 <- function(mod.param = NULL) {
 
     # auxiliary variables
     v11 <- v1 <- TR$mean13
-    v22 <- v2 <- ModifyT13(STRETCH = mod.param$STRETCH.opt)$HiRes
-    v33 <- v3 <- ModifyT13(SIGMA = mod.param$SIGMA.opt)$LoRes
+    v22 <- v2 <- ModifyRecord(rec.in = TR$mean13_HiRes,
+                              res = TR$HiRes,
+                              depth.hires = TR$depth_HiRes,
+                              depth.lores = TR$depth,
+                              STRETCH = mod.param$STRETCH.opt)$HiRes
+    v33 <- v3 <- ModifyRecord(rec.in = TR$mean13_HiRes,
+                              res = TR$HiRes,
+                              depth.hires = TR$depth_HiRes,
+                              depth.lores = TR$depth,
+                              SIGMA = mod.param$SIGMA.opt)$LoRes
     v44 <- v4 <- T13.star$LoRes
 
     p1 <- (p1 <- which(!is.na(v2)))[c(1, length(p1))]
@@ -144,7 +157,11 @@ TC17.Fig06 <- function(mod.param = NULL) {
     v22 <- v2 <- T13.star$LoRes
     v33 <- v3 <- T13.starstar$LoRes
     # only optimal advection
-    v4 <- ModifyT13(ADV = mod.param$ADV.only)$LoRes
+    v4 <- ModifyRecord(rec.in = TR$mean13_HiRes,
+                       res = TR$HiRes,
+                       depth.hires = TR$depth_HiRes,
+                       depth.lores = TR$depth,
+                       ADV = mod.param$ADV.only)$LoRes
 
     p1 <- (p1 <- which(!is.na(v2)))[c(1, length(p1))]
     p2 <- (p2 <- which(!is.na(v3)))[c(1, length(p2))]

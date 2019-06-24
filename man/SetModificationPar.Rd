@@ -39,7 +39,7 @@ values can be specified by setting the respective parameter values in the
 function call. The default optimal parameters stem from the analysis in
 \code{\link{LoopParamSpace}} stored in \code{ParamSpace}. The parameters
 can be used to model the temporal change of the T13 mean profile using the
-function \code{\link{ModifyT13}}.
+function \code{\link{ModifyRecord}}.
 }
 \examples{
 mod.par <- SetModificationPar()
@@ -50,7 +50,7 @@ in East Antarctic firn from analysing temporal changes of isotope profiles,
 The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
 }
 \seealso{
-\code{\link{LoopParamSpace}}; \code{\link{ModifyT13}}
+\code{\link{LoopParamSpace}}; \code{\link{ModifyRecord}}
 }
 \author{
 Thomas Münch

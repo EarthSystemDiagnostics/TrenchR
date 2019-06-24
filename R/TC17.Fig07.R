@@ -20,17 +20,19 @@ TC17.Fig07 <- function(mod.param = NULL) {
         mod.param <- SetModificationPar()
     }
 
-    TR = prepareTrenchData()$oxy
-
     pars <- SetPlotPar(mfrow = c(1, 2), xaxs = "r", yaxs = "i", lwd = 1.5,
                        mar = c(5, 5.5, 0.5, 0.5))
     op <- par(pars)
 
     # T13**
-    T13.starstar <- ModifyT13(TR,
-                              SIGMA = mod.param$SIGMA.ind,
-                              STRETCH = mod.param$STRETCH.ind,
-                              ADV = mod.param$ADV.ind)
+    TR <- prepareTrenchData()$oxy
+    T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes,
+                                 res = TR$HiRes,
+                                 depth.hires = TR$depth_HiRes,
+                                 depth.lores = TR$depth,
+                                 SIGMA = mod.param$SIGMA.ind,
+                                 STRETCH = mod.param$STRETCH.ind,
+                                 ADV = mod.param$ADV.ind)
 
     # profile differences
     diff.13 <- TR$mean13.1 -
