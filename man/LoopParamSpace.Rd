@@ -4,18 +4,32 @@
 \alias{LoopParamSpace}
 \title{Loop over parameter space to find minimum RMSD.}
 \usage{
-LoopParamSpace(TR = prepareTrenchData()$oxy, advSpace = seq(40, 60,
-  0.5)/TR$HiRes, sigmaSpace = seq(0, 8, 0.1), densfSpace = seq(0, 10,
-  0.1))
+LoopParamSpace(rec.in, reference, res, depth, advSpace, sigmaSpace,
+  densfSpace)
 }
 \arguments{
-\item{TR}{tbd}
+\item{rec.in}{numeric vector with the input record which is modified
+according to the given parameter spaces of advection, diffusion and
+densification.}
 
-\item{advSpace}{tbd}
+\item{reference}{numeric vector with a reference record against which the
+root mean square deviation of the modified record is calculated; must be of
+the same length as \code{rec.in}.}
 
-\item{sigmaSpace}{tbd}
+\item{res}{the depth resolution of \code{rec.in} and \code{reference}.}
 
-\item{densfSpace}{tbd}
+\item{depth}{the depth scale of the records; must be in the same units as
+\code{res}.}
+
+\item{advSpace}{numeric vector of downward advection values to loop over; in
+the same units as \code{res}; minimum advection values must not be smaller
+than \code{res}.}
+
+\item{sigmaSpace}{numeric vector of differential diffusion length values to
+loop over; in the same units as \code{res}.}
+
+\item{densfSpace}{numeric vector of compression values from densification to
+loop over; in the same units as \code{res}.}
 }
 \value{
 A list with nine components:
@@ -26,13 +40,13 @@ A list with nine components:
   \item{adv.opt:}{the optimal advection value;}
   \item{sigma.opt:}{the optimal diffusion length;}
   \item{densf.opt:}{the optimal compression value;}
-  \item{adv.opt.arr:}{an array of dimension \code{length(sigma)} x
-    \code{length(densf)} which contains the optimal advection values at
+  \item{adv.opt.arr:}{an array of dimension \code{length(sigmaSpace)} x
+    \code{length(densfSpace)} which contains the optimal advection values at
     which, for fixed compression and diffusion, the RMSD between the
     reference and the modified input record is minimal;}
-  \item{RMSD:}{an array of dimension \code{length(adv)} x
-    \code{length(sigma)} x \code{length(densf)} which contains the RMSD value
-    between the reference and the modified input record for every
+  \item{RMSD:}{an array of dimension \code{length(advSpace)} x
+    \code{length(sigmaSpace)} x \code{length(densfSpace)} which contains the
+    RMSD value between the reference and the modified input record for every
     combination of downward advection, diffusion and compression;}
   \item{RMSD.opt:}{the array \code{RMSD} projected onto the optimal
     downward-advection value.}
@@ -44,13 +58,30 @@ values to modify a given record accordingly, and return the overall minimum
 root mean square deviation (RMSD) to a reference record.
 }
 \details{
-Note that for computational efficiency, the implemented order of
+Note that all NA's are stripped from the input record before the computation
+process. This is problematic for the diffusion calculation in case of a
+large number of internal NA's.
+
+Note further that for computational efficiency, the implemented order of
 modifications is (1) downward advection, (2) diffusion, and (3) compression
 from densification. This is slightly unphysical since the diffusional
-smoothing acts over the uncompressed depth scale. However, it affects the
+smoothing so acts over the uncompressed depth scale. However, it affects the
 results only slightly in the domain of high diffusion lengths and high
 compression values, and does not affect the main results discussed in Münch
 et al. (2017).
+}
+\examples{
+# Run the analysis for Fig. (5) in Münch et al. (2017)
+# (note that this takes some amount of computation time):
+\donttest{
+TR <- prepareTrenchData()$oxy
+ParamSpace <- LoopParamSpace(rec.in = TR$mean13_HiRes,
+                             reference = TR$mean15_HiRes,
+                             res = TR$HiRes, depth = TR$depth_HiRes,
+                             advSpace = seq(40, 60, 0.5),
+                             sigmaSpace = seq(0, 8, 0.1),
+                             densfSpace = seq(0, 10, 0.1))
+}
 }
 \references{
 Münch, T., et al., Constraints on post-depositional isotope modifications
