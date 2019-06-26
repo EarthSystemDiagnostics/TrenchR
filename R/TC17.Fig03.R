@@ -174,10 +174,10 @@ TC17.Fig03 <- function(graphics.dev = NULL, path = NULL, file = NULL,
     points((TR$depth[p2] + TR$k15) / 100, TR$mean15.2[p2],
            col = "firebrick3", pch = 23, lwd = 1.5, cex = 0.75)
 
-    MyLegend("bottomright", legend = c("T15-1", "T15-2"),
-             pch = c(1, 23), lwd = 1.5, lty = c(1,1), col = c(1, "firebrick3"),
-             cex = 1.25, text.font = 2, pt.cex = 0.75, pt.lwd = 1.5, bty = "n",
-             end.pch = TRUE, pch.xoff = 0.2)
+    my.legend("bottomright", legend = c("T15-1", "T15-2"),
+              pch = c(1, 23), lwd = 1.5, lty = c(1,1), col = c(1, "firebrick3"),
+              cex = 1.25, text.font = 2, pt.cex = 0.75, pt.lwd = 1.5, bty = "n",
+              end.pch = TRUE, pch.xoff = 0.2)
 
     par(op)
     if (!is.null(graphics.dev)) {

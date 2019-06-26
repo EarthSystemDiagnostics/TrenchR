@@ -16,7 +16,7 @@
 ##' @return the value returned by \code{legend}.
 ##' @seealso \code{\link{legend}}
 ##' @author Thomas Münch
-MyLegend <- function (x, y = NULL, legend, fill = NULL, col = par("col"), 
+my.legend <- function (x, y = NULL, legend, fill = NULL, col = par("col"), 
     border = "black", lty, lwd, pch, angle = 45, density = NULL, 
     bty = "o", bg = par("bg"), box.lwd = par("lwd"), box.lty = par("lty"), 
     box.col = par("fg"), pt.bg = NA, cex = 1, pt.cex = cex, pt.lwd = lwd, 

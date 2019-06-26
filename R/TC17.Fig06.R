@@ -107,7 +107,7 @@ TC17.Fig06 <- function(mod.param = NULL) {
 
     legend("topleft", "T13 record", lwd = 2, col = my.col[1],
            lty = 1, cex = 1.1, text.font = 1, bty = "n")
-    MyLegend("topright", c("T13 after 2-yr incremental diffusion",
+    my.legend("topright", c("T13 after 2-yr incremental diffusion",
                             "T13 after linear compression"),
               lwd = c(1.5, 1.5), col = c("black", "firebrick"),
               lty = 1, cex = 1.1, text.font = 1, bty = "n",
@@ -143,10 +143,10 @@ TC17.Fig06 <- function(mod.param = NULL) {
     mtext("Depth (cm)", side = 1, line = 3.5,
           cex = pars$cex.lab, font = pars$font.lab)
 
-    MyLegend("bottomright", "T13* record",
-             lwd = 1.5, col = my.col[2], lty = 1, cex = 1.1, text.font = 1,
-             bty = "n", pch = 23, end.pch = TRUE, pch.xoff = 0.2,
-             inset = c(0.02, 0), pt.cex = 0.75, pt.lwd = 1.5)
+    my.legend("bottomright", "T13* record",
+              lwd = 1.5, col = my.col[2], lty = 1, cex = 1.1, text.font = 1,
+              bty = "n", pch = 23, end.pch = TRUE, pch.xoff = 0.2,
+              inset = c(0.02, 0), pt.cex = 0.75, pt.lwd = 1.5)
 
 
     #---------------------------------------------------------------------------
@@ -217,7 +217,7 @@ TC17.Fig06 <- function(mod.param = NULL) {
           side = 2, line = 3.5, las = 0,
           cex = pars$cex.lab, font = pars$font.lab)
 
-    MyLegend("topleft", c("T15", "T13* (opt. param.)", "T13** (ind. param.)"),
+    my.legend("topleft", c("T15", "T13* (opt. param.)", "T13** (ind. param.)"),
               lwd = 1.5, lty = 1, col = c("black", my.col[2], my.col[3]),
               pch = c(NA, 1, 23),
               cex = 1.1, text.font = 1, bty = "n", end.pch = TRUE, pch.xoff = 0.2,
