@@ -13,9 +13,9 @@
 ##' @author Thomas Münch
 ##' @examples
 ##' x <- rnorm(20)
-##' x.bin <- YearMean(x, ind = c(1, 7, 13, 17, 20))
+##' x.bin <- AverageIndexBins(x, ind = c(1, 7, 13, 17, 20))
 ##' @export
-YearMean <- function(x, ind, na.rm = TRUE) {
+AverageIndexBins <- function(x, ind, na.rm = TRUE) {
     
     means <- vector()
     for (i in (1 : (length(ind) - 1))) {

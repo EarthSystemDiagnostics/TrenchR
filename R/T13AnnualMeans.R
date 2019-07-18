@@ -66,16 +66,16 @@ T13AnnualMeans <- function(t1, t2, depth,
     means <- matrix(nrow = length(ind$summer) - 1, ncol = 11)
 
     tmp1 <- cbind(
-        c(YearMean(t1, ind$summer)),
-        c(YearMean(t1, ind$winter), NA),
-        c(YearMean(t1, ind$flk.up), NA),
-        c(NA, YearMean(t1, ind$flk.dwn)))
+        c(AverageIndexBins(t1, ind$summer)),
+        c(AverageIndexBins(t1, ind$winter), NA),
+        c(AverageIndexBins(t1, ind$flk.up), NA),
+        c(NA, AverageIndexBins(t1, ind$flk.dwn)))
 
     tmp2 <- cbind(
-        c(YearMean(t2, ind$summer)),
-        c(YearMean(t2, ind$winter), NA),
-        c(YearMean(t2, ind$flk.up), NA),
-        c(NA, YearMean(t2, ind$flk.dwn)))
+        c(AverageIndexBins(t2, ind$summer)),
+        c(AverageIndexBins(t2, ind$winter), NA),
+        c(AverageIndexBins(t2, ind$flk.up), NA),
+        c(NA, AverageIndexBins(t2, ind$flk.dwn)))
 
     tmp <- array(dim = c(dim(tmp1), 2))
     tmp[, , 1] <- tmp1
