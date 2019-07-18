@@ -9,7 +9,8 @@ prepareTrenchData(index.range = 1:59, LoRes = 3, HiRes = 0.5,
 }
 \arguments{
 \item{index.range}{Vector of depth indices to subset the T15 trench dataset;
-defaults to the range used in Münch et al. (2017).}
+defaults to the range used in Münch et al. (2017). Set to \code{NULL} to
+extract the full depth of the data.}
 
 \item{LoRes}{Depth resolution of trench dataset in cm; defaults to the
 original T13 and T15 sampling resolution (3 cm).}

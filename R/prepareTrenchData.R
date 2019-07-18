@@ -3,7 +3,8 @@
 ##' This function processes the T13 and T15 trench isotopologue data in a way
 ##' that is suited for analysis and plotting used in Münch et al. (2017).
 ##' @param index.range Vector of depth indices to subset the T15 trench dataset;
-##' defaults to the range used in Münch et al. (2017).
+##' defaults to the range used in Münch et al. (2017). Set to \code{NULL} to
+##' extract the full depth of the data.
 ##' @param LoRes Depth resolution of trench dataset in cm; defaults to the
 ##' original T13 and T15 sampling resolution (3 cm).
 ##' @param HiRes Higher depth resolution to interpolate trench data onto;
