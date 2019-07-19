@@ -2,18 +2,28 @@
 ##'
 ##' This function makes all necessary calculations and plots the results for
 ##' Figure 01 shown in Münch et al. (2017).
+##' @param cheat Originally, the annual mean isotope data have been erroneously
+##' calculated such that the last value contributing to bin \code{i} was also
+##' included in bin \code{i + 1}, due to an erroneous implementation of
+##' \code{\link{AverageIndexBins}}. This bug has been fixed. For
+##' \code{cheat = TRUE}, the original paper figure with the erroneous bin
+##' definition can be reproduced, while for \code{cheat = FALSE}, the correct
+##' implementation is used. However, the difference of the annual mean data
+##' between the two figure versions is minor and it thus does not influence any
+##' results or conclusions of Münch et al. (2017).
 ##' @author Thomas Münch
 ##' @references
 ##' Münch, T., et al., Constraints on post-depositional isotope modifications
 ##' in East Antarctic firn from analysing temporal changes of isotope profiles,
 ##' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
-TC17.Fig01 <- function() {
+TC17.Fig01 <- function(cheat = TRUE) {
 
     TR <- prepareTrenchData()$oxy
     T13.annual <- T13AnnualMeans(t1 = TR$mean13.1,
                                  t2 = Hmisc::Lag(TR$mean13.2,
                                                  TR$k13 / TR$LoRes),
-                                 depth = TR$depth)
+                                 depth = TR$depth,
+                                 cheat = cheat)
 
     pars <- SetPlotPar(mar = c(5, 5, 4, 2), mfrow = c(1, 2))
     op <- par(pars)

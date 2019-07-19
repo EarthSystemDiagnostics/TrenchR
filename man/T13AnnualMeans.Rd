@@ -5,14 +5,14 @@
 \title{T13 annual-mean isotope time series.}
 \usage{
 T13AnnualMeans(t1, t2, depth, i.max = c(5, 11, 19, 24, 33, 38),
-  i.min = c(7, 14, 21, 26, 37), start.year = 2013)
+  i.min = c(7, 14, 21, 26, 37), start.year = 2013, cheat = FALSE)
 }
 \arguments{
 \item{t1}{numeric vector of the T13--1 isotope record.}
 
 \item{t2}{numeric vector of the T13--2 isotope record.}
 
-\item{depth}{depth numeric vector of the common T13 depth scale (i.e. after
+\item{depth}{numeric vector of the common T13 depth scale (i.e. after
 the optimal shift of T13--2 to maximise the inter-trench correlation; see
 Münch et al. (2016)).}
 
@@ -24,6 +24,16 @@ record; default indices are the ones used in Münch et al. (2016).}
 
 \item{start.year}{assumed year of the first summer maximum where the maximum
 is defined to occur in January of the year; defaults to \code{2013}.}
+
+\item{cheat}{Originally, the annual mean isotope data have been erroneously
+calculated such that the last value contributing to bin \code{i} was also
+included in bin \code{i + 1}, due to an erroneous implementation of
+\code{\link{AverageIndexBins}}. This bug has been fixed. For
+\code{cheat = TRUE}, the original annual mean data using this erroneous bin
+definition can be reproduced, while for \code{cheat = FALSE}, the correct
+implementation is used. However, the difference in the annual mean data
+between the two version is minor and thus does not influence any results or
+conclusions of Münch et al. (2017).}
 }
 \value{
 A list of three data frames:

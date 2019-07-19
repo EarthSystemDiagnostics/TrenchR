@@ -8,7 +8,7 @@
 ##' slopes.
 ##' @param t1 numeric vector of the T13--1 isotope record. 
 ##' @param t2 numeric vector of the T13--2 isotope record.
-##' @param depth depth numeric vector of the common T13 depth scale (i.e. after
+##' @param depth numeric vector of the common T13 depth scale (i.e. after
 ##' the optimal shift of T13--2 to maximise the inter-trench correlation; see
 ##' Münch et al. (2016)).
 ##' @param i.max index positions of the summer maxima of the trench mean isotope
@@ -17,6 +17,15 @@
 ##' record; default indices are the ones used in Münch et al. (2016).
 ##' @param start.year assumed year of the first summer maximum where the maximum
 ##' is defined to occur in January of the year; defaults to \code{2013}.
+##' @param cheat Originally, the annual mean isotope data have been erroneously
+##' calculated such that the last value contributing to bin \code{i} was also
+##' included in bin \code{i + 1}, due to an erroneous implementation of
+##' \code{\link{AverageIndexBins}}. This bug has been fixed. For
+##' \code{cheat = TRUE}, the original annual mean data using this erroneous bin
+##' definition can be reproduced, while for \code{cheat = FALSE}, the correct
+##' implementation is used. However, the difference in the annual mean data
+##' between the two version is minor and thus does not influence any results or
+##' conclusions of Münch et al. (2017).
 ##' @return A list of three data frames:
 ##' \describe{
 ##'   \item{means:}{the annual-mean time series of the T13--1, T13--2 and mean
@@ -35,7 +44,7 @@
 T13AnnualMeans <- function(t1, t2, depth,
                            i.max = c(5, 11, 19, 24, 33, 38),
                            i.min = c(7, 14, 21, 26, 37),
-                           start.year = 2013) {
+                           start.year = 2013, cheat = FALSE) {
     
     ind <- list()
     ind$summer <- i.max
@@ -65,17 +74,66 @@ T13AnnualMeans <- function(t1, t2, depth,
 
     means <- matrix(nrow = length(ind$summer) - 1, ncol = 11)
 
-    tmp1 <- cbind(
-        c(AverageIndexBins(t1, ind$summer)),
-        c(AverageIndexBins(t1, ind$winter), NA),
-        c(AverageIndexBins(t1, ind$flk.up), NA),
-        c(NA, AverageIndexBins(t1, ind$flk.dwn)))
+    if (!cheat) {
 
-    tmp2 <- cbind(
-        c(AverageIndexBins(t2, ind$summer)),
-        c(AverageIndexBins(t2, ind$winter), NA),
-        c(AverageIndexBins(t2, ind$flk.up), NA),
-        c(NA, AverageIndexBins(t2, ind$flk.dwn)))
+        # calculate means with proper, non-overlapping bin definition
+
+        tmp1 <- cbind(
+            c(AverageIndexBins(t1, ind$summer)),
+            c(AverageIndexBins(t1, ind$winter), NA),
+            c(AverageIndexBins(t1, ind$flk.up), NA),
+            c(NA, AverageIndexBins(t1, ind$flk.dwn)))
+
+        tmp2 <- cbind(
+            c(AverageIndexBins(t2, ind$summer)),
+            c(AverageIndexBins(t2, ind$winter), NA),
+            c(AverageIndexBins(t2, ind$flk.up), NA),
+            c(NA, AverageIndexBins(t2, ind$flk.dwn)))
+
+    } else {
+
+        # calculate means with overlapping bins to reproduce the paper figure
+
+        # prolong records with NA to facilitate using bug-fixed AverageIndexBins
+        t1.cheat <- c(t1, rep(NA, 10))
+        t2.cheat <- c(t2, rep(NA, 10))
+
+        j <- ind$summer
+        n <- length(j) - 1
+        x1.1 <- x1.2 <- numeric(n)
+        for (i in 1 : n) {
+            x1.1[i] <- AverageIndexBins(t1.cheat, c(j[i], j[i + 1] + 1))
+            x1.2[i] <- AverageIndexBins(t2.cheat, c(j[i], j[i + 1] + 1))
+        }
+
+        j <- ind$winter
+        n <- length(j) - 1
+        x2.1 <- x2.2 <- numeric(n)
+        for (i in 1 : n) {
+            x2.1[i] <- AverageIndexBins(t1.cheat, c(j[i], j[i + 1] + 1))
+            x2.2[i] <- AverageIndexBins(t2.cheat, c(j[i], j[i + 1] + 1))
+        }
+
+        j <- ind$flk.up
+        n <- length(j) - 1
+        x3.1 <- x3.2 <- numeric(n)
+        for (i in 1 : n) {
+            x3.1[i] <- AverageIndexBins(t1.cheat, c(j[i], j[i + 1] + 1))
+            x3.2[i] <- AverageIndexBins(t2.cheat, c(j[i], j[i + 1] + 1))
+        }
+
+        j <- ind$flk.dwn
+        n <- length(j) - 1
+        x4.1 <- x4.2 <- numeric(n)
+        for (i in 1 : n) {
+            x4.1[i] <- AverageIndexBins(t1.cheat, c(j[i], j[i + 1] + 1))
+            x4.2[i] <- AverageIndexBins(t2.cheat, c(j[i], j[i + 1] + 1))
+        }
+
+        tmp1 <- cbind(x1.1, c(x2.1, NA), c(x3.1, NA), c(NA, x4.1))
+        tmp2 <- cbind(x1.2, c(x2.2, NA), c(x3.2, NA), c(NA, x4.2))
+
+    }
 
     tmp <- array(dim = c(dim(tmp1), 2))
     tmp[, , 1] <- tmp1
