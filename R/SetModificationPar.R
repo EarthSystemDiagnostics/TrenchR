@@ -26,18 +26,15 @@
 ##' }
 ##' @seealso \code{\link{LoopParamSpace}}; \code{\link{ModifyRecord}}
 ##' @author Thomas Münch
-##' @references
-##' Münch, T., et al., Constraints on post-depositional isotope modifications
-##' in East Antarctic firn from analysing temporal changes of isotope profiles,
-##' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
+##' @inherit Muench2017 references
 ##' @examples
-##' mod.par <- SetModificationPar()
+##' mod.par <- TrenchR:::SetModificationPar()
 SetModificationPar <- function(ADV.opt = ParamSpace$adv.opt,
                                SIGMA.opt = ParamSpace$sigma.opt,
                                STRETCH.opt = ParamSpace$densf.opt,
                                ADV.ind = 50,
                                SIGMA.ind = suppressWarnings(round(
-                                   TrenchR::DifferentialDiffusion(
+                                   DifferentialDiffusion(
                                        z00 = 0, z01 = 1,
                                        z10 = ADV.ind / 100,
                                        z11 = 1 + ADV.ind / 100)[1],

@@ -28,10 +28,7 @@
 ##' diffusion length value for deuterium.
 ##' @author Thomas Münch
 ##' @source Eq. (2) in Münch et al. (2017)
-##' @references
-##' Münch, T., et al., Constraints on post-depositional isotope modifications
-##' in East Antarctic firn from analysing temporal changes of isotope profiles,
-##' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
+##' @inherit Muench2017 references
 ##' @export
 DifferentialDiffusion <- function(dat = NULL, z00, z01, z10, z11,
                                   P = 650, T = 228.5, bdot = 64) {

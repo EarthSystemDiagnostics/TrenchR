@@ -56,9 +56,9 @@ ascending slopes flanking the maxima and (4) the midpoints of the descending
 slopes.
 }
 \references{
-Münch, T., et al., Regional climate signal vs. local noise: a
-two-dimensional view of water isotopes in Antarctic firn at Kohnen Station,
-Dronning Maud Land, Clim. Past, doi:10.5194/cp-12-1565-2016, 2016.
+Münch, T., et al., Regional climate signal vs. local noise: a two-dimensional
+view of water isotopes in Antarctic firn at Kohnen Station, Dronning Maud
+Land, Clim. Past, 12(7), 1565-1581, doi:10.5194/cp-12-1565-2016, 2016.
 }
 \author{
 Thomas Münch

@@ -9,10 +9,7 @@
 ##' \code{NULL} (the default), the original data from Münch et al. (2017) is
 ##' used for plotting.
 ##' @author Thomas Münch
-##' @references
-##' Münch, T., et al., Constraints on post-depositional isotope modifications
-##' in East Antarctic firn from analysing temporal changes of isotope profiles,
-##' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
+##' @inherit Muench2017 references
 ##' @seealso \code{\link{SetModificationPar}}
 TC17.Fig07 <- function(mod.param = NULL) {
     

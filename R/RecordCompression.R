@@ -13,10 +13,7 @@
 ##' @return the length change of the firn-core record in [cm].
 ##' @author Thomas Münch
 ##' @seealso \code{\link{Compression}}
-##' @references
-##' Münch, T., et al., Constraints on post-depositional isotope modifications
-##' in East Antarctic firn from analysing temporal changes of isotope profiles,
-##' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
+##' @inherit Muench2017 references
 ##' @examples
 ##' # Length change of trench record for mean estimated densification rate
 ##' # (see Münch et al., 2017):

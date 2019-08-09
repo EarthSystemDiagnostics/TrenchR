@@ -7,8 +7,8 @@
 SetModificationPar(ADV.opt = ParamSpace$adv.opt,
   SIGMA.opt = ParamSpace$sigma.opt, STRETCH.opt = ParamSpace$densf.opt,
   ADV.ind = 50,
-  SIGMA.ind = suppressWarnings(round(TrenchR::DifferentialDiffusion(z00 =
-  0, z01 = 1, z10 = ADV.ind/100, z11 = 1 + ADV.ind/100)[1], digits = 1)),
+  SIGMA.ind = suppressWarnings(round(DifferentialDiffusion(z00 = 0, z01 =
+  1, z10 = ADV.ind/100, z11 = 1 + ADV.ind/100)[1], digits = 1)),
   STRETCH.ind = round(RecordCompression(adv = ADV.ind, length.in = 100,
   rate = 4.5), digits = 1), ADV.only = 48.5)
 }
@@ -42,12 +42,12 @@ can be used to model the temporal change of the T13 mean profile using the
 function \code{\link{ModifyRecord}}.
 }
 \examples{
-mod.par <- SetModificationPar()
+mod.par <- TrenchR:::SetModificationPar()
 }
 \references{
 Münch, T., et al., Constraints on post-depositional isotope modifications
 in East Antarctic firn from analysing temporal changes of isotope profiles,
-The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
+The Cryosphere, 11(5), 2175-2188, doi:10.5194/tc-11-2175-2017, 2017.
 }
 \seealso{
 \code{\link{LoopParamSpace}}; \code{\link{ModifyRecord}}

@@ -19,12 +19,9 @@
 ##' }
 ##' @author Thomas Münch
 ##' @seealso \code{\link{par}}
-##' @references
-##' Münch, T., et al., Constraints on post-depositional isotope modifications
-##' in East Antarctic firn from analysing temporal changes of isotope profiles,
-##' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
+##' @inherit Muench2017 references
 ##' @examples
-##' op <- par(SetPlotPar())
+##' op <- par(TrenchR:::SetPlotPar())
 ##' plot(1 : 10, xlab = "X title", ylab = "Y title", type = "l")
 ##' par(op)
 SetPlotPar <- function(mar = c(5, 5, 0.5, 0.5), lwd = 2, las = 1,

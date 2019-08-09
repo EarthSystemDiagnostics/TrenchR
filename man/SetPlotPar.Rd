@@ -30,14 +30,14 @@ provides a convenient way to set new graphics parameters and save their old
 values for later restoring at the same time; see the example.
 }
 \examples{
-op <- par(SetPlotPar())
+op <- par(TrenchR:::SetPlotPar())
 plot(1 : 10, xlab = "X title", ylab = "Y title", type = "l")
 par(op)
 }
 \references{
 Münch, T., et al., Constraints on post-depositional isotope modifications
 in East Antarctic firn from analysing temporal changes of isotope profiles,
-The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
+The Cryosphere, 11(5), 2175-2188, doi:10.5194/tc-11-2175-2017, 2017.
 }
 \seealso{
 \code{\link{par}}

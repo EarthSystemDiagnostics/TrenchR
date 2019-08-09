@@ -1,15 +1,15 @@
 Package: TrenchR
-Title: Analyse and Plot Trench Isotope Records.
-Version: 0.0.0.9000
+Title: Analyse and Plot Trench-like Proxy Records.
+Version: 0.1.0
 Authors@R: person("Thomas", "Münch", email = "thomas.muench@awi.de",
 	role = c("aut", "cre"))
-Description: This package implements all main analyses and the plotting of
-	results for the publication Münch et al.: "Constraints on post-
-	depositional isotope modifications in East Antarctic firn from
-	analysing temporal changes of isotope profiles". The Cryosphere
-	Discuss., https://doi.org/10.5194/tc-2017-35, 2017.
+Description: This R package implements routines targeted at analysing and
+    plotting of proxy data derived from spatial arrays of records, specifically
+    from trenches. It incorporates the analyses of snow trench stable isotope
+    data for the publication of Münch et al., The Cryosphere,
+    https://doi.org/10.5194/tc-2017-35, 2017.
 Depends: R (>= 3.3.1)
-License: CC BY 4.0
+License: file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
@@ -19,3 +19,4 @@ Imports:
 	RColorBrewer
 RoxygenNote: 6.1.1
 Suggests: FirnR
+BugReports: https://github.com/EarthSystemDiagnostics/TrenchR/issues

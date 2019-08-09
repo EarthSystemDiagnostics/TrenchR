@@ -184,11 +184,24 @@
 #'   \item{RMSD.opt:}{The array \code{RMSD} projected onto the optimal
 #'     downward-advection value.}
 #' }
-#' @references
-#' Münch, T., et al., Constraints on post-depositional isotope modifications
-#' in East Antarctic firn from analysing temporal changes of isotope profiles,
-#' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
+#' @inherit Muench2017 references
 #' @source
 #' A call to \code{LoopParamSpace}.
 #' @seealso \code{\link{LoopParamSpace}}
 "ParamSpace"
+
+#' Citation for Münch et al. (2016)
+#' @references
+#' Münch, T., et al., Regional climate signal vs. local noise: a two-dimensional
+#' view of water isotopes in Antarctic firn at Kohnen Station, Dronning Maud
+#' Land, Clim. Past, 12(7), 1565-1581, doi:10.5194/cp-12-1565-2016, 2016.
+#' @name Muench2016
+NULL
+
+#' Citation for Münch et al. (2017)
+#' @references
+#' Münch, T., et al., Constraints on post-depositional isotope modifications
+#' in East Antarctic firn from analysing temporal changes of isotope profiles,
+#' The Cryosphere, 11(5), 2175-2188, doi:10.5194/tc-11-2175-2017, 2017.
+#' @name Muench2017
+NULL

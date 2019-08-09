@@ -53,10 +53,7 @@
 ##' @author Thomas Münch
 ##' @seealso \code{\link{DiffuseRecord}}; \code{\link{CompressRecord}};
 ##' \code{?ParamSpace}
-##' @references
-##' Münch, T., et al., Constraints on post-depositional isotope modifications
-##' in East Antarctic firn from analysing temporal changes of isotope profiles,
-##' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
+##' @inherit Muench2017 references
 ##' @examples
 ##' # Run the analysis for Fig. (5) in Münch et al. (2017)
 ##' # (note that this takes some amount of computation time):

@@ -28,7 +28,7 @@ A wrapper function for the \code{polygon} function to draw error shadings
 \examples{
 x <- 1 : 10
 plot(x, type = "n", xlab = "x", ylab = "y")
-Polyplot(x, y1 = x + 2, y2 = x - 2)
+TrenchR:::Polyplot(x, y1 = x + 2, y2 = x - 2)
 lines(x, lwd = 2)
 }
 \seealso{

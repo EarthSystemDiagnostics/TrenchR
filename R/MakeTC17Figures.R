@@ -12,10 +12,7 @@
 ##' @param height height of the plotting area in inches. Default '6'.
 ##' @param width width of the plotting area in inches. Default '8'.
 ##' @author Thomas Münch
-##' @references
-##' Münch, T., et al., Constraints on post-depositional isotope modifications
-##' in East Antarctic firn from analysing temporal changes of isotope profiles,
-##' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
+##' @inherit Muench2017 references
 MakeTC17Figures <- function(save = FALSE, path = file.path(getwd(), "plots"),
                             height = 6, width = 8) {
 

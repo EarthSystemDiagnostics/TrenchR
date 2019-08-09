@@ -28,7 +28,7 @@ using the \code{quartz} graphics device for Mac OS X systems.
 \references{
 Münch, T., et al., Constraints on post-depositional isotope modifications
 in East Antarctic firn from analysing temporal changes of isotope profiles,
-The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
+The Cryosphere, 11(5), 2175-2188, doi:10.5194/tc-11-2175-2017, 2017.
 }
 \author{
 Thomas Münch

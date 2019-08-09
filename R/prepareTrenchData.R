@@ -79,10 +79,7 @@
 ##'           shift of T13-2); and total T15.
 ##' }
 ##' @author Thomas Münch
-##' @references
-##' Münch, T., et al., Constraints on post-depositional isotope modifications
-##' in East Antarctic firn from analysing temporal changes of isotope profiles,
-##' The Cryosphere, doi:10.5194/tc-11-2175-2017, 2017.
+##' @inherit Muench2017 references
 prepareTrenchData <- function(index.range = 1 : 59, LoRes = 3, HiRes = 0.5,
                               k13 = 3, k15 = -0.5, na.treat = FALSE) {
 
