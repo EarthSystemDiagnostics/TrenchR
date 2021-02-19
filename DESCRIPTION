@@ -19,6 +19,7 @@ Imports:
 	RColorBrewer
 RoxygenNote: 6.1.1
 Suggests:
+    covr,
     FirnR,
     testthat
 BugReports: https://github.com/EarthSystemDiagnostics/TrenchR/issues
