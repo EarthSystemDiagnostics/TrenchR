@@ -4,8 +4,7 @@
 \alias{LoopParamSpace}
 \title{Loop over parameter space to find minimum RMSD.}
 \usage{
-LoopParamSpace(rec.in, reference, res, depth, advSpace, sigmaSpace,
-  densfSpace)
+LoopParamSpace(rec.in, reference, res, depth, advSpace, sigmaSpace, densfSpace)
 }
 \arguments{
 \item{rec.in}{numeric vector with the input record which is modified
@@ -22,8 +21,8 @@ the same length as \code{rec.in}.}
 \code{res}.}
 
 \item{advSpace}{numeric vector of downward advection values to loop over; in
-the same units as \code{res}; minimum advection values must not be smaller
-than \code{res}.}
+the same units as \code{res}. Advection values can be zero or negative, but
+the absolute non-zero values must be larger than \code{res}.}
 
 \item{sigmaSpace}{numeric vector of differential diffusion length values to
 loop over; in the same units as \code{res}.}

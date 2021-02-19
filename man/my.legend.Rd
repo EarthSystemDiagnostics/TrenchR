@@ -4,16 +4,49 @@
 \alias{my.legend}
 \title{Add Legends to Plots}
 \usage{
-my.legend(x, y = NULL, legend, fill = NULL, col = par("col"),
-  border = "black", lty, lwd, pch, angle = 45, density = NULL,
-  bty = "o", bg = par("bg"), box.lwd = par("lwd"),
-  box.lty = par("lty"), box.col = par("fg"), pt.bg = NA, cex = 1,
-  pt.cex = cex, pt.lwd = lwd, xjust = 0, yjust = 1,
-  x.intersp = 1, y.intersp = 1, adj = c(0, 0.5), text.width = NULL,
-  text.col = par("col"), text.font = NULL, merge = do.lines &&
-  has.pch, trace = FALSE, plot = TRUE, ncol = 1, horiz = FALSE,
-  title = NULL, inset = 0, xpd, title.col = text.col,
-  title.adj = 0.5, seg.len = 2, end.pch = FALSE, pch.xoff = 0.2)
+my.legend(
+  x,
+  y = NULL,
+  legend,
+  fill = NULL,
+  col = par("col"),
+  border = "black",
+  lty,
+  lwd,
+  pch,
+  angle = 45,
+  density = NULL,
+  bty = "o",
+  bg = par("bg"),
+  box.lwd = par("lwd"),
+  box.lty = par("lty"),
+  box.col = par("fg"),
+  pt.bg = NA,
+  cex = 1,
+  pt.cex = cex,
+  pt.lwd = lwd,
+  xjust = 0,
+  yjust = 1,
+  x.intersp = 1,
+  y.intersp = 1,
+  adj = c(0, 0.5),
+  text.width = NULL,
+  text.col = par("col"),
+  text.font = NULL,
+  merge = do.lines && has.pch,
+  trace = FALSE,
+  plot = TRUE,
+  ncol = 1,
+  horiz = FALSE,
+  title = NULL,
+  inset = 0,
+  xpd,
+  title.col = text.col,
+  title.adj = 0.5,
+  seg.len = 2,
+  end.pch = FALSE,
+  pch.xoff = 0.2
+)
 }
 \arguments{
 \item{x}{the x and y co-ordinates to be used to position the legend.
@@ -45,7 +78,7 @@ my.legend(x, y = NULL, legend, fill = NULL, col = par("col"),
 
 \item{pch}{the plotting symbols appearing in the legend, as
     numeric vector or a vector of 1-character strings (see
-    \code{\link{points}}). Unlike \code{points}, this can all be
+    \code{\link[graphics]{points}}). Unlike \code{points}, this can all be
     specified as a single multi-character string.  \emph{Must} be
     specified for symbol drawing.}
 
@@ -70,7 +103,7 @@ my.legend(x, y = NULL, legend, fill = NULL, col = par("col"),
 \item{box.col}{the line type, width and color for
     the legend box (if \code{bty = "o"}).}
 
-\item{pt.bg}{the background color for the \code{\link{points}},
+\item{pt.bg}{the background color for the \code{\link[graphics]{points}},
     corresponding to its argument \code{bg}.}
 
 \item{cex}{character expansion factor \bold{relative} to current
@@ -99,11 +132,11 @@ my.legend(x, y = NULL, legend, fill = NULL, col = par("col"),
 \item{text.width}{the width of the legend text in x (\code{"user"})
     coordinates.  (Should be a single positive number even for a reversed
     x axis.)  Defaults to the proper value computed by
-    \code{\link{strwidth}(legend)}.}
+    \code{\link[graphics]{strwidth}(legend)}.}
 
 \item{text.col}{the color used for the legend text.}
 
-\item{text.font}{the font used for the legend text, see \code{\link{text}}.}
+\item{text.font}{the font used for the legend text, see \code{\link[graphics]{text}}.}
 
 \item{merge}{logical; if \code{TRUE}, merge points and lines but
     not filled boxes.  Defaults to \code{TRUE} if there are points and lines.}
@@ -128,13 +161,13 @@ my.legend(x, y = NULL, legend, fill = NULL, col = par("col"),
 \item{inset}{inset distance(s) from the margins as a fraction of the
     plot region when legend is placed by keyword.}
 
-\item{xpd}{if supplied, a value of the \link{graphical parameter} \code{xpd}
+\item{xpd}{if supplied, a value of the \link[graphics]{graphical parameter} \code{xpd}
     to be used while the legend is being drawn.}
 
 \item{title.col}{color for \code{title}.}
 
 \item{title.adj}{horizontal adjustment for \code{title}: see the help
-    for \code{\link{par}("adj")}.}
+    for \code{\link[graphics]{par}("adj")}.}
 
 \item{seg.len}{the length of lines drawn to illustrate \code{lty}
     and/or \code{lwd} (in units of character widths).}

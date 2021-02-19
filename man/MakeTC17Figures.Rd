@@ -4,8 +4,12 @@
 \alias{MakeTC17Figures}
 \title{Produce TC2017 Figures.}
 \usage{
-MakeTC17Figures(save = FALSE, path = file.path(getwd(), "plots"),
-  height = 6, width = 8)
+MakeTC17Figures(
+  save = FALSE,
+  path = file.path(getwd(), "plots"),
+  height = 6,
+  width = 8
+)
 }
 \arguments{
 \item{save}{if \code{TRUE}, the plots are saved as files in the

@@ -4,7 +4,8 @@
 \name{aws9}
 \alias{aws9}
 \title{AWS9 2m air temperature.}
-\format{A list with two components:
+\format{
+A list with two components:
 \describe{
   \item{monthly:}{A data frame with 197 observations of 3 variables:
   \describe{
@@ -20,7 +21,8 @@
     annual temperatures.}
     \item{t2m:}{Numeric vector of annual mean 2 m air temperatures in degrees
     Celsius.}}}
-}}
+}
+}
 \source{
 The full AWS9 dataset is available upon request from Carleen Tijm-Reijmer
 (c.h.tijm-reijmer@uu.nl).

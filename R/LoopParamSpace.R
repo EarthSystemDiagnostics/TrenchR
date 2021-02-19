@@ -25,8 +25,8 @@
 ##' @param depth the depth scale of the records; must be in the same units as
 ##' \code{res}.
 ##' @param advSpace numeric vector of downward advection values to loop over; in
-##' the same units as \code{res}; minimum advection values must not be smaller
-##' than \code{res}.
+##' the same units as \code{res}. Advection values can be zero or negative, but
+##' the absolute non-zero values must be larger than \code{res}.
 ##' @param sigmaSpace numeric vector of differential diffusion length values to
 ##' loop over; in the same units as \code{res}.
 ##' @param densfSpace numeric vector of compression values from densification to
@@ -74,8 +74,11 @@ LoopParamSpace <- function(rec.in, reference, res, depth,
         stop("'rec.in' and 'reference' must be of the same length.")
     }
 
-    if (min(advSpace) < res) {
+    if (length(i <- which(abs(advSpace) != 0))) {
+
+      if (min(abs(advSpace[i])) < res) {
         stop("Advection values smaller than 'res' present.")
+      }
     }
     
     advSpace <- advSpace / res

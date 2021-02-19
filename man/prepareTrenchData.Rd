@@ -4,8 +4,14 @@
 \alias{prepareTrenchData}
 \title{Process T13 and T15 Trench Data.}
 \usage{
-prepareTrenchData(index.range = 1:59, LoRes = 3, HiRes = 0.5,
-  k13 = 3, k15 = -0.5, na.treat = FALSE)
+prepareTrenchData(
+  index.range = 1:59,
+  LoRes = 3,
+  HiRes = 0.5,
+  k13 = 3,
+  k15 = -0.5,
+  na.treat = FALSE
+)
 }
 \arguments{
 \item{index.range}{Vector of depth indices to subset the T15 trench dataset;

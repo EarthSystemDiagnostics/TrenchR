@@ -7,8 +7,16 @@
 Eq. (2) in Münch et al. (2017)
 }
 \usage{
-DifferentialDiffusion(dat = NULL, z00, z01, z10, z11, P = 650,
-  T = 228.5, bdot = 64)
+DifferentialDiffusion(
+  dat = NULL,
+  z00,
+  z01,
+  z10,
+  z11,
+  P = 650,
+  T = 228.5,
+  bdot = 64
+)
 }
 \arguments{
 \item{dat}{a list providing a firn density profile, in order to calculate

@@ -1,3 +1,7 @@
+# TrenchR 0.1.1
+
+* Improved checking for reasonable advection values in `LoopParamSpace()`.
+
 # TrenchR 0.1.0
 
 * Full functionality and documentation.

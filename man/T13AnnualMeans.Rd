@@ -4,8 +4,15 @@
 \alias{T13AnnualMeans}
 \title{T13 annual-mean isotope time series.}
 \usage{
-T13AnnualMeans(t1, t2, depth, i.max = c(5, 11, 19, 24, 33, 38),
-  i.min = c(7, 14, 21, 26, 37), start.year = 2013, cheat = FALSE)
+T13AnnualMeans(
+  t1,
+  t2,
+  depth,
+  i.max = c(5, 11, 19, 24, 33, 38),
+  i.min = c(7, 14, 21, 26, 37),
+  start.year = 2013,
+  cheat = FALSE
+)
 }
 \arguments{
 \item{t1}{numeric vector of the T13--1 isotope record.}

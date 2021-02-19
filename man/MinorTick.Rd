@@ -4,8 +4,7 @@
 \alias{MinorTick}
 \title{Make aesthetic minor ticks.}
 \usage{
-MinorTick(nx = 2, ny = 2, tick.ratio = 0.5, side = 1,
-  col = "black")
+MinorTick(nx = 2, ny = 2, tick.ratio = 0.5, side = 1, col = "black")
 }
 \arguments{
 \item{nx}{number of intervals in which to divide the area between major tick

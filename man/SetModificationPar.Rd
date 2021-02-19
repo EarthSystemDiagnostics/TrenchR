@@ -4,13 +4,17 @@
 \alias{SetModificationPar}
 \title{T13 temporal change parameters.}
 \usage{
-SetModificationPar(ADV.opt = ParamSpace$adv.opt,
-  SIGMA.opt = ParamSpace$sigma.opt, STRETCH.opt = ParamSpace$densf.opt,
+SetModificationPar(
+  ADV.opt = ParamSpace$adv.opt,
+  SIGMA.opt = ParamSpace$sigma.opt,
+  STRETCH.opt = ParamSpace$densf.opt,
   ADV.ind = 50,
-  SIGMA.ind = suppressWarnings(round(DifferentialDiffusion(z00 = 0, z01 =
-  1, z10 = ADV.ind/100, z11 = 1 + ADV.ind/100)[1], digits = 1)),
-  STRETCH.ind = round(RecordCompression(adv = ADV.ind, length.in = 100,
-  rate = 4.5), digits = 1), ADV.only = 48.5)
+  SIGMA.ind = suppressWarnings(round(DifferentialDiffusion(z00 = 0, z01 = 1, z10 =
+    ADV.ind/100, z11 = 1 + ADV.ind/100)[1], digits = 1)),
+  STRETCH.ind = round(RecordCompression(adv = ADV.ind, length.in = 100, rate = 4.5),
+    digits = 1),
+  ADV.only = 48.5
+)
 }
 \value{
 A list of the following modification parameters:

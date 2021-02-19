@@ -4,8 +4,15 @@
 \alias{TC17.Fig03}
 \title{Produce TC17 Figure 03.}
 \usage{
-TC17.Fig03(graphics.dev = NULL, path = NULL, file = NULL,
-  height = 6, width = 8, adj.width = 1.75, ...)
+TC17.Fig03(
+  graphics.dev = NULL,
+  path = NULL,
+  file = NULL,
+  height = 6,
+  width = 8,
+  adj.width = 1.75,
+  ...
+)
 }
 \arguments{
 \item{graphics.dev}{graphics device (function name) to be used for saving

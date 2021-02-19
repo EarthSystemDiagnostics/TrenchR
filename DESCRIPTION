@@ -1,6 +1,6 @@
 Package: TrenchR
 Title: Analyse and Plot Trench-like Proxy Records.
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: person("Thomas", "Münch", email = "thomas.muench@awi.de",
 	role = c("aut", "cre"))
 Description: This R package implements routines targeted at analysing and
@@ -17,7 +17,7 @@ Imports:
 	GISTools,
 	Hmisc,
 	RColorBrewer
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 Suggests:
     covr,
     FirnR,

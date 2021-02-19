@@ -4,9 +4,17 @@
 \alias{SetPlotPar}
 \title{Load plotting parameters.}
 \usage{
-SetPlotPar(mar = c(5, 5, 0.5, 0.5), lwd = 2, las = 1, font.lab = 2,
-  font.axis = 2, cex.main = 1.5, cex.lab = 1.5, cex.axis = 1.25,
-  ...)
+SetPlotPar(
+  mar = c(5, 5, 0.5, 0.5),
+  lwd = 2,
+  las = 1,
+  font.lab = 2,
+  font.axis = 2,
+  cex.main = 1.5,
+  cex.lab = 1.5,
+  cex.axis = 1.25,
+  ...
+)
 }
 \value{
 A list of plotting parameters to be used with \code{par()}.

@@ -4,7 +4,8 @@
 \name{t13.trench1}
 \alias{t13.trench1}
 \title{Trench T13-1 Stable Water Isotopologue Data and Meta Information.}
-\format{A list with three components:
+\format{
+A list with three components:
 \describe{
   \item{data:}{A 3 x 38 x 38 array with the isotopologue data: the first
     index refers to the isotopic species (1 = d18O, 2 = d2H, 3 =
@@ -21,7 +22,8 @@
     \item{profileSurfaceHeight:}{Numeric vector of the surface heights in
     [cm] at the profile positions (positive downwards) relative to the
     maximum surface height of the trench.}}}
-}}
+}
+}
 \source{
 \url{https://doi.pangaea.de/10.1594/PANGAEA.861675}
 }

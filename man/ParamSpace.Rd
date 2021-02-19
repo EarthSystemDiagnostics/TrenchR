@@ -4,7 +4,8 @@
 \name{ParamSpace}
 \alias{ParamSpace}
 \title{Data for TC2017 Figure 5.}
-\format{A list with nine components:
+\format{
+A list with nine components:
 \describe{
   \item{adv:}{Numeric vector with the range of advection values in cm for
     which the RMSD is computed.}
@@ -25,7 +26,8 @@
     downward advection, differential diffusion and compression.}
   \item{RMSD.opt:}{The array \code{RMSD} projected onto the optimal
     downward-advection value.}
-}}
+}
+}
 \source{
 A call to \code{LoopParamSpace}.
 }

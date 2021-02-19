@@ -4,8 +4,15 @@
 \alias{ModifyRecord}
 \title{Model temporal change of firn profile.}
 \usage{
-ModifyRecord(rec.in, res, depth.hires, depth.lores = NULL,
-  SIGMA = NULL, STRETCH = NULL, ADV = NULL)
+ModifyRecord(
+  rec.in,
+  res,
+  depth.hires,
+  depth.lores = NULL,
+  SIGMA = NULL,
+  STRETCH = NULL,
+  ADV = NULL
+)
 }
 \arguments{
 \item{rec.in}{numeric vector with the firn proxy (isotope) record to be
