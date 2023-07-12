@@ -129,8 +129,7 @@ TC17.Fig02 <- function() {
     lines(c(t15.2$start[2], t15.2$end[2]), c(t15.2$start[1], t15.2$end[1]),
           col = "firebrick3", lwd = 2.5, lty = 1)
 
-    GISTools::north.arrow(x0, y0, len = 0.0004,
-                          lab = "N", lwd = 1, cex.lab = 1.25)
+    prettymapr::addnortharrow(scale = 0.5, padin = c(0.25, 0.25))
     arrows(x1, y1, x2, y2, code = 1, length = 0.15, angle = 25, lwd = 1)
 
     par(op)
