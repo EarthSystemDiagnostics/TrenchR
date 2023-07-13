@@ -1,3 +1,8 @@
+# TrenchR 0.1.3
+
+* A package vignette showing how to reproduce the figures of the Münch et
+  al. (2017) paper is now included.
+
 # TrenchR 0.1.2
 
 * Replaced GISTools dependency since the package is no longer on CRAN. This only
