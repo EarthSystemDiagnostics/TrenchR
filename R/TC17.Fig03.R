@@ -35,9 +35,6 @@ TC17.Fig03 <- function(graphics.dev = NULL, path = NULL, file = NULL,
     }
 
     TR = prepareTrenchData(na.treat = TRUE)$oxy
-    
-    pars <- SetPlotPar()
-    
 
     #---------------------------------------------------------------------------
     # Fig03-a
@@ -50,7 +47,53 @@ TC17.Fig03 <- function(graphics.dev = NULL, path = NULL, file = NULL,
         graphics.dev(file = file.a, path, height = height,
                      width = width + adj.width, ...)
     }
-    op <- par(SetPlotPar(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2)))
+
+    TC17.Fig03a(TR = TR)
+
+    #---------------------------------------------------------------------------
+    # Fig03-b
+    if (is.null(graphics.dev)) {
+        dev.new(height = height, width = width + adj.width, ...,
+                noRStudioGD = TRUE)
+    } else {
+        dev.off()
+        file.b <- paste(paste(tools::file_path_sans_ext(file), "b", sep = ""),
+                        tools::file_ext(file), sep = ".")
+        graphics.dev(file = file.b, path, height = height,
+                     width = width + adj.width, ...)
+    }
+
+    TC17.Fig03b(TR = TR)
+
+    #---------------------------------------------------------------------------
+    # Fig03-c
+    if (is.null(graphics.dev)) {
+        dev.new(height = height, width = width, ...,
+                noRStudioGD = TRUE)
+    } else {
+        dev.off()
+        file.c <- paste(paste(tools::file_path_sans_ext(file), "c", sep = ""),
+                        tools::file_ext(file), sep = ".")
+        graphics.dev(file = file.c, path, height = height,
+                     width = width, ...)
+    }
+
+    TC17.Fig03c(TR = TR)
+
+    if (!is.null(graphics.dev)) {
+        dev.off()
+    }
+
+}
+
+##' Produce TC17 Figure 03a.
+##'
+##' @param TR the data set; defaults to the processed T15 oxygen isotope data.
+##' @author Thomas Münch
+##' @inherit Muench2017 references
+TC17.Fig03a <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy) {
+
+    op <- par(pars <- SetPlotPar(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2)))
 
     # limit the colorscale
     MAX <- -35
@@ -58,9 +101,6 @@ TC17.Fig03 <- function(graphics.dev = NULL, path = NULL, file = NULL,
     T1 <- TR$trench15.1
     T1[T1 > MAX] <- MAX
     T1[T1 < MIN] <- MIN
-    T2 <- TR$trench15.2
-    T2[T2 > MAX] <- MAX
-    T2[T2 < MIN] <- MIN
 
     # fill part of surface layer with first non-NA value/profile
     # to improve plot appearance
@@ -68,14 +108,10 @@ TC17.Fig03 <- function(graphics.dev = NULL, path = NULL, file = NULL,
     for (i in 1 : 11) {
         T1[first.not.na[i] - 1, i] <- T1[first.not.na[i], i]
     }
-    first.not.na <- apply(T2 ,2, function(x) {which(!is.na(x))[1]})
-    for (i in 1 : 11) {
-        T2[first.not.na[i] - 1, i] <- T2[first.not.na[i], i]}
 
     top <- -15
     bottom <- TR$depth[length(TR$depth)]
     palette <- colorRampPalette(rev(RColorBrewer::brewer.pal(10, "RdYlBu")))
-
 
     filled.contour(TR$XPOS, TR$depth / 100, t(T1),
                    color.palette = palette,
@@ -90,46 +126,59 @@ TC17.Fig03 <- function(graphics.dev = NULL, path = NULL, file = NULL,
          labels = expression(delta^bold("18") * bold("O") * bold(" (\u2030)")),
          srt = -90, xpd = NA, cex = pars$cex.lab, font = pars$font.lab)
 
+    par(op)
 
-    #---------------------------------------------------------------------------
-    # Fig03-b
-    if (is.null(graphics.dev)) {
-        dev.new(height = height, width = width + adj.width, ...,
-                noRStudioGD = TRUE)
-    } else {
-        dev.off()
-        file.b <- paste(paste(tools::file_path_sans_ext(file), "b", sep = ""),
-                        tools::file_ext(file), sep = ".")
-        graphics.dev(file = file.b, path, height = height,
-                     width = width + adj.width, ...)
-    }
-    par(SetPlotPar(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2)))
+}
+
+##' Produce TC17 Figure 03b.
+##'
+##' @param TR the data set; defaults to the processed T15 oxygen isotope data.
+##' @author Thomas Münch
+##' @inherit Muench2017 references
+TC17.Fig03b <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy) {
+
+    op <- par(pars <- SetPlotPar(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2)))
+
+    # limit the colorscale
+    MAX <- -35
+    MIN <- -55
+    T2 <- TR$trench15.2
+    T2[T2 > MAX] <- MAX
+    T2[T2 < MIN] <- MIN
+
+    # fill part of surface layer with first non-NA value/profile
+    # to improve plot appearance
+    first.not.na <- apply(T2 ,2, function(x) {which(!is.na(x))[1]})
+    for (i in 1 : 11) {
+        T2[first.not.na[i] - 1, i] <- T2[first.not.na[i], i]}
+
+    top <- -15
+    bottom <- TR$depth[length(TR$depth)]
+    palette <- colorRampPalette(rev(RColorBrewer::brewer.pal(10, "RdYlBu")))
 
     filled.contour(TR$XPOS, TR$depth / 100, t(T2),
                    color.palette = palette,
                    plot.title = {
-                       grid(col = "black", nx = NA, ny = NULL);
-                       title(xlab = "Trench position (m)");
-                       lines(TR$SPRF.t2$x, TR$SPRF.t2$y / 100)},
+                     grid(col = "black", nx = NA, ny = NULL);
+                     title(xlab = "Trench position (m)");
+                     lines(TR$SPRF.t2$x, TR$SPRF.t2$y / 100)},
                    zlim = c(MIN, MAX), ylim = c(bottom, top) / 100)
     text(51, mean(c(bottom, top)) / 100,
          labels = expression(delta^bold("18") * bold("O") * bold(" (\u2030)")),
          srt = -90, xpd = NA, cex = pars$cex.lab, font = pars$font.lab)
 
+    par(op)
 
-    #---------------------------------------------------------------------------
-    # Fig03-c
-    if (is.null(graphics.dev)) {
-        dev.new(height = height, width = width, ...,
-                noRStudioGD = TRUE)
-    } else {
-        dev.off()
-        file.c <- paste(paste(tools::file_path_sans_ext(file), "c", sep = ""),
-                        tools::file_ext(file), sep = ".")
-        graphics.dev(file = file.c, path, height = height,
-                     width = width, ...)
-    }
-    par(pars)
+}
+
+##' Produce TC17 Figure 03c.
+##'
+##' @param TR the data set; defaults to the processed T15 oxygen isotope data.
+##' @author Thomas Münch
+##' @inherit Muench2017 references
+TC17.Fig03c <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy) {
+
+    op <- par(pars <- SetPlotPar())
 
     ind1 <- which(TR$depth <= TR$SRF.b$t15.1)
     ind2 <- which(TR$depth <= TR$SRF.b$t15.2)
@@ -177,9 +226,4 @@ TC17.Fig03 <- function(graphics.dev = NULL, path = NULL, file = NULL,
               end.pch = TRUE, pch.xoff = 0.2)
 
     par(op)
-    if (!is.null(graphics.dev)) {
-        dev.off()
-    }
-
 }
-    
