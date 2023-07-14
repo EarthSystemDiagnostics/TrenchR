@@ -13,10 +13,11 @@ License: file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
-	geosphere,
-	Hmisc,
-	prettymapr,
-	RColorBrewer
+    geosphere,
+    grfxtools (>= 0.4.1),
+    Hmisc,
+    prettymapr,
+    RColorBrewer
 RoxygenNote: 7.2.3
 Suggests:
     knitr,
@@ -26,3 +27,5 @@ Suggests:
     rmarkdown
 BugReports: https://github.com/EarthSystemDiagnostics/TrenchR/issues
 VignetteBuilder: knitr
+Remotes:
+    EarthSystemDiagnostics/grfxtools

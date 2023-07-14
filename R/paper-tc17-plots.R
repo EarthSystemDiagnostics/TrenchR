@@ -60,12 +60,12 @@ TC17.Fig01 <- function(cheat = TRUE) {
     lines(T13.annual$means$depth, T13.annual$means$T2,
           type = 'b', lty = 1, pch = 19, col = "firebrick3")
 
-    Polyplot(T13.annual$means$depth,
-             T13.annual$means$max.T1, T13.annual$means$min.T1,
-             col = "black", alpha = 0.15)
-    Polyplot(T13.annual$means$depth,
-             T13.annual$means$max.T2, T13.annual$means$min.T2,
-             col = "firebrick3", alpha = 0.15)
+    grfxtools::Polyplot(T13.annual$means$depth,
+                        T13.annual$means$max.T1, T13.annual$means$min.T1,
+                        col = "black", alpha = 0.15)
+    grfxtools::Polyplot(T13.annual$means$depth,
+                        T13.annual$means$max.T2, T13.annual$means$min.T2,
+                        col = "firebrick3", alpha = 0.15)
 
     legend("topright",
            legend = c("T13-1", "T13-2"),
