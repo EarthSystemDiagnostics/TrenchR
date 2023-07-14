@@ -115,7 +115,8 @@ LoopParamSpace <- function(rec.in, reference, res, depth,
                 iR <- which(sigmaSpace == s)
                 iC <- which(densfSpace == d)
 
-                RMSD[iX, iR, iC] <- rmsd(diff.stretch.adv, REF, na.rm = TRUE)
+                RMSD[iX, iR, iC] <- stattools::rmsd(diff.stretch.adv, REF,
+                                                    na.rm = TRUE)
 
             }
         }
