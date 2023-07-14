@@ -23,15 +23,22 @@ Grant VG-NH900.
  
 ## Installation
 
-**TrenchR** can be installed directly from GitHub:
+**TrenchR** is currently available from its [GitHub
+repository](https://github.com/EarthSystemDiagnostics/TrenchR) and is installed
+via:
 
 ```r
-if (!require("devtools")) {
-  install.packages("devtools")
-}
-
-devtools::install_github("EarthSystemDiagnostics/TrenchR")
+# install.packages("remotes")
+remotes::install_github("EarthSystemDiagnostics/TrenchR", build_vignettes = TRUE)
 ```
+
+## Examples
+
+* The package vignette `Plot Münch et al. (2017) figures` shows how to
+  reproduce the plots for the publication Münch et al. (2017) and is available after
+  installing the package as shown above. The respective vignette of the package
+  development version is linked
+  [here](http://htmlpreview.github.io/?https://github.com/EarthSystemDiagnostics/TrenchR/blob/master/vignettes/tc17-figures.html).
 
 
 ## Literature cited

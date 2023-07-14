@@ -1,0 +1,86 @@
+---
+title: "Plot Münch et al. (2017) figures"
+author: "Thomas Münch"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Plot Münch et al. (2017) figures}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  rmarkdown.html_vignette.check_title = FALSE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(TrenchR)
+
+height   <- 6
+width    <- 8
+widthf3  <- width + 1.75
+heightf1 <- 1.125 * height
+```
+
+## Overview
+
+This vignette reproduces the figures shown in the publication Münch, T.,
+Kipfstuhl, S., Freitag, J., Meyer, H. and Laepple, T.: Constraints on
+post-depositional isotope modifications in East Antarctic firn from analysing
+temporal changes of isotope profiles, _The Cryosphere_, **11**, 2175–2188,
+doi: [10.5194/tc-11-2175-2017](https://doi.org/10.5194/tc-11-2175-2017), 2017.
+
+## Figure 1
+
+```{r, fig.width = 2 * width, fig.height = heightf1}
+TrenchR:::TC17.Fig01()
+```
+
+## Figure 2
+
+```{r, fig.width = width, fig.height = width}
+TrenchR:::TC17.Fig02()
+```
+
+## Figure 3
+
+```{r, fig.width = widthf3, fig.height = height}
+TrenchR:::TC17.Fig03a()
+```
+
+```{r, fig.width = widthf3, fig.height = height}
+TrenchR:::TC17.Fig03b()
+```
+
+```{r, fig.width = width, fig.height = height}
+TrenchR:::TC17.Fig03c()
+```
+
+## Figure 4
+
+```{r, fig.width = width, fig.height = height}
+TrenchR:::TC17.Fig04()
+```
+
+## Figure 5
+
+```{r, fig.width = width, fig.height = height}
+TrenchR:::TC17.Fig05()
+```
+
+## Figure 6
+
+```{r, fig.width = 2 * width, fig.height = height}
+TrenchR:::TC17.Fig06()
+```
+
+
+## Figure 7
+
+```{r, fig.width = 2 * height, fig.height = height}
+TrenchR:::TC17.Fig07()
+```

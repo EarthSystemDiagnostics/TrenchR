@@ -1,3 +1,14 @@
+# TrenchR 0.1.3
+
+* A package vignette showing how to reproduce the figures of the Münch et
+  al. (2017) paper is now included.
+
+# TrenchR 0.1.2
+
+* Replaced GISTools dependency since the package is no longer on CRAN. This only
+  affects the layout of the north arrow plotted on the map in Figure 2 of Münch
+  et al. (2017).
+
 # TrenchR 0.1.1
 
 * Improved checking for reasonable advection values in `LoopParamSpace()`.
@@ -5,7 +16,7 @@
 # TrenchR 0.1.0
 
 * Full functionality and documentation.
-* Gerenalised usage of some functions.
+* Generalised usage of some functions.
 
 # TrenchR 0.0.9
 
