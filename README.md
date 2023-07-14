@@ -38,7 +38,7 @@ remotes::install_github("EarthSystemDiagnostics/TrenchR", build_vignettes = TRUE
   reproduce the plots for the publication Münch et al. (2017) and is available after
   installing the package as shown above. The respective vignette of the package
   development version is linked
-  [here](http://htmlpreview.github.io/?https://github.com/EarthSystemDiagnostics/TrenchR/blob/dev-vignettes/vignettes/tc17-figures.html).
+  [here](http://htmlpreview.github.io/?https://github.com/EarthSystemDiagnostics/TrenchR/blob/master/vignettes/tc17-figures.html).
 
 
 ## Literature cited
