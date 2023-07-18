@@ -17,6 +17,7 @@ Imports:
     grfxtools (>= 0.4.1),
     Hmisc,
     prettymapr,
+    prxytools (>= 0.2.0),
     RColorBrewer,
     stattools (>= 0.3.0)
 RoxygenNote: 7.2.3
@@ -30,4 +31,5 @@ BugReports: https://github.com/EarthSystemDiagnostics/TrenchR/issues
 VignetteBuilder: knitr
 Remotes:
     EarthSystemDiagnostics/grfxtools,
-    EarthSystemDiagnostics/stattools
+    EarthSystemDiagnostics/stattools,
+    EarthSystemDiagnostics/prxytools

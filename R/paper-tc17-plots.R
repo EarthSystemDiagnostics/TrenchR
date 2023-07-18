@@ -3,14 +3,14 @@
 ##' This function makes all necessary calculations and plots the results for
 ##' Figure 01 shown in Münch et al. (2017).
 ##' @param cheat Originally, the annual mean isotope data have been erroneously
-##' calculated such that the last value contributing to bin \code{i} was also
-##' included in bin \code{i + 1}, due to an erroneous implementation of
-##' \code{\link{AverageIndexBins}}. This bug has been fixed. For
-##' \code{cheat = TRUE}, the original paper figure with the erroneous bin
-##' definition can be reproduced, while for \code{cheat = FALSE}, the correct
-##' implementation is used. However, the difference of the annual mean data
-##' between the two figure versions is minor and it thus does not influence any
-##' results or conclusions of Münch et al. (2017).
+##' calculated such that the last value contributing to annual bin \code{i} was
+##' also included in bin \code{i + 1}, due to an erroneous implementation within
+##' the bin averaging function. This bug has been fixed. For \code{cheat =
+##' TRUE}, the original paper figure with the erroneous bin definition can be
+##' reproduced, while for \code{cheat = FALSE}, the correct implementation is
+##' used. The difference in the annual mean data between the two figure versions
+##' is, however, minor, and it thus does not influence any results or
+##' conclusions of Münch et al. (2017).
 ##' @author Thomas Münch
 ##' @inherit Muench2017 references
 TC17.Fig01 <- function(cheat = TRUE) {

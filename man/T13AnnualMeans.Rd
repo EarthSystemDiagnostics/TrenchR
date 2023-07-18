@@ -33,14 +33,14 @@ record; default indices are the ones used in Münch et al. (2016).}
 is defined to occur in January of the year; defaults to \code{2013}.}
 
 \item{cheat}{Originally, the annual mean isotope data have been erroneously
-calculated such that the last value contributing to bin \code{i} was also
-included in bin \code{i + 1}, due to an erroneous implementation of
-\code{\link{AverageIndexBins}}. This bug has been fixed. For
-\code{cheat = TRUE}, the original annual mean data using this erroneous bin
-definition can be reproduced, while for \code{cheat = FALSE}, the correct
-implementation is used. However, the difference in the annual mean data
-between the two version is minor and thus does not influence any results or
-conclusions of Münch et al. (2017).}
+calculated such that the last value contributing to annual bin \code{i} was
+also included in bin \code{i + 1}, due to an erroneous implementation within
+the bin averaging function. This bug has been fixed. For \code{cheat =
+TRUE}, the original annual mean data using this erroneous bin definition can
+be reproduced, while for \code{cheat = FALSE}, the correct implementation is
+used. The difference in the annual mean data between the two versions is,
+however, minor, and it thus does not influence any results or conclusions of
+Münch et al. (2017).}
 }
 \value{
 A list of three data frames:
