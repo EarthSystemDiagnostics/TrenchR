@@ -22,9 +22,9 @@ TC17.Fig01 <- function(cheat = TRUE) {
                                  depth = TR$depth,
                                  cheat = cheat)
 
-    pars <- SetPlotPar(mar = c(5, 5, 4, 2), mfrow = c(1, 2))
-    op <- par(pars)
-    
+    op <- grfxtools::Par(mar = c(5, 5, 4, 2), mfrow = c(1, 2),
+                         lwd = 2, font.lab = 2, font.axis = 2)
+
 
     #---------------------------------------------------------------------------
     # Fig01-a
@@ -37,15 +37,15 @@ TC17.Fig01 <- function(cheat = TRUE) {
     box()
     axis(3, labels = T13.annual$summer.max$years,
          at = T13.annual$summer.max$depth,
-         cex.axis = 0.75 * pars$cex.lab)
-    mtext("Depth (cm)", side = 1, line = 3.5, cex = pars$cex.lab,
-          font = pars$font.lab)
+         cex.axis = 0.75 * par()$cex.lab)
+    mtext("Depth (cm)", side = 1, line = 3.5, cex = par()$cex.lab,
+          font = par()$font.lab)
     mtext(expression(bold("Trench ") *
                      delta^bold("18") * bold("O") * bold(" (\u2030)")),
           side = 2, line = 3.25, las = 0,
-          cex = pars$cex.lab, font = pars$font.lab)
+          cex = par()$cex.lab, font = par()$font.lab)
     mtext("Year", side = 3, line = 2.75,
-          cex = pars$cex.lab, font = pars$font.lab)
+          cex = par()$cex.lab, font = par()$font.lab)
 
     abline(v = T13.annual$summer.max$depth,
            lty = 5, lwd = 1.5, col = "darkgrey")
@@ -94,18 +94,18 @@ TC17.Fig01 <- function(cheat = TRUE) {
     abline(v = y.lines, lty = 5, lwd = 1.5, col = "darkgrey")
     axis(1, at = y.lines,
          labels = c("2013", "2012", "2011", "2010", "2009", "2008"),
-         cex.axis = 0.75 * pars$cex.lab)
+         cex.axis = 0.75 * par()$cex.lab)
     axis(3, at = y.lines,
          labels = c("2013", "2012", "2011", "2010", "2009", "2008"),
-         cex.axis = 0.75 * pars$cex.lab)
+         cex.axis = 0.75 * par()$cex.lab)
     axis(2)
     box()
 
     mtext("Year", side = c(1, 3), line = c(3.5, 2.75),
-          cex = pars$cex.lab, font = pars$font.lab)
+          cex = par()$cex.lab, font = par()$font.lab)
     mtext(bquote(bold("AWS 2m air temperature"~paste('(',degree,'C)'))),
           side = 2, line = 3.25, las = 0,
-          cex = pars$cex.lab, font = pars$font.lab)
+          cex = par()$cex.lab, font = par()$font.lab)
 
     legend("bottomright", c("Monthly mean", "Annual mean"),
            col = c("black", "dodgerblue"), lty = c(1, NA), pch = c(NA, 19),
@@ -123,8 +123,8 @@ TC17.Fig01 <- function(cheat = TRUE) {
 ##' @inherit Muench2017 references
 TC17.Fig02 <- function() {
 
-    pars <- SetPlotPar(mar = c(6, 6, 6, 6))
-    op <- par(pars)
+    op <- grfxtools::Par(mar = c(6, 6, 6, 6), lwd = 2,
+                         font.lab = 2, font.axis = 2)
 
     # lat/lon for relevant sites
     edml <- c(-75.0025, 0.0684)
@@ -198,14 +198,14 @@ TC17.Fig02 <- function() {
 
     mtext(bquote(paste(bold("Longitude ("), degree, bold("E)"))),
           side = 1, line = 4.5,
-          cex = pars$cex.lab, font = pars$font.lab)
+          cex = par()$cex.lab, font = par()$font.lab)
     mtext(bquote(paste(bold("Latitude ("), degree, bold("N)"))), las = 0,
           side = 2, line = 4.5,
-          cex = pars$cex.lab, font = pars$font.lab)
+          cex = par()$cex.lab, font = par()$font.lab)
     mtext("Distance (m)", side = 3, line = 4,
-          cex = pars$cex.lab, font = pars$font.lab)
+          cex = par()$cex.lab, font = par()$font.lab)
     text(0.108, -75.005, labels = "Distance (m)", srt = -90, xpd = NA,
-         cex = pars$cex.lab, font = pars$font.lab)
+         cex = par()$cex.lab, font = par()$font.lab)
 
     points(edml[2], edml[1], pch = 24, col = "black", bg = "black")
     points(edml[2], edml[1], pch = 25, col = "black", bg = "black")
@@ -260,7 +260,8 @@ TC17.Fig02 <- function() {
 ##' @inherit Muench2017 references
 TC17.Fig03a <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy) {
 
-    op <- par(pars <- SetPlotPar(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2)))
+    op <- grfxtools::Par(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2),
+                         lwd = 2, font.lab = 2, font.axis = 2)
 
     # limit the colorscale
     MAX <- -35
@@ -288,10 +289,10 @@ TC17.Fig03a <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy) {
                        lines(TR$SPRF.t1$x, TR$SPRF.t1$y / 100)},
                    zlim = c(MIN, MAX), ylim = c(bottom, top) / 100)
     mtext("Depth (m)", side = 2, line = 3.5,
-          cex = pars$cex.lab, font = pars$font.lab, las = 0)
+          cex = par()$cex.lab, font = par()$font.lab, las = 0)
     text(51, mean(c(bottom, top)) / 100,
          labels = expression(delta^bold("18") * bold("O") * bold(" (\u2030)")),
-         srt = -90, xpd = NA, cex = pars$cex.lab, font = pars$font.lab)
+         srt = -90, xpd = NA, cex = par()$cex.lab, font = par()$font.lab)
 
     par(op)
 
@@ -304,7 +305,8 @@ TC17.Fig03a <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy) {
 ##' @inherit Muench2017 references
 TC17.Fig03b <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy) {
 
-    op <- par(pars <- SetPlotPar(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2)))
+    op <- grfxtools::Par(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2),
+                         lwd = 2, font.lab = 2, font.axis = 2)
 
     # limit the colorscale
     MAX <- -35
@@ -332,7 +334,7 @@ TC17.Fig03b <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy) {
                    zlim = c(MIN, MAX), ylim = c(bottom, top) / 100)
     text(51, mean(c(bottom, top)) / 100,
          labels = expression(delta^bold("18") * bold("O") * bold(" (\u2030)")),
-         srt = -90, xpd = NA, cex = pars$cex.lab, font = pars$font.lab)
+         srt = -90, xpd = NA, cex = par()$cex.lab, font = par()$font.lab)
 
     par(op)
 
@@ -345,7 +347,7 @@ TC17.Fig03b <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy) {
 ##' @inherit Muench2017 references
 TC17.Fig03c <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy) {
 
-    op <- par(pars <- SetPlotPar())
+    op <- grfxtools::Par(lwd = 2, font.lab = 2, font.axis = 2)
 
     ind1 <- which(TR$depth <= TR$SRF.b$t15.1)
     ind2 <- which(TR$depth <= TR$SRF.b$t15.2)
@@ -369,10 +371,10 @@ TC17.Fig03c <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy) {
     abline(v = c(0, 50, 100, 150) / 100, col = "black", lty = "dotted")
 
     mtext("Depth (m)", side = 1, line = 3.5,
-          cex = pars$cex.lab, font = pars$font.lab)
+          cex = par()$cex.lab, font = par()$font.lab)
     mtext(expression(delta^bold("18") * bold("O") * bold("  (\u2030)")),
           side = 2, line = 3.25, las = 0,
-          cex = pars$cex.lab, font = pars$font.lab)
+          cex = par()$cex.lab, font = par()$font.lab)
 
     lines(TR$depth / 100, v1, col = "black")
     lines((TR$depth + TR$k15) / 100, v2, col = "firebrick3")
@@ -405,8 +407,8 @@ TC17.Fig04 <- function() {
 
     TR = prepareTrenchData(na.treat = TRUE)$oxy
     
-    pars <- SetPlotPar(oma = c(5, 0, 0.5, 0), mar = c(0, 6, 0, 6))
-    op <- par(pars)
+    op <- grfxtools::Par(oma = c(5, 0, 0.5, 0), mar = c(0, 6, 0, 6),
+                         lwd = 2, font.lab = 2, font.axis = 2)
 
     ind1 <- which(TR$depth <= TR$SRF.b$t15)
     ind2 <- which(TR$depth <= TR$SRF.b$t13)
@@ -425,10 +427,10 @@ TC17.Fig04 <- function() {
     MinorTick(nx = 1, ny = 2, side = 2)
     text(-35, -44,
          labels = expression(delta^bold("18") * bold("O")*bold(" (\u2030)")),
-         srt = 90, xpd = NA, cex = pars$cex.lab, font = pars$font.lab,
+         srt = 90, xpd = NA, cex = par()$cex.lab, font = par()$font.lab,
          col = "black")
     text(17.5, -37, "T15 (2015)",
-         cex = pars$cex.lab, font = pars$font.lab)
+         cex = par()$cex.lab, font = par()$font.lab)
 
     par(new = TRUE)
 
@@ -446,12 +448,12 @@ TC17.Fig04 <- function() {
 
     text(210, -44,
          labels = expression(delta^bold("18") * bold("O") * bold(" (\u2030)")),
-         srt = -90, xpd = NA, cex = pars$cex.lab, font = pars$font.lab,
+         srt = -90, xpd = NA, cex = par()$cex.lab, font = par()$font.lab,
          col = "dodgerblue")
     mtext("Depth (cm)", side = 1, line = 3.5,
-          cex = pars$cex.lab, font = pars$font.lab)
+          cex = par()$cex.lab, font = par()$font.lab)
     text(175 - 17.5, -40.75, "T13 (2013)",
-         cex = pars$cex.lab, font = pars$font.lab, col = "dodgerblue")
+         cex = par()$cex.lab, font = par()$font.lab, col = "dodgerblue")
 
     par(op)
 
@@ -475,8 +477,7 @@ TC17.Fig05 <- function(dat = NULL) {
         dat <- ParamSpace
     }
 
-    pars <- SetPlotPar()
-    op <- par(pars)
+    op <- grfxtools::Par(lwd = 2, font.lab = 2, font.axis = 2)
 
     palette <- colorRampPalette(rev(RColorBrewer::brewer.pal(10, "RdYlBu")))
 
@@ -495,7 +496,7 @@ TC17.Fig05 <- function(dat = NULL) {
                        axis(1); axis(2)})
     
     text(8.1, 5, labels = "Optimal downward advection (cm)",
-         srt = -90, xpd = NA, cex = pars$cex.lab, font = pars$font.lab)
+         srt = -90, xpd = NA, cex = par()$cex.lab, font = par()$font.lab)
 
     par(op)
 
@@ -521,9 +522,8 @@ TC17.Fig06 <- function(mod.param = NULL) {
         mod.param <- SetModificationPar()
     }
 
-    pars <- SetPlotPar(oma = c(5, 0, 0.5, 0), mar = c(0, 6, 0, 6),
-                       mfrow = c(1, 2))
-    op <- par(pars)
+    op <- grfxtools::Par(oma = c(5, 0, 0.5, 0), mar = c(0, 6, 0, 6),
+                         mfrow = c(1, 2), lwd = 2, font.lab = 2, font.axis = 2)
 
     # color scale
     my.col <- c("dodgerblue", "#1b9e77", "#d95f02", "#7570b3")
@@ -574,10 +574,10 @@ TC17.Fig06 <- function(mod.param = NULL) {
                   ceiling(mod.param$ADV.opt))
 
     # profiles w/o surface region
-    v11[ind1[-length(ind1)]]  <- NA
-    v22[ind2[-length(ind2)]]  <- NA
+    v11[ind1[-length(ind1)]] <- NA
+    v22[ind2[-length(ind2)]] <- NA
     v33[ind1[-length(ind1)]] <- NA
-    v44[ind4[-length(ind4)]]  <- NA
+    v44[ind4[-length(ind4)]] <- NA
 
     plot(TR$depth[1:38], v1, type = "n", axes = FALSE,
          xlab = "", ylab = "", xlim = c(0, 125), ylim = c(-54, -40))
@@ -602,7 +602,7 @@ TC17.Fig06 <- function(mod.param = NULL) {
 
     text(-27.5, -44,
          labels = expression(delta^bold("18") * bold("O") * bold(" (\u2030)")),
-         srt = 90, xpd = NA, cex = pars$cex.lab, font = pars$font.lab,
+         srt = 90, xpd = NA, cex = par()$cex.lab, font = par()$font.lab,
          col = "black")
 
     legend("topleft", "T13 record", lwd = 2, col = my.col[1],
@@ -634,14 +634,14 @@ TC17.Fig06 <- function(mod.param = NULL) {
 
     text(152.5,-44,
          labels = expression(delta^bold("18") * bold("O") * bold(" (\u2030)")),
-         srt = -90, xpd = NA, cex = pars$cex.lab, font = pars$font.lab,
+         srt = -90, xpd = NA, cex = par()$cex.lab, font = par()$font.lab,
          col = "black")
 
-    par(xaxp=c(0, 125, 5))
+    par(xaxp = c(0, 125, 5))
     axis(1)
 
     mtext("Depth (cm)", side = 1, line = 3.5,
-          cex = pars$cex.lab, font = pars$font.lab)
+          cex = par()$cex.lab, font = par()$font.lab)
 
     my.legend("bottomright", "T13* record",
               lwd = 1.5, col = my.col[2], lty = 1, cex = 1.1, text.font = 1,
@@ -712,10 +712,10 @@ TC17.Fig06 <- function(mod.param = NULL) {
     axis(1)
 
     mtext("Depth (cm)", side = 1, line = 3.5,
-          cex = pars$cex.lab, font = pars$font.lab)
+          cex = par()$cex.lab, font = par()$font.lab)
     mtext(expression(delta^bold("18") * bold("O") * bold(" (\u2030)")),
           side = 2, line = 3.5, las = 0,
-          cex = pars$cex.lab, font = pars$font.lab)
+          cex = par()$cex.lab, font = par()$font.lab)
 
     my.legend("topleft", c("T15", "T13* (opt. param.)", "T13** (ind. param.)"),
               lwd = 1.5, lty = 1, col = c("black", my.col[2], my.col[3]),
@@ -735,11 +735,11 @@ TC17.Fig06 <- function(mod.param = NULL) {
     lines(TR$depth, v1 - v4,
           lwd = 1.5, lty = 3, col = "dimgrey")
 
-    par(yaxp=c(-4, 4, 4))
+    par(yaxp = c(-4, 4, 4))
     axis(4, col = my.col[4], col.axis = my.col[4])
 
     text(205, 0, "T15 - T13** (\u2030)",
-         cex = pars$cex.lab, font = pars$font.lab,
+         cex = par()$cex.lab, font = par()$font.lab,
          col = my.col[4], srt = -90, xpd = NA)
 
     par(op)
@@ -765,9 +765,8 @@ TC17.Fig07 <- function(mod.param = NULL) {
         mod.param <- SetModificationPar()
     }
 
-    pars <- SetPlotPar(mfrow = c(1, 2), xaxs = "r", yaxs = "i", lwd = 1.5,
-                       mar = c(5, 5.5, 0.5, 0.5))
-    op <- par(pars)
+    op <- grfxtools::Par(mfrow = c(1, 2), xaxs = "r", yaxs = "i", lwd = 1.5,
+                       mar = c(5, 5.5, 0.5, 0.5), font.lab = 2, font.axis = 2)
 
     # T13**
     TR <- prepareTrenchData()$oxy
@@ -801,11 +800,11 @@ TC17.Fig07 <- function(mod.param = NULL) {
 
     mtext("Spatial differences between trenches (\u2030)",
           side = 1, line = 3.5,
-          cex = pars$cex.lab, font = pars$font.lab)
+          cex = par()$cex.lab, font = par()$font.lab)
     mtext(expression(bold("Normalised frequency density (\u2030")
                      ^{"-1"} * bold(")")),
           side = 2, line = 3.75, las = 0,
-          cex = pars$cex.lab, font = pars$font.lab)
+          cex = par()$cex.lab, font = par()$font.lab)
 
     legend("topleft", c(expression(Delta * bold("T13")),
                         expression(Delta * bold("T15"))),
@@ -824,11 +823,11 @@ TC17.Fig07 <- function(mod.param = NULL) {
 
     mtext("Spatial and temporal differences (\u2030)",
           side = 1, line = 3.5,
-          cex = pars$cex.lab, font = pars$font.lab)
+          cex = par()$cex.lab, font = par()$font.lab)
     mtext(expression(bold("Normalised frequency density (\u2030")
                      ^{"-1"} * bold(")")),
           side = 2, line = 3.75, las = 0,
-          cex = pars$cex.lab, font = pars$font.lab)
+          cex = par()$cex.lab, font = par()$font.lab)
 
     legend("topleft",
            c(expression(bold("Combined spatial: ") * Delta *
