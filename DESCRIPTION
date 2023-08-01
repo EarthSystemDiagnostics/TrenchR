@@ -17,7 +17,7 @@ Imports:
     grfxtools (>= 0.5.0),
     Hmisc,
     prettymapr,
-    prxytools (>= 0.2.0),
+    prxytools (>= 0.3.0),
     RColorBrewer,
     stattools (>= 0.3.0)
 RoxygenNote: 7.2.3

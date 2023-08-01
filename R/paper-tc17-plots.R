@@ -677,7 +677,7 @@ TC17.Fig06 <- function(mod.param = NULL) {
     v22[ind2[-length(ind2)]] <- NA
     v33[ind3[-length(ind3)]] <- NA
 
-    sum.max <- which.peaks(v11, partial = TRUE)[3 : 6]
+    sum.max <- prxytools::LocatePeaks(v11, partial = TRUE)[3 : 6]
 
     plot(TR$depth, v1, type = "n",
          xlim = c(0, 175), ylim = c(-52, -36),
