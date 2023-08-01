@@ -361,12 +361,12 @@ TC17.Fig03c <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy) {
     plot(TR$depth / 100, TR$mean15.1, type = "n", las = 1,
          xlim = c(-5, 175) / 100, ylim = c(-52, -34),
          axes = FALSE, xlab = "", ylab = "")
-    par(xaxp = c(0, 1.75, 7))
-    axis(1, at = c(0.0, 0.5, 1.0, 1.5))
-    axis(1, at = c(0.25, 0.75, 1.25, 1.75), tcl = 0.75 * par("tcl"),
-         labels = FALSE)
-    axis(2, at = seq(-52, -34, 4))
-    axis(2, at = seq(-50, -34, 4), tcl = 0.5 * par("tcl"), labels = FALSE)
+    par(xaxp = c(0, 1.5, 3))
+    axis(1)
+    grfxtools::MinorTick(tick.ratio = 0.75, extend = 1)
+    par(yaxp = c(-52, -36, 4))
+    axis(2)
+    grfxtools::MinorTick(side = 2, extend = 1)
     box()
     abline(v = c(0, 50, 100, 150) / 100, col = "black", lty = "dotted")
 
@@ -424,7 +424,7 @@ TC17.Fig04 <- function() {
 
     par(yaxp = c(-52, -36, 4))
     axis(2)
-    MinorTick(nx = 1, ny = 2, side = 2)
+    grfxtools::MinorTick(n = 2, side = 2)
     text(-35, -44,
          labels = expression(delta^bold("18") * bold("O")*bold(" (\u2030)")),
          srt = 90, xpd = NA, cex = par()$cex.lab, font = par()$font.lab,
@@ -442,7 +442,7 @@ TC17.Fig04 <- function() {
 
     par(yaxp = c(-48, -40, 2))
     axis(4, col = "dodgerblue", col.axis = "dodgerblue")
-    MinorTick(nx = 1, ny = 2, side = 4, col = "dodgerblue")
+    grfxtools::MinorTick(n = 2, side = 4, col = "dodgerblue")
     par(xaxp = c(0, 175, 7))
     axis(1)
 
@@ -707,7 +707,7 @@ TC17.Fig06 <- function(mod.param = NULL) {
 
     par(yaxp = c(-52, -36, 4))
     axis(2)
-    MinorTick(nx = 1, ny = 2, side = 2)
+    grfxtools::MinorTick(n = 2, side = 2)
     par(xaxp = c(0, 175, 7))
     axis(1)
 
