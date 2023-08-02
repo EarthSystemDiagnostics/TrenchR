@@ -389,10 +389,11 @@ TC17.Fig03c <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy) {
     points((TR$depth[p2] + TR$k15) / 100, TR$mean15.2[p2],
            col = "firebrick3", pch = 23, lwd = 1.5, cex = 0.75)
 
-    my.legend("bottomright", legend = c("T15-1", "T15-2"),
-              pch = c(1, 23), lwd = 1.5, lty = c(1,1), col = c(1, "firebrick3"),
-              cex = 1.25, text.font = 2, pt.cex = 0.75, pt.lwd = 1.5, bty = "n",
-              end.pch = TRUE, pch.xoff = 0.2)
+    grfxtools::Legend("bottomright", legend = c("T15-1", "T15-2"),
+                      pch = c(1, 23), lwd = 1.5, lty = c(1, 1),
+                      col = c(1, "firebrick3"), cex = 1.25, text.font = 2,
+                      pt.cex = 0.75, pt.lwd = 1.5, bty = "n",
+                      end.pch = TRUE, pch.xoff = 0.2)
 
     par(op)
 }
@@ -607,12 +608,12 @@ TC17.Fig06 <- function(mod.param = NULL) {
 
     legend("topleft", "T13 record", lwd = 2, col = my.col[1],
            lty = 1, cex = 1.1, text.font = 1, bty = "n")
-    my.legend("topright", c("T13 after 2-yr incremental diffusion",
-                            "T13 after linear compression"),
-              lwd = c(1.5, 1.5), col = c("black", "firebrick"),
-              lty = 1, cex = 1.1, text.font = 1, bty = "n",
-              pch = c(24, 25), end.pch = TRUE, pch.xoff = 0.2, inset = c(0.02, 0),
-              pt.cex = 0.75, pt.lwd = 1.5)
+    grfxtools::Legend("topright", c("T13 after 2-yr incremental diffusion",
+                                    "T13 after linear compression"),
+                      lwd = c(1.5, 1.5), col = c("black", "firebrick"),
+                      lty = 1, cex = 1.1, text.font = 1, bty = "n",
+                      pch = c(24, 25), end.pch = TRUE, pch.xoff = 0.2,
+                      inset = c(0.02, 0), pt.cex = 0.75, pt.lwd = 1.5)
 
     par(new = TRUE)
 
@@ -643,10 +644,11 @@ TC17.Fig06 <- function(mod.param = NULL) {
     mtext("Depth (cm)", side = 1, line = 3.5,
           cex = par()$cex.lab, font = par()$font.lab)
 
-    my.legend("bottomright", "T13* record",
-              lwd = 1.5, col = my.col[2], lty = 1, cex = 1.1, text.font = 1,
-              bty = "n", pch = 23, end.pch = TRUE, pch.xoff = 0.2,
-              inset = c(0.02, 0), pt.cex = 0.75, pt.lwd = 1.5)
+    grfxtools::Legend("bottomright", "T13* record",
+                      lwd = 1.5, col = my.col[2], lty = 1, cex = 1.1,
+                      text.font = 1, bty = "n", pch = 23, end.pch = TRUE,
+                      pch.xoff = 0.2, inset = c(0.02, 0), pt.cex = 0.75,
+                      pt.lwd = 1.5)
 
 
     #---------------------------------------------------------------------------
@@ -717,11 +719,13 @@ TC17.Fig06 <- function(mod.param = NULL) {
           side = 2, line = 3.5, las = 0,
           cex = par()$cex.lab, font = par()$font.lab)
 
-    my.legend("topleft", c("T15", "T13* (opt. param.)", "T13** (ind. param.)"),
-              lwd = 1.5, lty = 1, col = c("black", my.col[2], my.col[3]),
-              pch = c(NA, 1, 23),
-              cex = 1.1, text.font = 1, bty = "n", end.pch = TRUE, pch.xoff = 0.2,
-              inset = c(0.02, 0), pt.cex = 0.75, pt.lwd = 1.5)
+    grfxtools::Legend("topleft", c("T15", "T13* (opt. param.)",
+                                   "T13** (ind. param.)"),
+                      lwd = 1.5, lty = 1, pch = c(NA, 1, 23),
+                      col = c("black", my.col[2], my.col[3]),
+                      cex = 1.1, text.font = 1, bty = "n",
+                      end.pch = TRUE, pch.xoff = 0.2,
+                      inset = c(0.02, 0), pt.cex = 0.75, pt.lwd = 1.5)
 
     par(new = TRUE)
 
