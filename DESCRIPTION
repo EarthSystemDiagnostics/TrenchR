@@ -16,7 +16,6 @@ Imports:
     geosphere,
     grfxtools (>= 0.5.0),
     Hmisc,
-    prettymapr,
     prxytools (>= 0.3.0),
     RColorBrewer,
     stattools (>= 0.3.0)
