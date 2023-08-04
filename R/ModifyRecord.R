@@ -92,7 +92,7 @@ ModifyRecord <- function(rec.in, res, depth.hires, depth.lores = NULL,
             stop("No valid ADVECTION parameter.")
         }
 
-        rec.out <- Hmisc::Lag(rec.out, shift = ADV / res)
+        rec.out <- prxytools::Lag(rec.out, shift = ADV / res)
 
     }
 

@@ -109,7 +109,7 @@ LoopParamSpace <- function(rec.in, reference, res, depth,
                                                      stretch = d)$rec
 
                 # advect the diffused and stretched record
-                diff.stretch.adv <- Hmisc::Lag(diff.stretch, k)
+                diff.stretch.adv <- prxytools::Lag(diff.stretch, k)
 
                 iX <- which(advSpace == k)
                 iR <- which(sigmaSpace == s)

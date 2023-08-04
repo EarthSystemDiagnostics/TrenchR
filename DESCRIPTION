@@ -15,8 +15,7 @@ LazyData: true
 Imports:
     geosphere,
     grfxtools (>= 0.5.0),
-    Hmisc,
-    prxytools (>= 0.3.0),
+    prxytools (>= 0.4.0),
     RColorBrewer,
     stattools (>= 0.3.0)
 RoxygenNote: 7.2.3

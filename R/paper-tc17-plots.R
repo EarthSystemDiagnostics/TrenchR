@@ -17,7 +17,7 @@ TC17.Fig01 <- function(cheat = TRUE) {
 
     TR <- prepareTrenchData()$oxy
     T13.annual <- T13AnnualMeans(t1 = TR$mean13.1,
-                                 t2 = Hmisc::Lag(TR$mean13.2,
+                                 t2 = prxytools::Lag(TR$mean13.2,
                                                  TR$k13 / TR$LoRes),
                                  depth = TR$depth,
                                  cheat = cheat)
@@ -52,7 +52,7 @@ TC17.Fig01 <- function(cheat = TRUE) {
 
     lines(TR$depth[1 : 38], TR$mean13.1, lty = 1, col = "black")
     lines(TR$depth[1 : 38],
-          Hmisc::Lag(TR$mean13.2, TR$k13 / TR$LoRes),
+          prxytools::Lag(TR$mean13.2, TR$k13 / TR$LoRes),
           col = "firebrick3")
 
     lines(T13.annual$means$depth, T13.annual$means$T1,
@@ -785,10 +785,10 @@ TC17.Fig07 <- function(mod.param = NULL) {
 
     # profile differences
     diff.13 <- TR$mean13.1 -
-        Hmisc::Lag(TR$mean13.2, shift = TR$k13 / TR$LoRes)
+        prxytools::Lag(TR$mean13.2, shift = TR$k13 / TR$LoRes)
 
     diff.15 <- TR$mean15.1_HiRes -
-        Hmisc::Lag(TR$mean15.2_HiRes, shift = TR$k15 / TR$HiRes)
+        prxytools::Lag(TR$mean15.2_HiRes, shift = TR$k15 / TR$HiRes)
     diff.15 <- diff.15[match(TR$depth, TR$depth_HiRes)]
 
     diff.2yr <- TR$mean15 - T13.starstar$LoRes

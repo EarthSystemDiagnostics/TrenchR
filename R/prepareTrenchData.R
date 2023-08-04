@@ -170,15 +170,15 @@ prepareTrenchData <- function(index.range = 1 : 59, LoRes = 3, HiRes = 0.5,
         # mean profiles for each season
         
         mean15_HiRes <- rowMeans(cbind(mean15.1_HiRes,
-                                       Hmisc::Lag(mean15.2_HiRes,
+                                       prxytools::Lag(mean15.2_HiRes,
                                                   shift = k15 / HiRes)))
         mean15 <- approx(depth_HiRes, mean15_HiRes, depth)$y
 
         mean13_HiRes <- rowMeans(cbind(mean13.1_HiRes,
-                                       Hmisc::Lag(mean13.2_HiRes,
+                                       prxytools::Lag(mean13.2_HiRes,
                                                   shift = k13 / HiRes)))
         mean13 <- rowMeans(cbind(mean13.1,
-                                 Hmisc::Lag(mean13.2, shift = k13 / LoRes)))
+                                 prxytools::Lag(mean13.2, shift = k13 / LoRes)))
 
 
         res[[i.proxy]]$trench13.1 <- trench13.1
