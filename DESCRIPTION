@@ -1,5 +1,5 @@
 Package: TrenchR
-Title: Analyse and Plot Trench-like Proxy Records.
+Title: Analyse and Plot Trench-like Proxy Records
 Version: 0.2.0
 Authors@R: person("Thomas", "Münch", email = "thomas.muench@awi.de",
 	role = c("aut", "cre"))
@@ -9,7 +9,7 @@ Description: This R package implements routines targeted at analysing and
     data for the publication of Münch et al., The Cryosphere,
     https://doi.org/10.5194/tc-2017-35, 2017.
 Depends: R (>= 3.3.1)
-License: file LICENSE
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Imports:
