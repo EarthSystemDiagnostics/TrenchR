@@ -1,3 +1,460 @@
+#
+# ----- Data processing and helper functions -----------------------------------
+#
+
+##' Process T13 and T15 Trench Data.
+##'
+##' This function processes the T13 and T15 trench isotopologue data in a way
+##' that is suited for analysis and plotting used in Münch et al. (2017).
+##' @param index.range Vector of depth indices to subset the T15 trench dataset;
+##' defaults to the range used in Münch et al. (2017). Set to \code{NULL} to
+##' extract the full depth of the data.
+##' @param LoRes Depth resolution of trench dataset in cm; defaults to the
+##' original T13 and T15 sampling resolution (3 cm).
+##' @param HiRes Higher depth resolution to interpolate trench data onto;
+##' defaults to 0.5 cm as used in Münch et al. (2017).
+##' @param k13 Vertical shift [cm] of the mean T13-2 relative to the mean T13-1
+##' profile; defaults to the optimal shift that maximizes the profile
+##' correlation.
+##' @param k15 Vertical shift [cm] of the mean T15-2 relative to the mean T15-1
+##' profile; defaults to the optimal shift that maximizes the profile
+##' correlation.
+##' @param na.treat if \code{TRUE}, include the incomplete surface region of the
+##' trenches when calculating the mean profiles; defaults to \code{FALSE}.
+##' @return A list of three sub-lists corresponding to the three measured
+##'     isotopologue data (index i = 1: d18O, i = 2: d2H, i = 3: d-excess). Each
+##'     sub-list has the following components:
+##'     \itemize{
+##'     \item trench13.1: Data of isotope species \code{i} for trench T13-1.
+##'     \item trench13.2: Data of isotope species \code{i} for trench T13-2.
+##'     \item trench15.1: Data of isotope species \code{i} for trench T15-1
+##'           for the  depth range specified by \code{index.range}.
+##'     \item trench15.2: Data of isotope species \code{i} for trench T15-2
+##'           for the depth range specified by \code{index.range}.
+##'     \item mean13.1: Mean isotope profile \code{i} of trench T13-1.
+##'     \item mean13.2: Mean isotope profile \code{i} of trench T13-2.
+##'     \item mean15.1: Mean isotope profile \code{i} of trench T15-1.
+##'     \item mean15.2: Mean isotope profile \code{i} of trench T15-2.
+##'     \item trench13.1_HiRes: \code{trench13.1} linearly interpolated onto the
+##'           higher resolution specified by \code{HiRes}.
+##'     \item trench13.2_HiRes: Same for \code{trench13.2}.
+##'     \item trench15.1_HiRes: Same for \code{trench15.1}.
+##'     \item trench15.2_HiRes: Same for \code{trench15.2}.
+##'     \item mean13.1_HiRes: Same for \code{mean13.1}.
+##'     \item mean13.2_HiRes: Same for \code{mean13.2}.
+##'     \item mean15.1_HiRes: Same for \code{mean15.1}.
+##'     \item mean15.2_HiRes: Same for \code{mean15.2}.
+##'     \item mean13: Total mean isotope profile \code{i} of trench T13,
+##'           accounting for the vertical shift specified by \code{k13}.
+##'     \item mean13_HiRes: \code{mean13} linearly interpolated onto the
+##'           higher resolution specified by \code{HiRes}.
+##'     \item mean15: Total mean isotope profile \code{i} of trench T15.
+##'     \item mean15_HiRes: \code{mean15} linearly interpolated onto the
+##'           higher resolution specified by \code{HiRes} and accounting for the
+##'           vertical shift specified by \code{k15}.
+##'     \item k13: Copy of input \code{k13}.
+##'     \item k15: Copy of input \code{k15}.
+##'     \item LoRes: Copy of input \code{LoRes}.
+##'     \item HiRes: Copy of input \code{HiRes}.
+##'     \item depth: Numeric vector of sample depths on their original
+##'           resolution (specified by \code{LoRes}) for the T15 index range
+##'           \code{index.range}.
+##'     \item depth_HiRes: Numeric vector of sample depths corresponding to the
+##'           linearly interpolated data on the higher resolution \code{HiRes}.
+##'     \item XPOS: Horizontal profile positions in [m] of the T15-1 and T15-2
+##'           profiles relative to the trench starting point (= profile #1).
+##'     \item XPOS.t13.1: Horizontal profile positions in [m] of the T13-1
+##'           profiles relative to the trench starting point.
+##'     \item XPOS.t13.2: Horizontal profile positions in [m] of the T13-2
+##'           profiles relative to the trench starting point.
+##'     \item SPRF.t1: List: Horizontal position (component \code{x}) and
+##'           corresponding surface height in [cm] (component \code{y})
+##'           relative to the highest observed surface height for trench
+##'           T15-1 (positive downwards). This set includes the additional
+##'           profile at position 26.5 m for which no isotope profile is
+##'           present.
+##'     \item SPRF.t2: List: Horizontal position (component \code{x}) and
+##'           corresponding surface height in [cm] (component \code{y})
+##'           relative to the highest observed surface height for trench
+##'           T15-2 (positive downwards).
+##'     \item SRF.b: A list with six elements of the following quantities (in
+##'           that order): starting depths of horizontally complete datasets for
+##'           T13-1; T13-2; T15-1; T15-2; total T13 (accounting for vertical
+##'           shift of T13-2); and total T15.
+##' }
+##' @author Thomas Münch
+##' @inherit Muench2017 references
+prepareTrenchData <- function(index.range = 1 : 59, LoRes = 3, HiRes = 0.5,
+                              k13 = 3, k15 = -0.5, na.treat = FALSE) {
+
+    # extract full T15 record if desired
+    if (is.null(index.range)) {
+        index.range <- seq(1, length(t15.trench1$depth))
+    }
+
+    # horizontal profile positions and surface height profile
+    XPOS <- t15.trench1$meta$profilePos[-7]
+    SPRF.t1 <- list(x = t15.trench1$meta$profilePos,
+                    y = t15.trench1$meta$profileSurfaceHeight)
+    SPRF.t2 <- list(x = t15.trench2$meta$profilePos,
+                    y = t15.trench2$meta$profileSurfaceHeight)
+    XPOS.t13.1 <- t13.trench1$meta$profilePos/100.
+    XPOS.t13.2 <- t13.trench2$meta$profilePos/100.
+
+    # sample depths
+    depth <- t15.trench1$depth[index.range]
+
+    # KS 14/15 trenches
+    t15.1 <- t15.trench1$data[, index.range, ]
+    t15.2 <- t15.trench2$data[, index.range, ]
+
+    # KS 12/13 trenches
+    t13.1 <- t13.trench1$data[, , -1]
+    t13.2 <- t13.trench2$data[, , ]
+
+    # bottom depths of trench surface regions
+    SRF.b <- list()
+    k1 <- which(apply(t13.1[1, , ], 1, function(row) {all(!is.na(row))}))[1]
+    SRF.b$t13.1 <- depth[k1]
+
+    k2 <- which(apply(t13.2[1, , ], 1, function(row) {all(!is.na(row))}))[1]
+    SRF.b$t13.2 <- depth[k2]
+
+    k3 <- which(apply(t15.1[1, , ], 1, function(row) {all(!is.na(row))}))[1]
+    SRF.b$t15.1 <- depth[k3]
+
+    k4 <- which(apply(t15.2[1, , ], 1, function(row) {all(!is.na(row))}))[1]
+    SRF.b$t15.2 <- depth[k4]
+
+    k <- max(k1, k2) + k13/LoRes
+    SRF.b$t13 <- depth[k]
+
+    k <- max(k3, k4)
+    SRF.b$t15 <- depth[k]
+
+
+    # loop over isotope types
+    res <- list()
+    res$dxs <- res$dtr <- res$oxy <- list()
+    for (i.proxy in 1 : 3) {
+
+        trench13.1 <- t13.1[i.proxy, , ]
+        trench13.2 <- t13.2[i.proxy, , ]
+
+        trench15.1 <- t15.1[i.proxy, , ]
+        trench15.2 <- t15.2[i.proxy, , ]
+
+        # mean profiles
+        mean15.1 <- rowMeans(trench15.1, na.rm = na.treat)
+        mean15.2 <- rowMeans(trench15.2, na.rm = na.treat)
+        mean13.1 <- rowMeans(trench13.1, na.rm = na.treat)
+        mean13.2 <- rowMeans(trench13.2, na.rm = na.treat)
+
+        # high-resolution data
+
+        depth_HiRes <- seq(min(depth), max(depth), HiRes)
+
+        trench15.1_HiRes <- apply(trench15.1, 2, function(prf) {
+            approx(depth, prf, depth_HiRes)$y})
+        trench15.2_HiRes <- apply(trench15.2, 2, function(prf) {
+            approx(depth, prf, depth_HiRes)$y})
+
+        trench13.1_HiRes <- apply(trench13.1, 2, function(prf) {
+            approx(depth[1:38], prf, depth_HiRes)$y})
+        trench13.2_HiRes <- apply(trench13.2, 2, function(prf) {
+            approx(depth[1:38], prf, depth_HiRes)$y})
+
+        mean15.1_HiRes <- approx(depth, mean15.1, depth_HiRes)$y
+        mean15.2_HiRes <- approx(depth, mean15.2, depth_HiRes)$y
+        mean13.1_HiRes <- approx(depth[1:38], mean13.1, depth_HiRes)$y
+        mean13.2_HiRes <- approx(depth[1:38], mean13.2, depth_HiRes)$y
+
+        # mean profiles for each season
+
+        mean15_HiRes <- rowMeans(cbind(mean15.1_HiRes,
+                                       prxytools::Lag(mean15.2_HiRes,
+                                                  shift = k15 / HiRes)))
+        mean15 <- approx(depth_HiRes, mean15_HiRes, depth)$y
+
+        mean13_HiRes <- rowMeans(cbind(mean13.1_HiRes,
+                                       prxytools::Lag(mean13.2_HiRes,
+                                                  shift = k13 / HiRes)))
+        mean13 <- rowMeans(cbind(mean13.1,
+                                 prxytools::Lag(mean13.2, shift = k13 / LoRes)))
+
+
+        res[[i.proxy]]$trench13.1 <- trench13.1
+        res[[i.proxy]]$trench13.2 <- trench13.2
+        res[[i.proxy]]$trench15.1 <- trench15.1
+        res[[i.proxy]]$trench15.2 <- trench15.2
+
+        res[[i.proxy]]$mean13.1 <- mean13.1
+        res[[i.proxy]]$mean13.2 <- mean13.2
+        res[[i.proxy]]$mean15.1 <- mean15.1
+        res[[i.proxy]]$mean15.2 <- mean15.2
+
+        res[[i.proxy]]$trench13.1_HiRes <- trench13.1_HiRes
+        res[[i.proxy]]$trench13.2_HiRes <- trench13.2_HiRes
+        res[[i.proxy]]$trench15.1_HiRes <- trench15.1_HiRes
+        res[[i.proxy]]$trench15.2_HiRes <- trench15.2_HiRes
+
+        res[[i.proxy]]$mean13.1_HiRes <- mean13.1_HiRes
+        res[[i.proxy]]$mean13.2_HiRes <- mean13.2_HiRes
+        res[[i.proxy]]$mean15.1_HiRes <- mean15.1_HiRes
+        res[[i.proxy]]$mean15.2_HiRes <- mean15.2_HiRes
+
+        res[[i.proxy]]$mean13 <- mean13
+        res[[i.proxy]]$mean13_HiRes <- mean13_HiRes
+        res[[i.proxy]]$mean15 <- mean15
+        res[[i.proxy]]$mean15_HiRes <- mean15_HiRes
+
+        res[[i.proxy]]$k13 <- k13
+        res[[i.proxy]]$k15 <- k15
+        res[[i.proxy]]$LoRes <- LoRes
+        res[[i.proxy]]$HiRes <- HiRes
+
+        res[[i.proxy]]$depth <- depth
+        res[[i.proxy]]$depth_HiRes <- depth_HiRes
+        res[[i.proxy]]$XPOS <- XPOS
+        res[[i.proxy]]$XPOS.t13.1 <- XPOS.t13.1
+        res[[i.proxy]]$XPOS.t13.2 <- XPOS.t13.2
+
+        res[[i.proxy]]$SPRF.t1 <- SPRF.t1
+        res[[i.proxy]]$SPRF.t2 <- SPRF.t2
+
+        res[[i.proxy]]$SRF.b <- SRF.b
+
+    }
+
+    return(res)
+
+}
+
+##' T13 temporal change parameters.
+##'
+##' This function provides a list of the parameters used in Münch et al. (2017)
+##' according to which the temporal change of the original T13 mean trench
+##' profile was modelled.
+##'
+##' The modification parameters are given as arguments to this function. Default
+##' values are the ones presented and used in Münch et al. (2017); different
+##' values can be specified by setting the respective parameter values in the
+##' function call. The default optimal parameters stem from the analysis in
+##' \code{\link{LoopParamSpace}} stored in \code{ParamSpace}. The parameters
+##' can be used to model the temporal change of the T13 mean profile using the
+##' function \code{\link{ModifyRecord}}.
+##' @return A list of the following modification parameters:
+##' \itemize{
+##'   \item ADV.opt optimal 2-yr downward advection [cm];
+##'   \item SIGMA.opt optimal 2-yr differential diffusion length for oxygen
+##'     isotopes [cm];
+##'   \item STRETCH.opt optimal 2-yr compression from densification [cm];
+##'   \item ADV.ind independently inferred 2-yr downward advection [cm];
+##'   \item SIGMA.ind independently inferred 2-yr differential diffusion length
+##'     for oxygen isotopes [cm];
+##'   \item STRETCH.ind independently inferred 2-yr compression [cm];
+##'   \item ADV.only optimal 2-yr downward advection [cm] allowing no diffusion
+##'     and densification ("advection only").
+##' }
+##' @seealso \code{\link{LoopParamSpace}}; \code{\link{ModifyRecord}}
+##' @author Thomas Münch
+##' @inherit Muench2017 references
+##' @examples
+##' mod.par <- TrenchR:::SetModificationPar()
+SetModificationPar <- function(ADV.opt = ParamSpace$adv.opt,
+                               SIGMA.opt = ParamSpace$sigma.opt,
+                               STRETCH.opt = ParamSpace$densf.opt,
+                               ADV.ind = 50,
+                               SIGMA.ind = suppressWarnings(round(
+                                   DifferentialDiffusion(
+                                       z00 = 0, z01 = 1,
+                                       z10 = ADV.ind / 100,
+                                       z11 = 1 + ADV.ind / 100)[1],
+                                   digits = 1)),
+                               STRETCH.ind = round(
+                                   RecordCompression(adv = ADV.ind,
+                                     length.in = 100, rate = 4.5),
+                                   digits = 1),
+                               ADV.only = 48.5) {
+
+    mod.param <- as.list(environment())
+    return(mod.param)
+
+}
+
+##' T13 annual-mean isotope time series.
+##'
+##' Calculate annual-mean time series of the T13 trench isotope records defined
+##' by binning the records according to the isotopic maxima and minima. From
+##' this, four different time series are created: averages from bins defined by
+##' (1) the summer maxima, (2) the winter minima, (3) the midpoints of the
+##' ascending slopes flanking the maxima and (4) the midpoints of the descending
+##' slopes.
+##' @param t1 numeric vector of the T13--1 isotope record.
+##' @param t2 numeric vector of the T13--2 isotope record.
+##' @param depth numeric vector of the common T13 depth scale (i.e. after
+##' the optimal shift of T13--2 to maximise the inter-trench correlation; see
+##' Münch et al. (2016)).
+##' @param i.max index positions of the summer maxima of the trench mean isotope
+##' record; default indices are the ones used in Münch et al. (2016).
+##' @param i.min index positions of the winter minima of the trench mean isotope
+##' record; default indices are the ones used in Münch et al. (2016).
+##' @param start.year assumed year of the first summer maximum where the maximum
+##' is defined to occur in January of the year; defaults to \code{2013}.
+##' @param cheat Originally, the annual mean isotope data have been erroneously
+##' calculated such that the last value contributing to annual bin \code{i} was
+##' also included in bin \code{i + 1}, due to an erroneous implementation within
+##' the bin averaging function. This bug has been fixed. For \code{cheat =
+##' TRUE}, the original annual mean data using this erroneous bin definition can
+##' be reproduced, while for \code{cheat = FALSE}, the correct implementation is
+##' used. The difference in the annual mean data between the two versions is,
+##' however, minor, and it thus does not influence any results or conclusions of
+##' Münch et al. (2017).
+##' @return A list of three data frames:
+##' \describe{
+##'   \item{means:}{the annual-mean time series of the T13--1, T13--2 and mean
+##'   T13 isotope records together with the range of annual means from the
+##'   different binning methods;}
+##'   \item{summer.max:}{the annual time series of summer maximum values for the
+##'   T13--1, T13--2 and mean T13 isotope records;}
+##'   \item{winter.min:}{the annual time series of winter minimum values for the
+##'   T13--1, T13--2 and mean T13 isotope records.}
+##' }
+##' @author Thomas Münch
+##' @inherit Muench2016 references
+T13AnnualMeans <- function(t1, t2, depth,
+                           i.max = c(5, 11, 19, 24, 33, 38),
+                           i.min = c(7, 14, 21, 26, 37),
+                           start.year = 2013, cheat = FALSE) {
+
+    ind <- list()
+    ind$summer <- i.max
+    ind$winter <- i.min
+    for (i in 1 : (length(ind$summer) - 1)) {
+        ind$flk.up[i]   <- round(mean(c(ind$summer[i], ind$winter[i])))
+        ind$flk.dwn[i]  <- round(mean(c(ind$summer[i + 1], ind$winter[i])))
+    }
+
+    summer.max <- matrix(nrow = length(ind$summer), ncol = 5)
+    summer.max[, 1] <- start.year : (start.year - length(ind$summer) + 1)
+    summer.max[, 2] <- depth[ind$summer]
+    summer.max[, 3] <- t1[ind$summer]
+    summer.max[, 4] <- t2[ind$summer]
+    summer.max[, 5] <- rowMeans(cbind(summer.max[, 3], summer.max[, 4]))
+
+    winter.min <- matrix(nrow = length(ind$winter), ncol = 5)
+    winter.min[, 1] <- (start.year - 1) :
+                               ((start.year - 1) - length(ind$winter) + 1)
+    winter.min[, 2] <- depth[ind$winter]
+    winter.min[, 3] <- t1[ind$winter]
+    winter.min[, 4] <- t2[ind$winter]
+    winter.min[, 5] <- rowMeans(cbind(winter.min[, 3], winter.min[, 4]))
+
+    colnames(summer.max) <- c("years", "depth", "T1", "T2", "mean")
+    colnames(winter.min) <- c("years", "depth", "T1", "T2", "mean")
+
+    means <- matrix(nrow = length(ind$summer) - 1, ncol = 11)
+
+    if (!cheat) {
+
+        # calculate means with proper, non-overlapping bin definition
+
+        tmp1 <- cbind(
+            c(prxytools::AverageByIndex(t1, ind$summer)),
+            c(prxytools::AverageByIndex(t1, ind$winter), NA),
+            c(prxytools::AverageByIndex(t1, ind$flk.up), NA),
+            c(NA, prxytools::AverageByIndex(t1, ind$flk.dwn)))
+
+        tmp2 <- cbind(
+            c(prxytools::AverageByIndex(t2, ind$summer)),
+            c(prxytools::AverageByIndex(t2, ind$winter), NA),
+            c(prxytools::AverageByIndex(t2, ind$flk.up), NA),
+            c(NA, prxytools::AverageByIndex(t2, ind$flk.dwn)))
+
+    } else {
+
+        # calculate means with overlapping bins to reproduce the paper figure
+
+        # pad records with NA to facilitate using bug-fixed averaging function
+        t1.cheat <- c(t1, rep(NA, 10))
+        t2.cheat <- c(t2, rep(NA, 10))
+
+        j <- ind$summer
+        n <- length(j) - 1
+        x1.1 <- x1.2 <- numeric(n)
+        for (i in 1 : n) {
+            x1.1[i] <- prxytools::AverageByIndex(t1.cheat, c(j[i], j[i + 1] + 1))
+            x1.2[i] <- prxytools::AverageByIndex(t2.cheat, c(j[i], j[i + 1] + 1))
+        }
+
+        j <- ind$winter
+        n <- length(j) - 1
+        x2.1 <- x2.2 <- numeric(n)
+        for (i in 1 : n) {
+            x2.1[i] <- prxytools::AverageByIndex(t1.cheat, c(j[i], j[i + 1] + 1))
+            x2.2[i] <- prxytools::AverageByIndex(t2.cheat, c(j[i], j[i + 1] + 1))
+        }
+
+        j <- ind$flk.up
+        n <- length(j) - 1
+        x3.1 <- x3.2 <- numeric(n)
+        for (i in 1 : n) {
+            x3.1[i] <- prxytools::AverageByIndex(t1.cheat, c(j[i], j[i + 1] + 1))
+            x3.2[i] <- prxytools::AverageByIndex(t2.cheat, c(j[i], j[i + 1] + 1))
+        }
+
+        j <- ind$flk.dwn
+        n <- length(j) - 1
+        x4.1 <- x4.2 <- numeric(n)
+        for (i in 1 : n) {
+            x4.1[i] <- prxytools::AverageByIndex(t1.cheat, c(j[i], j[i + 1] + 1))
+            x4.2[i] <- prxytools::AverageByIndex(t2.cheat, c(j[i], j[i + 1] + 1))
+        }
+
+        tmp1 <- cbind(x1.1, c(x2.1, NA), c(x3.1, NA), c(NA, x4.1))
+        tmp2 <- cbind(x1.2, c(x2.2, NA), c(x3.2, NA), c(NA, x4.2))
+
+    }
+
+    tmp <- array(dim = c(dim(tmp1), 2))
+    tmp[, , 1] <- tmp1
+    tmp[, , 2] <- tmp2
+
+    trench.mean <- apply(tmp, c(1, 2), mean, na.rm = TRUE)
+
+    means[, 1] <- summer.max[, 1][-1]
+    means[, 2] <- depth[ind$summer[-length(ind$summer)]] +
+        0.5 * diff(depth[ind$summer])
+
+    means[, 3] <- rowMeans(tmp1, na.rm = TRUE)
+    means[, 4] <- rowMeans(tmp2, na.rm = TRUE)
+    means[, 5] <- rowMeans(trench.mean, na.rm = TRUE)
+
+    means[, c(6, 7)]   <- matrix(apply(tmp1, 1, range, na.rm = TRUE),
+                                       nrow = length(ind$summer) - 1, ncol = 2,
+                                       byrow = TRUE)
+    means[, c(8, 9)]   <- matrix(apply(tmp2, 1, range, na.rm = TRUE),
+                                       nrow = length(ind$summer) - 1, ncol = 2,
+                                       byrow = TRUE)
+    means[, c(10, 11)] <- matrix(apply(trench.mean, 1, range, na.rm = TRUE),
+                                       nrow = length(ind$summer) - 1, ncol = 2,
+                                       byrow = TRUE)
+
+    colnames(means) <- c("years", "depth", "T1", "T2", "total",
+                               "min.T1", "max.T1", "min.T2", "max.T2",
+                               "min.total", "max.total")
+
+    res <- list(means = as.data.frame(means),
+                summer.max = as.data.frame(summer.max),
+                winter.min = as.data.frame(winter.min))
+    return(res)
+
+}
+
+#
+# ----- Plotting functions -----------------------------------------------------
+#
+
 ##' Produce TC17 Figure 01.
 ##'
 ##' This function makes all necessary calculations and plots the results for
