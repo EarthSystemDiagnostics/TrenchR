@@ -2,7 +2,7 @@
 % Please edit documentation in R/LoopParamSpace.R
 \name{LoopParamSpace}
 \alias{LoopParamSpace}
-\title{Loop over parameter space to find minimum RMSD.}
+\title{Loop over parameter space to find minimum RMSD}
 \usage{
 LoopParamSpace(rec.in, reference, res, depth, advSpace, sigmaSpace, densfSpace)
 }
@@ -73,7 +73,7 @@ et al. (2017).
 # Run the analysis for Fig. (5) in Münch et al. (2017)
 # (note that this takes some amount of computation time):
 \donttest{
-TR <- prepareTrenchData()$oxy
+TR <- TrenchR:::prepareTrenchData()$oxy
 ParamSpace <- LoopParamSpace(rec.in = TR$mean13_HiRes,
                              reference = TR$mean15_HiRes,
                              res = TR$HiRes, depth = TR$depth_HiRes,
