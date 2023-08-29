@@ -7,9 +7,10 @@
 **TrenchR** implements routines that are targeted at the analysis, together with
 accompanying plotting, of spatial and temporal variations of proxy data
 derived from spatial arrays of records, specifically from trenches, i.e.,
-proxy depth profiles sampled longitudinally at regular intervals. It
-incorporates the analyses of snow trench stable isotope data for the
-publication of Münch et al. (2017).
+proxy depth profiles sampled longitudinally at regular intervals. This part is
+still under active development, but the package incorporates the analyses of
+Antarctic snow trench stable isotope data performed for the publication of Münch
+et al. (2017).
 
 The R code in this package has been implemented by Dr. Thomas Münch. For further
 information, code enhancements or potential bugs, please write to
@@ -40,6 +41,23 @@ remotes::install_github("EarthSystemDiagnostics/TrenchR", build_vignettes = TRUE
   development version is linked
   [here](http://htmlpreview.github.io/?https://github.com/EarthSystemDiagnostics/TrenchR/blob/master/vignettes/tc17-figures.html).
 
+## Package data
+
+Several datasets are included in **TrenchR** and can be accessed from the
+following variables after loading the package:
+
+* `t13.trench1`: Antarctic snow trench T13-1 stable water isotopologue data and
+  meta information.
+* `t13.trench2`: Antarctic snow trench T13-2 stable water isotopologue data and
+  meta information.
+* `t15.trench1`: Antarctic snow trench T15-1 stable water isotopologue data and
+  meta information.
+* `t15.trench2`: Antarctic snow trench T15-2 stable water isotopologue data and
+  meta information.
+* `aws9`: 2 m air temperature from the automatic weather station AWS9 at Kohnen
+  Station, Dronning Maud Land, Antarctica, at monthly and annual resolution for
+  the period December 1998 (start of AWS9 operation) until April 2014.
+* `ParamSpace`: Data to reproduce Figure 5 in Münch et al. (2017).
 
 ## Literature cited
 
