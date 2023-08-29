@@ -15,7 +15,7 @@ library(TrenchR)
 
 TR <- TrenchR:::prepareTrenchData()$oxy
 T13.annual <- TrenchR:::T13AnnualMeans(t1 = TR$mean13.1,
-                                       t2 = Hmisc::Lag(TR$mean13.2,
+                                       t2 = prxytools::Lag(TR$mean13.2,
                                                        TR$k13 / TR$LoRes),
                                        depth = TR$depth,
                                        cheat = TRUE)
@@ -138,10 +138,10 @@ T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes,
                              ADV = mod.param$ADV.ind)
 
 diff.13 <- TR$mean13.1 -
-  Hmisc::Lag(TR$mean13.2, shift = TR$k13 / TR$LoRes)
+  prxytools::Lag(TR$mean13.2, shift = TR$k13 / TR$LoRes)
 
 diff.15 <- TR$mean15.1_HiRes -
-  Hmisc::Lag(TR$mean15.2_HiRes, shift = TR$k15 / TR$HiRes)
+  prxytools::Lag(TR$mean15.2_HiRes, shift = TR$k15 / TR$HiRes)
 diff.15 <- diff.15[match(TR$depth, TR$depth_HiRes)]
 
 diff.2yr <- TR$mean15 - T13.starstar$LoRes

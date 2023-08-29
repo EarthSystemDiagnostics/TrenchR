@@ -1,4 +1,4 @@
-##' Calculate compression of firn-core record.
+##' Calculate compression of firn-core record
 ##'
 ##' Calculate the compression due to densification with a constant rate during
 ##' downward-advection of a firn-core record.

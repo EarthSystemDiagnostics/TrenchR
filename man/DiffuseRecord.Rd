@@ -2,7 +2,7 @@
 % Please edit documentation in R/DiffuseRecord.R
 \name{DiffuseRecord}
 \alias{DiffuseRecord}
-\title{Diffuse a record.}
+\title{Diffuse a record}
 \usage{
 DiffuseRecord(rec, sigma, res = 1, debug = FALSE)
 }

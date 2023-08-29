@@ -2,7 +2,7 @@
 % Please edit documentation in R/ModifyRecord.R
 \name{ModifyRecord}
 \alias{ModifyRecord}
-\title{Model temporal change of firn profile.}
+\title{Model temporal change of firn profile}
 \usage{
 ModifyRecord(
   rec.in,

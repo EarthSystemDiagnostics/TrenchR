@@ -1,4 +1,4 @@
-##' Loop over parameter space to find minimum RMSD.
+##' Loop over parameter space to find minimum RMSD
 ##'
 ##' Loop over a given parameter space of advection, diffusion and densification
 ##' values to modify a given record accordingly, and return the overall minimum
@@ -58,7 +58,7 @@
 ##' # Run the analysis for Fig. (5) in Münch et al. (2017)
 ##' # (note that this takes some amount of computation time):
 ##' \donttest{
-##' TR <- prepareTrenchData()$oxy
+##' TR <- TrenchR:::prepareTrenchData()$oxy
 ##' ParamSpace <- LoopParamSpace(rec.in = TR$mean13_HiRes,
 ##'                              reference = TR$mean15_HiRes,
 ##'                              res = TR$HiRes, depth = TR$depth_HiRes,
@@ -109,13 +109,14 @@ LoopParamSpace <- function(rec.in, reference, res, depth,
                                                      stretch = d)$rec
 
                 # advect the diffused and stretched record
-                diff.stretch.adv <- Hmisc::Lag(diff.stretch, k)
+                diff.stretch.adv <- prxytools::Lag(diff.stretch, k)
 
                 iX <- which(advSpace == k)
                 iR <- which(sigmaSpace == s)
                 iC <- which(densfSpace == d)
 
-                RMSD[iX, iR, iC] <- rmsd(diff.stretch.adv, REF, na.rm = TRUE)
+                RMSD[iX, iR, iC] <- stattools::rmsd(diff.stretch.adv, REF,
+                                                    na.rm = TRUE)
 
             }
         }

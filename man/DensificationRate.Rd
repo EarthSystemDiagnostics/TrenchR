@@ -2,7 +2,7 @@
 % Please edit documentation in R/DensificationRate.R
 \name{DensificationRate}
 \alias{DensificationRate}
-\title{Firn densification rate.}
+\title{Firn densification rate}
 \usage{
 DensificationRate(dat = NULL, lim)
 }

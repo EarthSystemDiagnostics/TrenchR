@@ -3,7 +3,7 @@
 \docType{data}
 \name{ParamSpace}
 \alias{ParamSpace}
-\title{Data for TC2017 Figure 5.}
+\title{Data for TC2017 Figure 5}
 \format{
 A list with nine components:
 \describe{

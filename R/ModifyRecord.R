@@ -1,4 +1,4 @@
-##' Model temporal change of firn profile.
+##' Model temporal change of firn profile
 ##'
 ##' Modify a proxy firn profile (e.g., an isotope record) to simulate changes
 ##' over time given values of downward advection, compression by densification,
@@ -92,7 +92,7 @@ ModifyRecord <- function(rec.in, res, depth.hires, depth.lores = NULL,
             stop("No valid ADVECTION parameter.")
         }
 
-        rec.out <- Hmisc::Lag(rec.out, shift = ADV / res)
+        rec.out <- prxytools::Lag(rec.out, shift = ADV / res)
 
     }
 

@@ -1,4 +1,4 @@
-##' Compression by densification.
+##' Compression by densification
 ##'
 ##' Amount of compression of a depth increment for linear densification of firn
 ##' with a constant rate.

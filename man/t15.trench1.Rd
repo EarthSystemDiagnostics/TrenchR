@@ -3,7 +3,7 @@
 \docType{data}
 \name{t15.trench1}
 \alias{t15.trench1}
-\title{Trench T15-1 Stable Water Isotopologue Data and Meta Information.}
+\title{Trench T15-1 stable water isotopologue data and meta information}
 \format{
 A list with three components:
 \describe{

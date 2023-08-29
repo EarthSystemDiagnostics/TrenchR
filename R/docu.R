@@ -1,4 +1,4 @@
-#' Trench T15-1 Stable Water Isotopologue Data and Meta Information.
+#' Trench T15-1 stable water isotopologue data and meta information
 #'
 #' A dataset providing the stable water isotopologue data measured on Kohnen
 #' Snow Trench T15-1 (oxygen isotopes, hydrogen isotopes, and deuterium excess)
@@ -31,7 +31,7 @@
 #' @source \url{https://doi.pangaea.de/10.1594/PANGAEA.876639}
 "t15.trench1"
 
-#' Trench T15-2 Stable Water Isotopologue Data and Meta Information.
+#' Trench T15-2 stable water isotopologue data and meta information
 #'
 #' A dataset providing the stable water isotopologue data measured on Kohnen
 #' Snow Trench T15-2 (oxygen isotopes, hydrogen isotopes, and deuterium excess)
@@ -61,7 +61,7 @@
 #' @source \url{https://doi.pangaea.de/10.1594/PANGAEA.876639}
 "t15.trench2"
 
-#' Trench T13-1 Stable Water Isotopologue Data and Meta Information.
+#' Trench T13-1 stable water isotopologue data and meta information
 #'
 #' A dataset providing the stable water isotopologue data measured on Kohnen
 #' Snow Trench T13-1 (oxygen isotopes, hydrogen isotopes, and deuterium excess)
@@ -91,7 +91,7 @@
 #' @source \url{https://doi.pangaea.de/10.1594/PANGAEA.861675}
 "t13.trench1"
 
-#' Trench T13-2 Stable Water Isotopologue Data and Meta Information.
+#' Trench T13-2 stable water isotopologue data and meta information
 #'
 #' A dataset providing the stable water isotopologue data measured on Kohnen
 #' Snow Trench T13-2 (oxygen isotopes, hydrogen isotopes, and deuterium excess)
@@ -121,7 +121,7 @@
 #' @source \url{https://doi.pangaea.de/10.1594/PANGAEA.861675}
 "t13.trench2"
 
-#' AWS9 2m air temperature.
+#' AWS9 2m air temperature
 #'
 #' A dataset of the measurements of 2 m air temperature from the automatic
 #' weather station AWS9 at Kohnen Station. The data are provided at monthly as
@@ -155,7 +155,7 @@
 #' (c.h.tijm-reijmer@uu.nl).
 "aws9"
 
-#' Data for TC2017 Figure 5.
+#' Data for TC2017 Figure 5
 #'
 #' This file contains the data displayed in Figure 5 of the TC17 paper and is
 #' the result of a call to \code{\link{LoopParamSpace}} for the parameter ranges

@@ -1,4 +1,4 @@
-##' Differential firn diffusion.
+##' Differential firn diffusion
 ##'
 ##' Calculate the differential diffusion, as defined in Münch et al. (2007),
 ##' over a specified depth interval given a diffusion length profile.

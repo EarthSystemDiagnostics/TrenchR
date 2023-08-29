@@ -12,7 +12,7 @@ test_that("fig01 is reproducible", {
 
   TR <- prepareTrenchData()$oxy
   T13.annual <- T13AnnualMeans(t1 = TR$mean13.1,
-                               t2 = Hmisc::Lag(TR$mean13.2,
+                               t2 = prxytools::Lag(TR$mean13.2,
                                                TR$k13 / TR$LoRes),
                                depth = TR$depth,
                                cheat = TRUE)
@@ -111,7 +111,7 @@ test_that("fig06 is reproducible", {
   ind1 <- which(TR$depth <= TR$SRF.b$t15)                 
   v11[ind1[-length(ind1)]] <- NA
 
-  sum.max <- which.peaks(v11, partial = TRUE)[3 : 6]
+  sum.max <- prxytools::LocatePeaks(v11, partial = TRUE)[3 : 6]
 
   # ------------------------------------------------------------------------------
   # tests
@@ -150,10 +150,10 @@ test_that("fig07 is reproducible", {
                                ADV = mod.param$ADV.ind)
 
   diff.13 <- TR$mean13.1 -
-    Hmisc::Lag(TR$mean13.2, shift = TR$k13 / TR$LoRes)
+    prxytools::Lag(TR$mean13.2, shift = TR$k13 / TR$LoRes)
 
   diff.15 <- TR$mean15.1_HiRes -
-    Hmisc::Lag(TR$mean15.2_HiRes, shift = TR$k15 / TR$HiRes)
+    prxytools::Lag(TR$mean15.2_HiRes, shift = TR$k15 / TR$HiRes)
   diff.15 <- diff.15[match(TR$depth, TR$depth_HiRes)]
 
   diff.2yr <- TR$mean15 - T13.starstar$LoRes
