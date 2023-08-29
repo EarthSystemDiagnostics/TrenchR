@@ -1,4 +1,4 @@
-##' Firn densification rate.
+##' Firn densification rate
 ##'
 ##' Function to return the relative densification rate in \% per metre over a
 ##' specified depth, given a record of firn densities. The densification rate is

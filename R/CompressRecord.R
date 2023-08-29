@@ -1,4 +1,4 @@
-##' Compress a record.
+##' Compress a record
 ##'
 ##' Linearly interpolate given data onto a compressed depth scale.
 ##'

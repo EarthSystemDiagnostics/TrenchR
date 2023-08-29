@@ -3,7 +3,7 @@
 \docType{data}
 \name{aws9}
 \alias{aws9}
-\title{AWS9 2m air temperature.}
+\title{AWS9 2m air temperature}
 \format{
 A list with two components:
 \describe{

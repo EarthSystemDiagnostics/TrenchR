@@ -2,7 +2,7 @@
 % Please edit documentation in R/DifferentialDiffusion.R
 \name{DifferentialDiffusion}
 \alias{DifferentialDiffusion}
-\title{Differential firn diffusion.}
+\title{Differential firn diffusion}
 \source{
 Eq. (2) in Münch et al. (2017)
 }

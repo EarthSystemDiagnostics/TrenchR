@@ -2,7 +2,7 @@
 % Please edit documentation in R/Compression.R
 \name{Compression}
 \alias{Compression}
-\title{Compression by densification.}
+\title{Compression by densification}
 \usage{
 Compression(z1, z2, rate)
 }

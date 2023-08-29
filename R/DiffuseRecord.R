@@ -1,4 +1,4 @@
-##' Diffuse a record.
+##' Diffuse a record
 ##' 
 ##' This function diffuses a time series or record with a given depth-dependent
 ##' diffusion length by convolution with a Gaussian kernel.

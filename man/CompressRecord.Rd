@@ -2,7 +2,7 @@
 % Please edit documentation in R/CompressRecord.R
 \name{CompressRecord}
 \alias{CompressRecord}
-\title{Compress a record.}
+\title{Compress a record}
 \usage{
 CompressRecord(depth, rec, stretch)
 }

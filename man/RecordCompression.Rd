@@ -2,7 +2,7 @@
 % Please edit documentation in R/RecordCompression.R
 \name{RecordCompression}
 \alias{RecordCompression}
-\title{Calculate compression of firn-core record.}
+\title{Calculate compression of firn-core record}
 \usage{
 RecordCompression(z.start = 0, adv, length.in, rate, res = 1)
 }
