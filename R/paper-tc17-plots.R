@@ -2,7 +2,7 @@
 # ----- Data processing and helper functions -----------------------------------
 #
 
-##' Process T13 and T15 Trench Data.
+##' Process T13 and T15 trench data
 ##'
 ##' This function processes the T13 and T15 trench isotopologue data in a way
 ##' that is suited for analysis and plotting used in Münch et al. (2017).
@@ -83,7 +83,7 @@
 ##'           shift of T13-2); and total T15.
 ##' }
 ##' @author Thomas Münch
-##' @inherit Muench2017 references
+##' @noRd
 prepareTrenchData <- function(index.range = 1 : 59, LoRes = 3, HiRes = 0.5,
                               k13 = 3, k15 = -0.5, na.treat = FALSE) {
 
@@ -230,7 +230,7 @@ prepareTrenchData <- function(index.range = 1 : 59, LoRes = 3, HiRes = 0.5,
 
 }
 
-##' T13 temporal change parameters.
+##' Set T13 temporal change parameters
 ##'
 ##' This function provides a list of the parameters used in Münch et al. (2017)
 ##' according to which the temporal change of the original T13 mean trench
@@ -258,9 +258,9 @@ prepareTrenchData <- function(index.range = 1 : 59, LoRes = 3, HiRes = 0.5,
 ##' }
 ##' @seealso \code{\link{LoopParamSpace}}; \code{\link{ModifyRecord}}
 ##' @author Thomas Münch
-##' @inherit Muench2017 references
 ##' @examples
 ##' mod.par <- TrenchR:::SetModificationPar()
+##' @noRd
 SetModificationPar <- function(ADV.opt = ParamSpace$adv.opt,
                                SIGMA.opt = ParamSpace$sigma.opt,
                                STRETCH.opt = ParamSpace$densf.opt,
@@ -282,7 +282,7 @@ SetModificationPar <- function(ADV.opt = ParamSpace$adv.opt,
 
 }
 
-##' T13 annual-mean isotope time series.
+##' Calculate T13 annual-mean isotope time series
 ##'
 ##' Calculate annual-mean time series of the T13 trench isotope records defined
 ##' by binning the records according to the isotopic maxima and minima. From
@@ -321,7 +321,7 @@ SetModificationPar <- function(ADV.opt = ParamSpace$adv.opt,
 ##'   T13--1, T13--2 and mean T13 isotope records.}
 ##' }
 ##' @author Thomas Münch
-##' @inherit Muench2016 references
+##' @noRd
 T13AnnualMeans <- function(t1, t2, depth,
                            i.max = c(5, 11, 19, 24, 33, 38),
                            i.min = c(7, 14, 21, 26, 37),
@@ -455,7 +455,7 @@ T13AnnualMeans <- function(t1, t2, depth,
 # ----- Plotting functions -----------------------------------------------------
 #
 
-##' Produce TC17 Figure 01.
+##' Produce TC17 Figure 01
 ##'
 ##' This function makes all necessary calculations and plots the results for
 ##' Figure 01 shown in Münch et al. (2017).
@@ -469,7 +469,7 @@ T13AnnualMeans <- function(t1, t2, depth,
 ##' is, however, minor, and it thus does not influence any results or
 ##' conclusions of Münch et al. (2017).
 ##' @author Thomas Münch
-##' @inherit Muench2017 references
+##' @noRd
 TC17.Fig01 <- function(cheat = TRUE) {
 
     TR <- prepareTrenchData()$oxy
@@ -572,12 +572,12 @@ TC17.Fig01 <- function(cheat = TRUE) {
 
 }
 
-##' Produce TC17 Figure 02.
+##' Produce TC17 Figure 02
 ##'
 ##' This function makes all necessary calculations and plots the results for
 ##' Figure 02 shown in Münch et al. (2017).
 ##' @author Thomas Münch
-##' @inherit Muench2017 references
+##' @noRd
 TC17.Fig02 <- function() {
 
     op <- grfxtools::Par(mar = c(6, 6, 6, 6), lwd = 2,
@@ -711,12 +711,14 @@ TC17.Fig02 <- function() {
 
 }
 
-##' Produce TC17 Figure 03a.
+##' Produce TC17 Figure 03a
 ##'
 ##' @param TR the data set; defaults to the processed T15 oxygen isotope data.
 ##' @author Thomas Münch
-##' @inherit Muench2017 references
-TC17.Fig03a <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy) {
+##' @noRd
+TC17.Fig03a <- function() {
+
+    TR <- prepareTrenchData(na.treat = TRUE)$oxy
 
     op <- grfxtools::Par(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2),
                          lwd = 2, font.lab = 2, font.axis = 2)
@@ -756,12 +758,14 @@ TC17.Fig03a <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy) {
 
 }
 
-##' Produce TC17 Figure 03b.
+##' Produce TC17 Figure 03b
 ##'
 ##' @param TR the data set; defaults to the processed T15 oxygen isotope data.
 ##' @author Thomas Münch
-##' @inherit Muench2017 references
-TC17.Fig03b <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy) {
+##' @noRd
+TC17.Fig03b <- function() {
+
+    TR <- prepareTrenchData(na.treat = TRUE)$oxy
 
     op <- grfxtools::Par(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2),
                          lwd = 2, font.lab = 2, font.axis = 2)
@@ -798,12 +802,14 @@ TC17.Fig03b <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy) {
 
 }
 
-##' Produce TC17 Figure 03c.
+##' Produce TC17 Figure 03c
 ##'
 ##' @param TR the data set; defaults to the processed T15 oxygen isotope data.
 ##' @author Thomas Münch
-##' @inherit Muench2017 references
-TC17.Fig03c <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy) {
+##' @noRd
+TC17.Fig03c <- function() {
+
+    TR <- prepareTrenchData(na.treat = TRUE)$oxy
 
     op <- grfxtools::Par(lwd = 2, font.lab = 2, font.axis = 2)
 
@@ -856,12 +862,12 @@ TC17.Fig03c <- function(TR = prepareTrenchData(na.treat = TRUE)$oxy) {
     par(op)
 }
 
-##' Produce TC17 Figure 04.
+##' Produce TC17 Figure 04
 ##'
 ##' This function makes all necessary calculations and plots the results for
 ##' Figure 04 shown in Münch et al. (2017).
 ##' @author Thomas Münch
-##' @inherit Muench2017 references
+##' @noRd
 TC17.Fig04 <- function() {
 
     TR = prepareTrenchData(na.treat = TRUE)$oxy
@@ -918,7 +924,7 @@ TC17.Fig04 <- function() {
 
 }
 
-##' Produce TC17 Figure 05.
+##' Produce TC17 Figure 05
 ##'
 ##' This function makes all necessary calculations and plots the results for
 ##' Figure 05 shown in Münch et al. (2017).
@@ -927,7 +933,7 @@ TC17.Fig04 <- function() {
 ##' data presented in Münch et al. (2017) is used for plotting which is
 ##' supplied with this package in the variable \code{\link{ParamSpace}}.
 ##' @author Thomas Münch
-##' @inherit Muench2017 references
+##' @noRd
 TC17.Fig05 <- function(dat = NULL) {
 
     if (is.null(dat)) {
@@ -961,25 +967,15 @@ TC17.Fig05 <- function(dat = NULL) {
 
 }
 
-##' Produce TC17 Figure 06.
+##' Produce TC17 Figure 06
 ##'
 ##' This function makes all necessary calculations and plots the results for
 ##' Figure 06 shown in Münch et al. (2017).
-##' @param mod.param list of the parameters according to which the original
-##' T13 mean profile is modified to model the temporal changes. It must containt
-##' the following elements: \code{ADV.ind}, \code{ADV.opt}, \code{ADV.only},
-##' \code{SIGMA.ind}, \code{SIGMA.opt}, \code{STRETCH.ind}, and
-##' \code{STRETCH.opt} (see also \code{\link{SetModificationPar}}). If
-##' \code{NULL} (the default), the original data from Münch et al. (2017) is
-##' used for plotting.
 ##' @author Thomas Münch
-##' @inherit Muench2017 references
-##' @seealso \code{\link{SetModificationPar}}
-TC17.Fig06 <- function(mod.param = NULL) {
+##' @noRd
+TC17.Fig06 <- function() {
 
-    if (is.null(mod.param)) {
-        mod.param <- SetModificationPar()
-    }
+    mod.param <- SetModificationPar()
 
     op <- grfxtools::Par(oma = c(5, 0, 0.5, 0), mar = c(0, 6, 0, 6),
                          mfrow = c(1, 2), lwd = 2, font.lab = 2, font.axis = 2)
@@ -1208,24 +1204,15 @@ TC17.Fig06 <- function(mod.param = NULL) {
 
 }
 
-##' Produce TC17 Figure 07.
+##' Produce TC17 Figure 07
 ##'
 ##' This function makes all necessary calculations and plots the results for
 ##' Figure 07 shown in Münch et al. (2017).
-##' @param mod.param  list of the parameters according to which the original
-##' T13 mean profile is modified to model the temporal changes. It must containt
-##' the following elements: \code{ADV.ind}, \code{SIGMA.ind} and
-##' \code{STRETCH.ind} (see also \code{\link{SetModificationPar}}). If
-##' \code{NULL} (the default), the original data from Münch et al. (2017) is
-##' used for plotting.
 ##' @author Thomas Münch
-##' @inherit Muench2017 references
-##' @seealso \code{\link{SetModificationPar}}
-TC17.Fig07 <- function(mod.param = NULL) {
+##' @noRd
+TC17.Fig07 <- function() {
     
-    if (is.null(mod.param)) {
-        mod.param <- SetModificationPar()
-    }
+    mod.param <- SetModificationPar()
 
     op <- grfxtools::Par(mfrow = c(1, 2), xaxs = "r", yaxs = "i", lwd = 1.5,
                        mar = c(5, 5.5, 0.5, 0.5), font.lab = 2, font.axis = 2)
