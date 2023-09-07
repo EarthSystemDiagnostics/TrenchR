@@ -1,0 +1,5 @@
+"profileName"	"profilePos_[m]"	"profileSurfaceHeight_[cm]"
+"T13-2-01"	0.3	4
+"T13-2-02"	10	9.5
+"T13-2-03"	29.8	4.5
+"T13-2-04"	40	0.5
