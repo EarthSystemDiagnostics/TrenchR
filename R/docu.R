@@ -4,31 +4,37 @@
 #' Snow Trench T15-1 (oxygen isotopes, hydrogen isotopes, and deuterium excess)
 #' together with meta information.
 #'
-#' @format A list with three components:
+#' @format A tibble with 1500 rows and 8 variables:
 #' \describe{
-#'   \item{data:}{A 3 x 125 x 11 array with the isotopologue data: the first
-#'     index refers to the isotopic species (1 = d18O, 2 = d2H, 3 =
-#'     d-excess), the second index to the sample depth, the third index to the
-#'     profile position.}
-#'   \item{depth:}{Numeric vector of length 125 providing the sample depths in
-#'     [cm] on the absolute depth scale, thus 0 cm referring to the maximum
-#'     surface height of the trench.}
-#'   \item{meta:}{A data frame with 12 observations of 3 variables:
-#'   \describe{
-#'     \item{profileName:}{Character vector with the profile names.}
-#'     \item{profilePos:}{Numeric vector of the horizontal profile positions in
-#'       [m] along the trench.}
-#'     \item{profileSurfaceHeight:}{Numeric vector of the surface heights in
-#'     [cm] at the profile positions (positive downwards) relative to the
-#'     maximum surface height of the trench.}}}
+#'   \item{profileName:}{character string of the name of the trench profile.}
+#'   \item{profilePosition:}{the horizontal position of the trench profile in m
+#'     relative to the first profile.}
+#'   \item{surfaceHeight:}{the surface "height" in cm at each profile position
+#'     (positive downwards) relative to the maximum observed surface height.}
+#'   \item{sampleNumber:}{number enumerating the depth samples taken at each
+#'     profile position; i.e. the profile name together with the sample number
+#'     specify the exact position of the isotope sample within the entire
+#'     trench.}
+#'   \item{depth:}{depth in cm of the isotope sample on an absolute depth scale,
+#'     i.e. relative to the maximum observed surface height along the profile
+#'     positions.}
+#'   \item{d18O:}{the sample's oxygen isotope composition in permil VSMOW/SLAP.}
+#'   \item{dD:}{the sample's hydrogen isotope composition in permil VSMOW/SLAP.}
+#'   \item{dxs:}{d-excess value in permil VSMOW/SLAP calculated from d18O and
+#'     dD.}
 #' }
 #' @details
-#' Note that the meta data frame contains one additional profile at position
-#' 26.5 m which defines the maximum surface height, but for which, however, is
-#' no isotope profile available.\cr
-#' To create this dataset, the data available from PANGAEA has to be converted
-#' to the format described here.
-#' @source \url{https://doi.pangaea.de/10.1594/PANGAEA.876639}
+#' Note that isotope values close to the surface are NA when the surface height
+#' at a profile position does not reach the maximum surface height. Also one
+#' depth sample (T15-1-G-108) was lost in the measurement process and is listed
+#' as an NA value here.
+#'
+#' For data source files and for how to create this dataset from source, see the
+#' \code{data-raw} folder in the R package source. The data are also available
+#' in a similar format from PANGAEA, see the source information below, but note
+#' that sample positions with NA values, due to the variable surface height or
+#' because of missing samples, are not included in the PANGAEA dataset.
+#' @source \url{https://doi.pangaea.de/10.1594/PANGAEA.876637}
 "t15.trench1"
 
 #' Trench T15-2 stable water isotopologue data and meta information
@@ -37,28 +43,38 @@
 #' Snow Trench T15-2 (oxygen isotopes, hydrogen isotopes, and deuterium excess)
 #' together with meta information.
 #'
-#' @format A list with three components:
+#' @format A tibble with 1375 rows and 8 variables:
 #' \describe{
-#'   \item{data:}{A 3 x 125 x 11 array with the isotopologue data: the first
-#'     index refers to the isotopic species (1 = d18O, 2 = d2H, 3 =
-#'     d-excess), the second index to the sample depth, the third index to the
-#'     profile position.}
-#'   \item{depth:}{Numeric vector of length 125 providing the sample depths in
-#'     [cm] on the absolute depth scale, thus 0 cm referring to the maximum
-#'     surface height of the trench.}
-#'   \item{meta:}{A data frame with 11 observations of 3 variables:
-#'   \describe{
-#'     \item{profileName:}{Character vector with the profile names.}
-#'     \item{profilePos:}{Numeric vector of the horizontal profile positions in
-#'       [m] along the trench.}
-#'     \item{profileSurfaceHeight:}{Numeric vector of the surface heights in
-#'     [cm] at the profile positions (positive downwards) relative to the
-#'     maximum surface height of the trench.}}}
+#'   \item{profileName:}{character string of the name of the trench profile.}
+#'   \item{profilePosition:}{the horizontal position of the trench profile in m
+#'     relative to the first profile.}
+#'   \item{surfaceHeight:}{the surface "height" in cm at each profile position
+#'     (positive downwards) relative to the maximum observed surface height.}
+#'   \item{sampleNumber:}{number enumerating the depth samples taken at each
+#'     profile position; i.e. the profile name together with the sample number
+#'     specify the exact position of the isotope sample within the entire
+#'     trench.}
+#'   \item{depth:}{depth in cm of the isotope sample on an absolute depth scale,
+#'     i.e. relative to the maximum observed surface height along the profile
+#'     positions.}
+#'   \item{d18O:}{the sample's oxygen isotope composition in permil VSMOW/SLAP.}
+#'   \item{dD:}{the sample's hydrogen isotope composition in permil VSMOW/SLAP.}
+#'   \item{dxs:}{d-excess value in permil VSMOW/SLAP calculated from d18O and
+#'     dD.}
 #' }
 #' @details
-#' To create this dataset, the data available from PANGAEA has to be converted
-#' to the format described here.
-#' @source \url{https://doi.pangaea.de/10.1594/PANGAEA.876639}
+#' Note that isotope values close to the surface are NA when the surface height
+#' at a profile position does not reach the maximum surface height. Also a few
+#' depth samples (T15-2-W-39 and 52; T15-2-X-48, 50-52, 74 and 77; T15-2-Y-36
+#' and 42) were lost in the measurement process and are listed as NA values
+#' here.
+#'
+#' For data source files and for how to create this dataset from source, see the
+#' \code{data-raw} folder in the R package source. The data are also available
+#' in a similar format from PANGAEA, see the source information below, but note
+#' that sample positions with NA values, due to the variable surface height or
+#' because of missing samples, are not included in the PANGAEA dataset.
+#' @source \url{https://doi.pangaea.de/10.1594/PANGAEA.876638}
 "t15.trench2"
 
 #' Trench T13-1 stable water isotopologue data and meta information
@@ -67,28 +83,39 @@
 #' Snow Trench T13-1 (oxygen isotopes, hydrogen isotopes, and deuterium excess)
 #' together with meta information.
 #'
-#' @format A list with three components:
+#' @format A tibble with 1444 rows and 8 variables:
 #' \describe{
-#'   \item{data:}{A 3 x 38 x 38 array with the isotopologue data: the first
-#'     index refers to the isotopic species (1 = d18O, 2 = d2H, 3 =
-#'     d-excess), the second index to the sample depth, the third index to the
-#'     profile position.}
-#'   \item{depth:}{Numeric vector of length 38 providing the sample depths in
-#'     [cm] on the absolute depth scale, thus 0 cm referring to the maximum
-#'     surface height of the trench.}
-#'   \item{meta:}{A data frame with 38 observations of 3 variables:
-#'   \describe{
-#'     \item{profileName:}{Character vector with the profile names.}
-#'     \item{profilePos:}{Numeric vector of the horizontal profile positions in
-#'       [cm] along the trench.}
-#'     \item{profileSurfaceHeight:}{Numeric vector of the surface heights in
-#'     [cm] at the profile positions (positive downwards) relative to the
-#'     maximum surface height of the trench.}}}
+#'   \item{profileName:}{character string of the name of the trench profile.}
+#'   \item{profilePosition:}{the horizontal position of the trench profile in m
+#'     relative to the predefined trench starting point.}
+#'   \item{surfaceHeight:}{the surface "height" in cm at each profile position
+#'     (positive downwards) relative to the maximum observed surface height.}
+#'   \item{sampleNumber:}{number enumerating the depth samples taken at each
+#'     profile position; i.e. the profile name together with the sample number
+#'     specify the exact position of the isotope sample within the entire
+#'     trench.}
+#'   \item{depth:}{depth in cm of the isotope sample on an absolute depth scale,
+#'     i.e. relative to the maximum observed surface height along the profile
+#'     positions.}
+#'   \item{d18O:}{the sample's oxygen isotope composition in permil VSMOW/SLAP.}
+#'   \item{dD:}{the sample's hydrogen isotope composition in permil VSMOW/SLAP.}
+#'   \item{dxs:}{d-excess value in permil VSMOW/SLAP calculated from d18O and
+#'     dD.}
 #' }
 #' @details
-#' To create this dataset, the data available from PANGAEA has to be converted
-#' to the format described here.
-#' @source \url{https://doi.pangaea.de/10.1594/PANGAEA.861675}
+#' Note that isotope values close to the surface are NA when the surface height
+#' at a profile position does not reach the maximum surface height. Also one
+#' depth sample of profile 3 (T13-1-03-12) was lost in the measurement process,
+#' and large parts of profile T13-1-01 could not be sampled during the field
+#' work due to instabilities in the trench wall; these are also listed as NA
+#' values here.
+#'
+#' For data source files and for how to create this dataset from source, see the
+#' \code{data-raw} folder in the R package source. The data are also available
+#' in a similar format from PANGAEA, see the source information below, but note
+#' that sample positions with NA values, due to the variable surface height or
+#' because of missing samples, are not included in the PANGAEA dataset.
+#' @source \url{https://doi.pangaea.de/10.1594/PANGAEA.861673}
 "t13.trench1"
 
 #' Trench T13-2 stable water isotopologue data and meta information
@@ -97,28 +124,35 @@
 #' Snow Trench T13-2 (oxygen isotopes, hydrogen isotopes, and deuterium excess)
 #' together with meta information.
 #'
-#' @format A list with three components:
+#' @format A tibble with 152 rows and 8 variables:
 #' \describe{
-#'   \item{data:}{A 3 x 38 x 4 array with the isotopologue data: the first
-#'     index refers to the isotopic species (1 = d18O, 2 = d2H, 3 =
-#'     d-excess), the second index to the sample depth, the third index to the
-#'     profile position.}
-#'   \item{depth:}{Numeric vector of length 38 providing the sample depths in
-#'     [cm] on the absolute depth scale, thus 0 cm referring to the maximum
-#'     surface height of the trench.}
-#'   \item{meta:}{A data frame with 4 observations of 3 variables:
-#'   \describe{
-#'     \item{profileName:}{Character vector with the profile names.}
-#'     \item{profilePos:}{Numeric vector of the horizontal profile positions in
-#'       [cm] along the trench.}
-#'     \item{profileSurfaceHeight:}{Numeric vector of the surface heights in
-#'     [cm] at the profile positions (positive downwards) relative to the
-#'     maximum surface height of the trench.}}}
+#'   \item{profileName:}{character string of the name of the trench profile.}
+#'   \item{profilePosition:}{the horizontal position of the trench profile in m
+#'     relative to the predefined trench starting point.}
+#'   \item{surfaceHeight:}{the surface "height" in cm at each profile position
+#'     (positive downwards) relative to the maximum observed surface height.}
+#'   \item{sampleNumber:}{number enumerating the depth samples taken at each
+#'     profile position; i.e. the profile name together with the sample number
+#'     specify the exact position of the isotope sample within the entire
+#'     trench.}
+#'   \item{depth:}{depth in cm of the isotope sample on an absolute depth scale,
+#'     i.e. relative to the maximum observed surface height along the profile
+#'     positions.}
+#'   \item{d18O:}{the sample's oxygen isotope composition in permil VSMOW/SLAP.}
+#'   \item{dD:}{the sample's hydrogen isotope composition in permil VSMOW/SLAP.}
+#'   \item{dxs:}{d-excess value in permil VSMOW/SLAP calculated from d18O and
+#'     dD.}
 #' }
 #' @details
-#' To create this dataset, the data available from PANGAEA has to be converted
-#' to the format described here.
-#' @source \url{https://doi.pangaea.de/10.1594/PANGAEA.861675}
+#' Note that isotope values close to the surface are NA when the surface height
+#' at a profile position does not reach the maximum surface height.
+#'
+#' For data source files and for how to create this dataset from source, see the
+#' \code{data-raw} folder in the R package source. The data are also available
+#' in a similar format from PANGAEA, see the source information below, but note
+#' that sample positions with NA values, due to the variable surface height, are
+#' not included in the PANGAEA dataset.
+#' @source \url{https://doi.pangaea.de/10.1594/PANGAEA.861674}
 "t13.trench2"
 
 #' AWS9 2m air temperature
