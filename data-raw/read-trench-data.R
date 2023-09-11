@@ -18,7 +18,8 @@ library(usethis) # v>=2.2.1
 # ------------------------------------------------------------------------------
 # Library function to do the actual work
 
-#' Read a single Kohnen trench profile given its meta information
+#' Read a single Kohnen trench profile given its meta information, including
+#' linear interpolation of missing samples.
 #'
 #' @return a tibble
 #' @author Thomas Münch
@@ -26,6 +27,14 @@ readTrenchProfile <- function(file, meta) {
 
   prfNm <- strsplit(file, "_")[[1]][3] %>%
     stringr::str_remove(".txt")
+
+  profiles2interpolate <- c("T13-1-03", "T15-1-G", "T15-2-W",
+                            "T15-2-X", "T15-2-Y")
+  interpolate <- FALSE
+  if (prfNm %in% profiles2interpolate) {
+    interpolate <- TRUE
+    intpl <- function(x, y, n = 1) {round(approx(x, y, x)$y, digits = n)}
+  }
 
   profilePosition <- dplyr::filter(meta, profileName == prfNm) %>%
     dplyr::pull(`profilePos_.m.`)
@@ -44,7 +53,13 @@ readTrenchProfile <- function(file, meta) {
                                 names = c("t", "p", "sampleNumber")) %>%
     dplyr::mutate(sampleNumber = as.integer(sampleNumber)) %>%
     dplyr::select(profileName, profilePosition, surfaceHeight,
-                  sampleNumber, depth, d18O, dD, dxs)
+                  sampleNumber, depth, d18O, dD, dxs) %>%
+    {
+      if (interpolate) {
+        dplyr::mutate(., d18O = intpl(depth, d18O, n = 2),
+                      dD = intpl(depth, dD), dxs = intpl(depth, dxs))
+      } else { . }
+    }
 
 }
 

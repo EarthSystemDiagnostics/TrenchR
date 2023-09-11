@@ -38,16 +38,18 @@ together with meta information.
 }
 \details{
 Note that isotope values close to the surface are NA when the surface height
-at a profile position does not reach the maximum surface height. Also one
-depth sample of profile 3 (T13-1-03-12) was lost in the measurement process,
-and large parts of profile T13-1-01 could not be sampled during the field
-work due to instabilities in the trench wall; these are also listed as NA
-values here.
+at a profile position does not reach the maximum surface height. One depth
+sample (T13-1-03-12) was lost in the measurement process and has been
+linearly interpolated from the neighbouring values. Large parts of profile
+T13-1-01 could not be sampled during the field work due to instabilities in
+the trench wall; these parts have not been interpolated and are instead
+listed as NA values here.
 
 For data source files and for how to create this dataset from source, see the
 \code{data-raw} folder in the R package source. The data are also available
 in a similar format from PANGAEA, see the source information below, but note
-that sample positions with NA values, due to the variable surface height or
-because of missing samples, are not included in the PANGAEA dataset.
+that sample positions with NA values due to the variable surface height and
+for the corrupted first trench profile (T13-1-01) are not included in the
+PANGAEA dataset, and the other missing sample has not been interpolated.
 }
 \keyword{datasets}

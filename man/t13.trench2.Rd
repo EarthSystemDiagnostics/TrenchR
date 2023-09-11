@@ -43,7 +43,7 @@ at a profile position does not reach the maximum surface height.
 For data source files and for how to create this dataset from source, see the
 \code{data-raw} folder in the R package source. The data are also available
 in a similar format from PANGAEA, see the source information below, but note
-that sample positions with NA values, due to the variable surface height, are
+that sample positions with NA values due to the variable surface height are
 not included in the PANGAEA dataset.
 }
 \keyword{datasets}

@@ -25,15 +25,16 @@
 #' }
 #' @details
 #' Note that isotope values close to the surface are NA when the surface height
-#' at a profile position does not reach the maximum surface height. Also one
-#' depth sample (T15-1-G-108) was lost in the measurement process and is listed
-#' as an NA value here.
+#' at a profile position does not reach the maximum surface height. One
+#' depth sample (T15-1-G-108) was lost in the measurement process and has been
+#' linearly interpolated from the neighbouring values.
 #'
 #' For data source files and for how to create this dataset from source, see the
 #' \code{data-raw} folder in the R package source. The data are also available
 #' in a similar format from PANGAEA, see the source information below, but note
-#' that sample positions with NA values, due to the variable surface height or
-#' because of missing samples, are not included in the PANGAEA dataset.
+#' that sample positions with NA values due to the variable surface height are
+#' not included in the PANGAEA dataset and the missing sample has not been
+#' interpolated.
 #' @source \url{https://doi.pangaea.de/10.1594/PANGAEA.876637}
 "t15.trench1"
 
@@ -64,16 +65,17 @@
 #' }
 #' @details
 #' Note that isotope values close to the surface are NA when the surface height
-#' at a profile position does not reach the maximum surface height. Also a few
+#' at a profile position does not reach the maximum surface height. A few
 #' depth samples (T15-2-W-39 and 52; T15-2-X-48, 50-52, 74 and 77; T15-2-Y-36
-#' and 42) were lost in the measurement process and are listed as NA values
-#' here.
+#' and 42) were lost in the measurement process and have been linearly
+#' interpolated from the neighbouring values.
 #'
 #' For data source files and for how to create this dataset from source, see the
 #' \code{data-raw} folder in the R package source. The data are also available
 #' in a similar format from PANGAEA, see the source information below, but note
-#' that sample positions with NA values, due to the variable surface height or
-#' because of missing samples, are not included in the PANGAEA dataset.
+#' that sample positions with NA values due to the variable surface height are
+#' not included in the PANGAEA dataset and missing samples have not been
+#' interpolated.
 #' @source \url{https://doi.pangaea.de/10.1594/PANGAEA.876638}
 "t15.trench2"
 
@@ -104,17 +106,19 @@
 #' }
 #' @details
 #' Note that isotope values close to the surface are NA when the surface height
-#' at a profile position does not reach the maximum surface height. Also one
-#' depth sample of profile 3 (T13-1-03-12) was lost in the measurement process,
-#' and large parts of profile T13-1-01 could not be sampled during the field
-#' work due to instabilities in the trench wall; these are also listed as NA
-#' values here.
+#' at a profile position does not reach the maximum surface height. One depth
+#' sample (T13-1-03-12) was lost in the measurement process and has been
+#' linearly interpolated from the neighbouring values. Large parts of profile
+#' T13-1-01 could not be sampled during the field work due to instabilities in
+#' the trench wall; these parts have not been interpolated and are instead
+#' listed as NA values here.
 #'
 #' For data source files and for how to create this dataset from source, see the
 #' \code{data-raw} folder in the R package source. The data are also available
 #' in a similar format from PANGAEA, see the source information below, but note
-#' that sample positions with NA values, due to the variable surface height or
-#' because of missing samples, are not included in the PANGAEA dataset.
+#' that sample positions with NA values due to the variable surface height and
+#' for the corrupted first trench profile (T13-1-01) are not included in the
+#' PANGAEA dataset, and the other missing sample has not been interpolated.
 #' @source \url{https://doi.pangaea.de/10.1594/PANGAEA.861673}
 "t13.trench1"
 
@@ -150,7 +154,7 @@
 #' For data source files and for how to create this dataset from source, see the
 #' \code{data-raw} folder in the R package source. The data are also available
 #' in a similar format from PANGAEA, see the source information below, but note
-#' that sample positions with NA values, due to the variable surface height, are
+#' that sample positions with NA values due to the variable surface height are
 #' not included in the PANGAEA dataset.
 #' @source \url{https://doi.pangaea.de/10.1594/PANGAEA.861674}
 "t13.trench2"

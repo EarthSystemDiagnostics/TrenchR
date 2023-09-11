@@ -38,14 +38,15 @@ together with meta information.
 }
 \details{
 Note that isotope values close to the surface are NA when the surface height
-at a profile position does not reach the maximum surface height. Also one
-depth sample (T15-1-G-108) was lost in the measurement process and is listed
-as an NA value here.
+at a profile position does not reach the maximum surface height. One
+depth sample (T15-1-G-108) was lost in the measurement process and has been
+linearly interpolated from the neighbouring values.
 
 For data source files and for how to create this dataset from source, see the
 \code{data-raw} folder in the R package source. The data are also available
 in a similar format from PANGAEA, see the source information below, but note
-that sample positions with NA values, due to the variable surface height or
-because of missing samples, are not included in the PANGAEA dataset.
+that sample positions with NA values due to the variable surface height are
+not included in the PANGAEA dataset and the missing sample has not been
+interpolated.
 }
 \keyword{datasets}
