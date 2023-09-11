@@ -88,29 +88,38 @@ prepareTrenchData <- function(index.range = 1 : 59, LoRes = 3, HiRes = 0.5,
                               k13 = 3, k15 = -0.5, na.treat = FALSE) {
 
     # extract full T15 record if desired
-    if (is.null(index.range)) {
-        index.range <- seq(1, length(t15.trench1$depth))
-    }
+    if (is.null(index.range)) index.range <- seq(getZ(t15.trench1))
 
-    # horizontal profile positions and surface height profile
-    XPOS <- t15.trench1$meta$profilePos[-7]
-    SPRF.t1 <- list(x = t15.trench1$meta$profilePos,
-                    y = t15.trench1$meta$profileSurfaceHeight)
-    SPRF.t2 <- list(x = t15.trench2$meta$profilePos,
-                    y = t15.trench2$meta$profileSurfaceHeight)
-    XPOS.t13.1 <- t13.trench1$meta$profilePos/100.
-    XPOS.t13.2 <- t13.trench2$meta$profilePos/100.
+    # horizontal profile positions and surface heights
+    XPOS <- getSurfaceProfile(t15.trench1)$position[-7] # exclude DUNE1 profile
+    SPRF.t1 <- list(x = getSurfaceProfile(t15.trench1)$position,
+                    y = getSurfaceProfile(t15.trench1)$height)
+    SPRF.t2 <- list(x = getSurfaceProfile(t15.trench2)$position,
+                    y = getSurfaceProfile(t15.trench2)$height)
+    XPOS.t13.1 <- getSurfaceProfile(t13.trench1)$position
+    XPOS.t13.2 <- getSurfaceProfile(t13.trench2)$position
 
     # sample depths
-    depth <- t15.trench1$depth[index.range]
+    depth <- getZ(t15.trench1)[index.range]
 
-    # KS 14/15 trenches
-    t15.1 <- t15.trench1$data[, index.range, ]
-    t15.2 <- t15.trench2$data[, index.range, ]
+    # KS 14/15 trenches (exclude DUNE1 profile)
+    t15.1 <- t15.2 <- array(dim = c(3, length(index.range), length(XPOS)))
+    t15.1[1, , ] <- make2D(t15.trench1, var = "d18O", simplify = TRUE)[index.range, -7]
+    t15.1[2, , ] <- make2D(t15.trench1, var = "dD", simplify = TRUE)[index.range, -7]
+    t15.1[3, , ] <- make2D(t15.trench1, var = "dxs", simplify = TRUE)[index.range, -7]
+    t15.2[1, , ] <- make2D(t15.trench2, var = "d18O", simplify = TRUE)[index.range, ]
+    t15.2[2, , ] <- make2D(t15.trench2, var = "dD", simplify = TRUE)[index.range, ]
+    t15.2[3, , ] <- make2D(t15.trench2, var = "dxs", simplify = TRUE)[index.range, ]
 
-    # KS 12/13 trenches
-    t13.1 <- t13.trench1$data[, , -1]
-    t13.2 <- t13.trench2$data[, , ]
+    # KS 12/13 trenches (exclude corrupted first T13-1 profile)
+    t13.1 <- array(dim = c(3, length(getZ(t13.trench1)), length(XPOS.t13.1) - 1))
+    t13.1[1, , ] <- make2D(t13.trench1, var = "d18O", simplify = TRUE)[, -1]
+    t13.1[2, , ] <- make2D(t13.trench1, var = "dD", simplify = TRUE)[, -1]
+    t13.1[3, , ] <- make2D(t13.trench1, var = "dxs", simplify = TRUE)[, -1]
+    t13.2 <- array(dim = c(3, length(getZ(t13.trench2)), length(XPOS.t13.2)))
+    t13.2[1, , ] <- make2D(t13.trench2, var = "d18O", simplify = TRUE)
+    t13.2[2, , ] <- make2D(t13.trench2, var = "dD", simplify = TRUE)
+    t13.2[3, , ] <- make2D(t13.trench2, var = "dxs", simplify = TRUE)
 
     # bottom depths of trench surface regions
     SRF.b <- list()
@@ -131,7 +140,6 @@ prepareTrenchData <- function(index.range = 1 : 59, LoRes = 3, HiRes = 0.5,
 
     k <- max(k3, k4)
     SRF.b$t15 <- depth[k]
-
 
     # loop over isotope types
     res <- list()
