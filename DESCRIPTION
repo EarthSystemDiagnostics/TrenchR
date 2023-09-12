@@ -8,16 +8,21 @@ Description: This R package implements routines targeted at analysing and
     from trenches. It incorporates the analyses of snow trench stable isotope
     data for the publication of Münch et al., The Cryosphere,
     https://doi.org/10.5194/tc-2017-35, 2017.
-Depends: R (>= 3.3.1)
+Depends:
+    R (>= 3.5)
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Imports:
+    dplyr (>= 1.1.3),
     geosphere,
     grfxtools (>= 0.5.0),
     prxytools (>= 0.4.0),
     RColorBrewer,
-    stattools (>= 0.3.0)
+    rlang (>= 1.1.1),
+    stattools (>= 0.3.0),
+    tibble (>= 3.2.1),
+    tidyr (>= 1.3.0)
 RoxygenNote: 7.2.3
 Suggests:
     knitr,

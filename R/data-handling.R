@@ -31,6 +31,8 @@ getZ <- function(data, var = "depth") {
 #' @inheritParams getZ
 #' @return a tibble of two variables: the horizontal profile position in the
 #'   first column and the surface heights at each position in the second column.
+#' @importFrom dplyr %>%
+#' @importFrom rlang .data
 #' @author Thomas Münch
 #' @examples
 #' getSurfaceProfile(t13.trench2)
@@ -39,7 +41,7 @@ getZ <- function(data, var = "depth") {
 getSurfaceProfile <- function(data) {
 
   data %>%
-    dplyr::filter(sampleNumber == 1) %>%
+    dplyr::filter(.data$sampleNumber == 1) %>%
     dplyr::select(position = "profilePosition", height = "surfaceHeight")
 
 }
@@ -154,7 +156,7 @@ makeMean <- function(data, var = "d18O", na.rm = FALSE,
   if (df) {
     tibble::tibble(
       getZ(data, var = zscale), rowMeans(make2D(data, var), na.rm = na.rm)) %>%
-      setNames(c(zscale, var))
+      stats::setNames(c(zscale, var))
   } else {
     rowMeans(make2D(data, var), na.rm = na.rm)
   }
