@@ -4,7 +4,7 @@
 \alias{makeMean}
 \title{Trench mean profile}
 \usage{
-makeMean(data, var = "d18O", na.rm = FALSE, df = TRUE, zscale = "depth")
+makeMean(data, var = "d18O", vscale = "depth", na.rm = FALSE, df = TRUE)
 }
 \arguments{
 \item{data}{a trench data set following the default structure used in the
@@ -22,18 +22,18 @@ following:
   data, but only if a column \code{"nssSulfate"} is not already present.}
 }}
 
+\item{vscale}{a character string giving the name of the vertical scale
+variable used in the trench data; defaults to \code{"depth"}; see also
+\code{\link{getZ}}.}
+
 \item{na.rm}{a logical evaluating to \code{TRUE} or \code{FALSE} indicating
 whether \code{NA} values should be stripped before the computation of the
 mean profile proceeds.}
 
 \item{df}{a logical; for \code{TRUE} (the default) the mean profile is
 returned as a tibble where the first column includes the vertical scale
-of the trench data given in the variable \code{zscale}, else the mean
+of the trench data given in the variable \code{vscale}, else the mean
 profile is returned as a simple numeric vector.}
-
-\item{zscale}{a character string giving the name of the vertical scale
-variable used in the trench data; defaults to \code{"depth"}; see also
-\code{\link{getZ}}.}
 }
 \value{
 a tibble or numeric vector.

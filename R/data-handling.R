@@ -125,16 +125,16 @@ make2D <- function(data, var = "d18O", simplify = FALSE) {
 #' the horizontal dimension of the trench data.
 #'
 #' @inheritParams make2D
+#' @param vscale a character string giving the name of the vertical scale
+#'   variable used in the trench data; defaults to \code{"depth"}; see also
+#'   \code{\link{getZ}}.
 #' @param na.rm a logical evaluating to \code{TRUE} or \code{FALSE} indicating
 #'   whether \code{NA} values should be stripped before the computation of the
 #'   mean profile proceeds.
 #' @param df a logical; for \code{TRUE} (the default) the mean profile is
 #'   returned as a tibble where the first column includes the vertical scale
-#'   of the trench data given in the variable \code{zscale}, else the mean
+#'   of the trench data given in the variable \code{vscale}, else the mean
 #'   profile is returned as a simple numeric vector.
-#' @param zscale a character string giving the name of the vertical scale
-#'   variable used in the trench data; defaults to \code{"depth"}; see also
-#'   \code{\link{getZ}}.
 #' @importFrom dplyr %>%
 #' @return a tibble or numeric vector.
 #' @author Thomas Münch
@@ -150,13 +150,13 @@ make2D <- function(data, var = "d18O", simplify = FALSE) {
 #'
 #' @export
 #'
-makeMean <- function(data, var = "d18O", na.rm = FALSE,
-                     df = TRUE, zscale = "depth") {
+makeMean <- function(data, var = "d18O", vscale = "depth",
+                     na.rm = FALSE, df = TRUE) {
 
   if (df) {
     tibble::tibble(
-      getZ(data, var = zscale), rowMeans(make2D(data, var), na.rm = na.rm)) %>%
-      stats::setNames(c(zscale, var))
+      getZ(data, var = vscale), rowMeans(make2D(data, var), na.rm = na.rm)) %>%
+      stats::setNames(c(vscale, var))
   } else {
     rowMeans(make2D(data, var), na.rm = na.rm)
   }
