@@ -82,6 +82,8 @@ plot2D <- function(data, var = "d18O", vscale = "depth",
                    fill = FALSE, hadj = 0, vadj = 0, line.h = 3, line.v = 3.5,
                    ...) {
 
+  is.trench(data)
+
   if (!length(palette)) {
     if (filledContour) {
       palette <- grfxtools::ColorPal("RdYlBu", 10, rev = TRUE, fun = TRUE)
@@ -122,6 +124,11 @@ plot2D <- function(data, var = "d18O", vscale = "depth",
 
   if (filledContour) {
 
+    if (!is.function(palette)) {
+      stop("Argument 'palette' must be a function that can be used to assign ",
+           "colours in a filled contour plot.")
+    }
+
     graphics::filled.contour(
       x, y, z, color.palette = palette, xlim = xlim, ylim = ylim, zlim = zlim,
       plot.title = {
@@ -136,6 +143,10 @@ plot2D <- function(data, var = "d18O", vscale = "depth",
     )
 
   } else {
+
+    if (is.function(palette)) {
+      stop("Argument 'palette' must be a vector of colours for image plots.")
+    }
 
     fields::imagePlot(
       x, y, z, legend.shrink = 1, horizontal = horizontal, col = palette,
