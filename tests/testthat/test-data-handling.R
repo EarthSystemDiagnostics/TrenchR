@@ -1,10 +1,24 @@
 test_that("extraction of depth profile works", {
+
   expect_error(getZ(t13.trench1, var = "foo"),
                "Unknown column name for vertical scale.")
   expect_equal(getZ(t13.trench1), seq(from = 1.5, by = 3, length.out = 38))
+
 })
 
 test_that("production of surface profile works", {
+
+  msg <- paste("'profilePosition' and 'surfaceHeight' columns both needed",
+               "to extract surface profile.")
+
+  foo <- tibble::tibble(x = 1, y = 2)
+  expect_error(getSurfaceProfile(foo), msg, fixed = TRUE)
+  foo <- tibble::tibble(x = 1, y = 2, profilePosition = 0)
+  expect_error(getSurfaceProfile(foo), msg, fixed = TRUE)
+  foo <- tibble::tibble(x = 1,y = 2, surfaceHeight = 10)
+  expect_error(getSurfaceProfile(foo), msg, fixed = TRUE)
+  foo <- tibble::tibble(x = 1,y = 2, profilePosition = 0, surfaceHeight = 10)
+  expect_no_error(getSurfaceProfile(foo))
 
   target <- tibble::tibble(
     position = seq(0, 50, 5),
@@ -18,6 +32,15 @@ test_that("production of surface profile works", {
 test_that("production of 2D profile works", {
 
   # test error checking
+
+  foo <- tibble::tibble(x = 1)
+  expect_error(make2D(foo))
+  foo <- tibble::tibble(x = 1, profileName = "A")
+  expect_error(make2D(foo))
+  foo <- tibble::tibble(x = 1, sampleNumber = 1)
+  expect_error(make2D(foo))
+  foo <- tibble::tibble(x = 1, profileName = "A", sampleNumber = 1)
+  expect_no_error(make2D(foo, var = "x"))
 
   foo <- dplyr::select(t15.trench1, -d18O)
   expect_error(make2D(foo), "Unknown column variable selected.")
@@ -119,5 +142,40 @@ test_that("production of mean profile works", {
   # return type should be a tibble
   target <- tibble::tibble(depth = c(1.5, 4.5, 7.5), foovar = target)
   expect_equal(makeMean(foo, var = "foovar", na.rm = TRUE), target)
+
+})
+
+test_that("checking for proper trench data works", {
+
+  x1 <- tibble::tibble(x = 1)
+  msg1a <- paste("Incomplete trench data set: columns profileName,",
+                 "sampleNumber missing.")
+  msg1b <- paste("Incomplete trench data set: columns profileName,",
+                 "sampleNumber, profilePosition, surfaceHeight missing.")
+  x2 <- tibble::tibble(x = 1, profileName = "A")
+  msg2 <- paste("Incomplete trench data set: columns sampleNumber",
+                "missing.")
+  x3 <- tibble::tibble(x = 1, profileName = "A", sampleNumber = 1)
+  msg3 <- paste("Incomplete trench data set: columns profilePosition,",
+                "surfaceHeight missing.")
+
+  expect_error(is.trench(x1, full = FALSE), msg1a)
+  expect_error(is.trench(x1), msg1b)
+  expect_error(is.trench(x2, full = FALSE), msg2)
+  expect_no_error(is.trench(x3, full = FALSE))
+  expect_error(is.trench(x3), msg3)
+
+  x4 <- tibble::tibble(x = 1, profileName = "A", sampleNumber = 1,
+                       profilePosition = 10)
+  msg4 <- paste("Incomplete trench data set: columns surfaceHeight missing.")
+  x5 <- tibble::tibble(x = 1, profileName = "A", sampleNumber = 1,
+                       surfaceHeight = 2.68)
+  msg5 <- paste("Incomplete trench data set: columns profilePosition missing.")
+  x6 <- tibble::tibble(x = 1, profileName = "A", sampleNumber = 1,
+                       profilePosition = 10, surfaceHeight = 2.68)
+
+  expect_error(is.trench(x4), msg4)
+  expect_error(is.trench(x5), msg5)
+  expect_no_error(is.trench(x6))
 
 })

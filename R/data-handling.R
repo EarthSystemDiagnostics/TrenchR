@@ -40,6 +40,11 @@ getZ <- function(data, var = "depth") {
 #'
 getSurfaceProfile <- function(data) {
 
+  if (!all(c("profilePosition", "surfaceHeight") %in% colnames(data))) {
+    stop("'profilePosition' and 'surfaceHeight' columns both needed ",
+         "to extract surface profile.", call. = FALSE)
+  }
+
   data %>%
     dplyr::select(position = "profilePosition", height = "surfaceHeight") %>%
     dplyr::group_by(.data$position) %>%
@@ -86,6 +91,8 @@ getSurfaceProfile <- function(data) {
 #' @export
 #'
 make2D <- function(data, var = "d18O", simplify = FALSE) {
+
+  is.trench(data, full = FALSE)
 
   if (var == "dxs" & (!"dxs" %in% colnames(data))) {
     if ((!"d18O" %in% colnames(data)) | (!"dD" %in% colnames(data))) {
@@ -161,6 +168,32 @@ makeMean <- function(data, var = "d18O", vscale = "depth",
       stats::setNames(c(vscale, var))
   } else {
     rowMeans(make2D(data, var), na.rm = na.rm)
+  }
+
+}
+
+#' Check if data is a valid trench data set
+#'
+#' @param data a data frame.
+#' @param full logical; if \code{TRUE} check for the complete set of necessary
+#'   data frame columns, else check only that \code{profileName} and
+#'   \code{surfaceNumber} columns exist.
+#' @return an error message is created if \code{data} is no valid trench data.
+#' @author Thomas Münch
+#' @noRD
+#'
+is.trench <- function(data, full = TRUE) {
+
+  trenchCols <- c("profileName", "sampleNumber")
+  if (full) trenchCols <- c(trenchCols, "profilePosition", "surfaceHeight")
+
+  iMissing <- which(is.na(match(trenchCols, colnames(data))))
+
+  if (length(iMissing)) {
+
+    stop("Incomplete trench data set: columns ",
+         paste(trenchCols[iMissing], collapse = ", "),
+         " missing.", call. = FALSE)
   }
 
 }
