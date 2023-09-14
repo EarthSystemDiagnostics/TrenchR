@@ -41,8 +41,10 @@ getZ <- function(data, var = "depth") {
 getSurfaceProfile <- function(data) {
 
   data %>%
-    dplyr::filter(.data$sampleNumber == 1) %>%
-    dplyr::select(position = "profilePosition", height = "surfaceHeight")
+    dplyr::select(position = "profilePosition", height = "surfaceHeight") %>%
+    dplyr::group_by(.data$position) %>%
+    dplyr::slice(1L) %>%
+    dplyr::ungroup()
 
 }
 
