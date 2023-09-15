@@ -180,7 +180,7 @@ makeMean <- function(data, var = "d18O", vscale = "depth",
 #'   \code{surfaceNumber} columns exist.
 #' @return an error message is created if \code{data} is no valid trench data.
 #' @author Thomas Münch
-#' @noRD
+#' @noRd
 #'
 is.trench <- function(data, full = TRUE) {
 
@@ -195,5 +195,54 @@ is.trench <- function(data, full = TRUE) {
          paste(trenchCols[iMissing], collapse = ", "),
          " missing.", call. = FALSE)
   }
+
+}
+
+#' Bottom of varying trench surface region
+#'
+#' Extract the value of the bin in vertical dimension ("depth") for which a
+#' complete horizontal data set across all trench profile positions is
+#' available.
+#'
+#' This function assumes that NA values at the start of a trench profile are due
+#' to tabulating the trench data on an absolute scale in vertical dimension, so
+#' that positions where the surface height is below the maximum surface height
+#' have no data. It extracts the value of the bin for which **all** profiles
+#' have a data value for the first time.
+#'
+#' @param data a trench data set following the default structure used in the
+#'   package.
+#' @param var character string with the name of a trench data variable.
+#' @param vscale  character string giving the name of the vertical scale
+#'   variable used in the trench data; defaults to \code{"depth"}.
+#' @return value of \code{vscale} for the first vertical bin where all profiles
+#'   exhibit data in \code{var}.
+#' @author Thomas Münch
+#' @examples
+#' getFirstCompleteDepthBin(t13.trench1)
+#' # per definition, all data variables should give the same result
+#' getFirstCompleteDepthBin(t13.trench1, var = "dD")
+#' @export
+#'
+getFirstCompleteDepthBin <- function(data, var = "d18O", vscale = "depth") {
+
+  if (!vscale %in% colnames(data)) {
+    stop("Unknown column name for vertical scale.")
+  }
+  if (!var %in% colnames(data)) {
+    stop("Unknown data variable.")
+  }
+  if (!"profileName" %in% colnames(data)) {
+    stop("Need column 'profileName'.")
+  }
+
+  data %>%
+    dplyr::group_by(.data$profileName) %>%
+    tidyr::drop_na(dplyr::all_of(var)) %>%
+    dplyr::select("profileName", dplyr::all_of(vscale)) %>%
+    dplyr::slice(1L) %>%
+    dplyr::ungroup() %>%
+    dplyr::pull(vscale) %>%
+    max(.)
 
 }

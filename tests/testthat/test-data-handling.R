@@ -179,3 +179,21 @@ test_that("checking for proper trench data works", {
   expect_no_error(is.trench(x6))
 
 })
+
+test_that("extracting the bottom of the surface layer works", {
+
+  expect_error(getFirstCompleteDepthBin(t13.trench1, var = "foo"))
+  expect_error(getFirstCompleteDepthBin(t13.trench1, vscale = "foo"))
+
+  foo <- tibble::tibble(
+    profileName = rep(c("A", "B", "C"), each = 3),
+    depth = rep(1 : 3, times = 3),
+    d18O = c(1, 2, 3, NA, 2, 3, NA, NA, 3)
+  )
+
+  expect_error(getFirstCompleteDepthBin(dplyr::select(foo, -"profileName")),
+               "Need column 'profileName'.", fixed = TRUE)
+
+  expect_equal(getFirstCompleteDepthBin(foo), 3)
+
+})
