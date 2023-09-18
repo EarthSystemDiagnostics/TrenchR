@@ -2,239 +2,88 @@
 # ----- Data processing and helper functions -----------------------------------
 #
 
-##' Process T13 and T15 trench data
-##'
-##' This function processes the T13 and T15 trench isotopologue data in a way
-##' that is suited for analysis and plotting used in Münch et al. (2017).
-##' @param index.range Vector of depth indices to subset the T15 trench dataset;
-##' defaults to the range used in Münch et al. (2017). Set to \code{NULL} to
-##' extract the full depth of the data.
-##' @param LoRes Depth resolution of trench dataset in cm; defaults to the
-##' original T13 and T15 sampling resolution (3 cm).
-##' @param HiRes Higher depth resolution to interpolate trench data onto;
-##' defaults to 0.5 cm as used in Münch et al. (2017).
-##' @param k13 Vertical shift [cm] of the mean T13-2 relative to the mean T13-1
-##' profile; defaults to the optimal shift that maximizes the profile
-##' correlation.
-##' @param k15 Vertical shift [cm] of the mean T15-2 relative to the mean T15-1
-##' profile; defaults to the optimal shift that maximizes the profile
-##' correlation.
-##' @param na.treat if \code{TRUE}, include the incomplete surface region of the
-##' trenches when calculating the mean profiles; defaults to \code{FALSE}.
-##' @return A list of three sub-lists corresponding to the three measured
-##'     isotopologue data (index i = 1: d18O, i = 2: d2H, i = 3: d-excess). Each
-##'     sub-list has the following components:
-##'     \itemize{
-##'     \item trench13.1: Data of isotope species \code{i} for trench T13-1.
-##'     \item trench13.2: Data of isotope species \code{i} for trench T13-2.
-##'     \item trench15.1: Data of isotope species \code{i} for trench T15-1
-##'           for the  depth range specified by \code{index.range}.
-##'     \item trench15.2: Data of isotope species \code{i} for trench T15-2
-##'           for the depth range specified by \code{index.range}.
-##'     \item mean13.1: Mean isotope profile \code{i} of trench T13-1.
-##'     \item mean13.2: Mean isotope profile \code{i} of trench T13-2.
-##'     \item mean15.1: Mean isotope profile \code{i} of trench T15-1.
-##'     \item mean15.2: Mean isotope profile \code{i} of trench T15-2.
-##'     \item trench13.1_HiRes: \code{trench13.1} linearly interpolated onto the
-##'           higher resolution specified by \code{HiRes}.
-##'     \item trench13.2_HiRes: Same for \code{trench13.2}.
-##'     \item trench15.1_HiRes: Same for \code{trench15.1}.
-##'     \item trench15.2_HiRes: Same for \code{trench15.2}.
-##'     \item mean13.1_HiRes: Same for \code{mean13.1}.
-##'     \item mean13.2_HiRes: Same for \code{mean13.2}.
-##'     \item mean15.1_HiRes: Same for \code{mean15.1}.
-##'     \item mean15.2_HiRes: Same for \code{mean15.2}.
-##'     \item mean13: Total mean isotope profile \code{i} of trench T13,
-##'           accounting for the vertical shift specified by \code{k13}.
-##'     \item mean13_HiRes: \code{mean13} linearly interpolated onto the
-##'           higher resolution specified by \code{HiRes}.
-##'     \item mean15: Total mean isotope profile \code{i} of trench T15.
-##'     \item mean15_HiRes: \code{mean15} linearly interpolated onto the
-##'           higher resolution specified by \code{HiRes} and accounting for the
-##'           vertical shift specified by \code{k15}.
-##'     \item k13: Copy of input \code{k13}.
-##'     \item k15: Copy of input \code{k15}.
-##'     \item LoRes: Copy of input \code{LoRes}.
-##'     \item HiRes: Copy of input \code{HiRes}.
-##'     \item depth: Numeric vector of sample depths on their original
-##'           resolution (specified by \code{LoRes}) for the T15 index range
-##'           \code{index.range}.
-##'     \item depth_HiRes: Numeric vector of sample depths corresponding to the
-##'           linearly interpolated data on the higher resolution \code{HiRes}.
-##'     \item XPOS: Horizontal profile positions in [m] of the T15-1 and T15-2
-##'           profiles relative to the trench starting point (= profile #1).
-##'     \item XPOS.t13.1: Horizontal profile positions in [m] of the T13-1
-##'           profiles relative to the trench starting point.
-##'     \item XPOS.t13.2: Horizontal profile positions in [m] of the T13-2
-##'           profiles relative to the trench starting point.
-##'     \item SPRF.t1: List: Horizontal position (component \code{x}) and
-##'           corresponding surface height in [cm] (component \code{y})
-##'           relative to the highest observed surface height for trench
-##'           T15-1 (positive downwards). This set includes the additional
-##'           profile at position 26.5 m for which no isotope profile is
-##'           present.
-##'     \item SPRF.t2: List: Horizontal position (component \code{x}) and
-##'           corresponding surface height in [cm] (component \code{y})
-##'           relative to the highest observed surface height for trench
-##'           T15-2 (positive downwards).
-##'     \item SRF.b: A list with six elements of the following quantities (in
-##'           that order): starting depths of horizontally complete datasets for
-##'           T13-1; T13-2; T15-1; T15-2; total T13 (accounting for vertical
-##'           shift of T13-2); and total T15.
-##' }
-##' @author Thomas Münch
-##' @noRd
-prepareTrenchData <- function(index.range = 1 : 59, LoRes = 3, HiRes = 0.5,
-                              k13 = 3, k15 = -0.5, na.treat = FALSE) {
+#' High-depth resolution set of Kohnen T13 and T15 mean profiles for the
+#' analyses in Münch et al. (2017).
+#'
+#' @param var character string with the name of the trench data variable for
+#'   which mean profiles are to be calculated.
+#' @param na.rm a logical evaluating to \code{TRUE} or \code{FALSE} indicating
+#'   whether \code{NA} values should be stripped before the computation of the
+#'   mean profile proceeds.
+#' @return a list of the T13 and T15 mean profiles (for each individual trench
+#'   and the seasonal mean) on the original depth resolution as well as on the
+#'   higher depth resolution as specified in \code{loadKohnenTrenchPar()}.
+#' @author Thomas Münch
+#' @noRd
+makeHiResKohnenTrenches <- function(var = "d18O", na.rm = FALSE) {
 
-    # extract full T15 record if desired
-    if (is.null(index.range)) index.range <- seq(getZ(t15.trench1))
+  intpl <- function(x, var, newdepth) {
+    tibble::tibble(newdepth, approx(x$depth, x[[var]], newdepth)$y) %>%
+      setNames(c("depth", var))
+  }
+  seasonalMean <- function(t1, t2, lag, var) {
+    tibble::tibble(
+      t1$depth,
+      {
+        cbind(t1[[var]], prxytools::Lag(t2[[var]], shift = lag)) %>%
+          rowMeans()
+      }) %>%
+      setNames(c("depth", var))
+  }
 
-    # horizontal profile positions and surface heights
-    XPOS <- getSurfaceProfile(t15.trench1)$position[-7] # exclude DUNE1 profile
-    SPRF.t1 <- list(x = getSurfaceProfile(t15.trench1)$position,
-                    y = getSurfaceProfile(t15.trench1)$height)
-    SPRF.t2 <- list(x = getSurfaceProfile(t15.trench2)$position,
-                    y = getSurfaceProfile(t15.trench2)$height)
-    XPOS.t13.1 <- getSurfaceProfile(t13.trench1)$position
-    XPOS.t13.2 <- getSurfaceProfile(t13.trench2)$position
+  trPar <- loadKohnenTrenchPar()
 
-    # sample depths
-    depth <- getZ(t15.trench1)[index.range]
+  x <- range(getZ(t15.trench1)[trPar$ix])
+  depth_HiRes <- seq(x[1], x[2], by = trPar$hiRes)
 
-    # KS 14/15 trenches (exclude DUNE1 profile)
-    t15.1 <- t15.2 <- array(dim = c(3, length(index.range), length(XPOS)))
-    t15.1[1, , ] <- make2D(t15.trench1, var = "d18O", simplify = TRUE)[index.range, -7]
-    t15.1[2, , ] <- make2D(t15.trench1, var = "dD", simplify = TRUE)[index.range, -7]
-    t15.1[3, , ] <- make2D(t15.trench1, var = "dxs", simplify = TRUE)[index.range, -7]
-    t15.2[1, , ] <- make2D(t15.trench2, var = "d18O", simplify = TRUE)[index.range, ]
-    t15.2[2, , ] <- make2D(t15.trench2, var = "dD", simplify = TRUE)[index.range, ]
-    t15.2[3, , ] <- make2D(t15.trench2, var = "dxs", simplify = TRUE)[index.range, ]
+  # T13 mean profiles
+  mean13.1 <- t13.trench1 %>%
+    dplyr::filter(profileName != "T13-1-01") %>%
+    makeMean(var = var, na.rm = na.rm, df = TRUE)
+  mean13.2 <- t13.trench2 %>%
+    makeMean(var = var, na.rm = na.rm, df = TRUE)
 
-    # KS 12/13 trenches (exclude corrupted first T13-1 profile)
-    t13.1 <- array(dim = c(3, length(getZ(t13.trench1)), length(XPOS.t13.1) - 1))
-    t13.1[1, , ] <- make2D(t13.trench1, var = "d18O", simplify = TRUE)[, -1]
-    t13.1[2, , ] <- make2D(t13.trench1, var = "dD", simplify = TRUE)[, -1]
-    t13.1[3, , ] <- make2D(t13.trench1, var = "dxs", simplify = TRUE)[, -1]
-    t13.2 <- array(dim = c(3, length(getZ(t13.trench2)), length(XPOS.t13.2)))
-    t13.2[1, , ] <- make2D(t13.trench2, var = "d18O", simplify = TRUE)
-    t13.2[2, , ] <- make2D(t13.trench2, var = "dD", simplify = TRUE)
-    t13.2[3, , ] <- make2D(t13.trench2, var = "dxs", simplify = TRUE)
+  # T15 mean profiles for depth range analysed in paper
+  mean15.1 <- t15.trench1 %>%
+    dplyr::filter(profileName != "T15-1-DUNE1") %>%
+    makeMean(var = var, na.rm = na.rm, df = TRUE) %>%
+    dplyr::slice(trPar$ix)
+  mean15.2 <- t15.trench2 %>%
+    makeMean(var = var, na.rm = na.rm, df = TRUE) %>%
+    dplyr::slice(trPar$ix)
 
-    # bottom depths of trench surface regions
-    SRF.b <- list()
-    k1 <- which(apply(t13.1[1, , ], 1, function(row) {all(!is.na(row))}))[1]
-    SRF.b$t13.1 <- depth[k1]
+  # interpolate mean profiles onto higher depth resolution
 
-    k2 <- which(apply(t13.2[1, , ], 1, function(row) {all(!is.na(row))}))[1]
-    SRF.b$t13.2 <- depth[k2]
+  mean13.1_HiRes <- intpl(mean13.1, var = var, depth_HiRes)
+  mean13.2_HiRes <- intpl(mean13.2, var = var, depth_HiRes)
+  mean15.1_HiRes <- intpl(mean15.1, var = var, depth_HiRes)
+  mean15.2_HiRes <- intpl(mean15.2, var = var, depth_HiRes)
 
-    k3 <- which(apply(t15.1[1, , ], 1, function(row) {all(!is.na(row))}))[1]
-    SRF.b$t15.1 <- depth[k3]
+  # calculate overall mean profiles for each Kohnen season
 
-    k4 <- which(apply(t15.2[1, , ], 1, function(row) {all(!is.na(row))}))[1]
-    SRF.b$t15.2 <- depth[k4]
+  mean13_HiRes <- seasonalMean(mean13.1_HiRes, mean13.2_HiRes, var = var,
+                               lag = trPar$k13 / trPar$hiRes)
+  mean15_HiRes <- seasonalMean(mean15.1_HiRes, mean15.2_HiRes, var = var,
+                               lag = trPar$k15 / trPar$hiRes)
 
-    k <- max(k1, k2) + k13/LoRes
-    SRF.b$t13 <- depth[k]
+  mean13 <- tibble::tibble(
+    mean13.1$depth,
+    approx(depth_HiRes, mean13_HiRes[[var]], mean13.1$depth)$y) %>%
+    setNames(c("depth", var))
+  mean15 <- tibble::tibble(
+    mean15.1$depth,
+    approx(depth_HiRes, mean15_HiRes[[var]], mean15.1$depth)$y) %>%
+    setNames(c("depth", var))
 
-    k <- max(k3, k4)
-    SRF.b$t15 <- depth[k]
-
-    # loop over isotope types
-    res <- list()
-    res$dxs <- res$dtr <- res$oxy <- list()
-    for (i.proxy in 1 : 3) {
-
-        trench13.1 <- t13.1[i.proxy, , ]
-        trench13.2 <- t13.2[i.proxy, , ]
-
-        trench15.1 <- t15.1[i.proxy, , ]
-        trench15.2 <- t15.2[i.proxy, , ]
-
-        # mean profiles
-        mean15.1 <- rowMeans(trench15.1, na.rm = na.treat)
-        mean15.2 <- rowMeans(trench15.2, na.rm = na.treat)
-        mean13.1 <- rowMeans(trench13.1, na.rm = na.treat)
-        mean13.2 <- rowMeans(trench13.2, na.rm = na.treat)
-
-        # high-resolution data
-
-        depth_HiRes <- seq(min(depth), max(depth), HiRes)
-
-        trench15.1_HiRes <- apply(trench15.1, 2, function(prf) {
-            approx(depth, prf, depth_HiRes)$y})
-        trench15.2_HiRes <- apply(trench15.2, 2, function(prf) {
-            approx(depth, prf, depth_HiRes)$y})
-
-        trench13.1_HiRes <- apply(trench13.1, 2, function(prf) {
-            approx(depth[1:38], prf, depth_HiRes)$y})
-        trench13.2_HiRes <- apply(trench13.2, 2, function(prf) {
-            approx(depth[1:38], prf, depth_HiRes)$y})
-
-        mean15.1_HiRes <- approx(depth, mean15.1, depth_HiRes)$y
-        mean15.2_HiRes <- approx(depth, mean15.2, depth_HiRes)$y
-        mean13.1_HiRes <- approx(depth[1:38], mean13.1, depth_HiRes)$y
-        mean13.2_HiRes <- approx(depth[1:38], mean13.2, depth_HiRes)$y
-
-        # mean profiles for each season
-
-        mean15_HiRes <- rowMeans(cbind(mean15.1_HiRes,
-                                       prxytools::Lag(mean15.2_HiRes,
-                                                  shift = k15 / HiRes)))
-        mean15 <- approx(depth_HiRes, mean15_HiRes, depth)$y
-
-        mean13_HiRes <- rowMeans(cbind(mean13.1_HiRes,
-                                       prxytools::Lag(mean13.2_HiRes,
-                                                  shift = k13 / HiRes)))
-        mean13 <- rowMeans(cbind(mean13.1,
-                                 prxytools::Lag(mean13.2, shift = k13 / LoRes)))
-
-
-        res[[i.proxy]]$trench13.1 <- trench13.1
-        res[[i.proxy]]$trench13.2 <- trench13.2
-        res[[i.proxy]]$trench15.1 <- trench15.1
-        res[[i.proxy]]$trench15.2 <- trench15.2
-
-        res[[i.proxy]]$mean13.1 <- mean13.1
-        res[[i.proxy]]$mean13.2 <- mean13.2
-        res[[i.proxy]]$mean15.1 <- mean15.1
-        res[[i.proxy]]$mean15.2 <- mean15.2
-
-        res[[i.proxy]]$trench13.1_HiRes <- trench13.1_HiRes
-        res[[i.proxy]]$trench13.2_HiRes <- trench13.2_HiRes
-        res[[i.proxy]]$trench15.1_HiRes <- trench15.1_HiRes
-        res[[i.proxy]]$trench15.2_HiRes <- trench15.2_HiRes
-
-        res[[i.proxy]]$mean13.1_HiRes <- mean13.1_HiRes
-        res[[i.proxy]]$mean13.2_HiRes <- mean13.2_HiRes
-        res[[i.proxy]]$mean15.1_HiRes <- mean15.1_HiRes
-        res[[i.proxy]]$mean15.2_HiRes <- mean15.2_HiRes
-
-        res[[i.proxy]]$mean13 <- mean13
-        res[[i.proxy]]$mean13_HiRes <- mean13_HiRes
-        res[[i.proxy]]$mean15 <- mean15
-        res[[i.proxy]]$mean15_HiRes <- mean15_HiRes
-
-        res[[i.proxy]]$k13 <- k13
-        res[[i.proxy]]$k15 <- k15
-        res[[i.proxy]]$LoRes <- LoRes
-        res[[i.proxy]]$HiRes <- HiRes
-
-        res[[i.proxy]]$depth <- depth
-        res[[i.proxy]]$depth_HiRes <- depth_HiRes
-        res[[i.proxy]]$XPOS <- XPOS
-        res[[i.proxy]]$XPOS.t13.1 <- XPOS.t13.1
-        res[[i.proxy]]$XPOS.t13.2 <- XPOS.t13.2
-
-        res[[i.proxy]]$SPRF.t1 <- SPRF.t1
-        res[[i.proxy]]$SPRF.t2 <- SPRF.t2
-
-        res[[i.proxy]]$SRF.b <- SRF.b
-
-    }
-
-    return(res)
+  list(mean13.1 = mean13.1, mean13.2 = mean13.2,
+       mean15.1 = mean15.1, mean15.2 = mean15.2,
+       mean13.1_HiRes = mean13.1_HiRes,
+       mean13.2_HiRes = mean13.2_HiRes,
+       mean15.1_HiRes = mean15.1_HiRes,
+       mean15.2_HiRes = mean15.2_HiRes,
+       mean13 = mean13, mean15 = mean15,
+       mean13_HiRes = mean13_HiRes,
+       mean15_HiRes = mean15_HiRes)
 
 }
 
@@ -459,6 +308,48 @@ T13AnnualMeans <- function(t1, t2, depth,
 
 }
 
+#' Load depth resolution, mean profile shift parameters for Kohnen T13 and
+#' T15 trenches, T15 depth index range, and bottom of trench surface layers as
+#' used for the papers.
+#'
+#' @return a list with four elements:
+#'   \code{loRes}: original T13 and T15 depth sampling resolution [cm];
+#'   \code{hiRes}: higher depth resolution to interpolate trench data [cm];
+#'   \code{k13}: optimal vertical shift [cm] of the mean T13-2 relative to the
+#'     mean T13-1 profile;
+#'   \code{k15}: optimal vertical shift [cm] of the mean T15-2 relative to the
+#'     mean T15-1 profile;
+#'   \code{ix}: index vector for the T15 depth range analysed in the TC17 paper;
+#'   \code{surfaceBot}: the depth of the trench surface layers from which
+#'     onwards a full horizontal data set is available; also given for the mean
+#'     T13 and T15 data.
+#' @author Thomas Münch
+#' @noRd
+loadKohnenTrenchPar <- function() {
+
+  res <- list(
+    loRes = 3,
+    hiRes = 0.5,
+    k13 = 3,
+    k15 = -0.5,
+    ix = 1 : 59,
+    surfaceBot = c(
+      t13.1 = getFirstCompleteDepthBin(t13.trench1),
+      t13.2 = getFirstCompleteDepthBin(t13.trench2),
+      t15.1 = getFirstCompleteDepthBin(t15.trench1),
+      t15.2 = getFirstCompleteDepthBin(t15.trench2))
+  )
+
+  res$surfaceBot <- c(
+    res$surfaceBot,
+    t13 = max(res$surfaceBot["t13.1"], res$surfaceBot["t13.2"]) + res$k13,
+    t15 = max(res$surfaceBot["t15.1"], res$surfaceBot["t15.2"])
+  )
+
+  return(res)
+
+}
+
 #
 # ----- Plotting functions -----------------------------------------------------
 #
@@ -480,12 +371,17 @@ T13AnnualMeans <- function(t1, t2, depth,
 ##' @noRd
 TC17.Fig01 <- function(cheat = TRUE) {
 
-    TR <- prepareTrenchData()$oxy
-    T13.annual <- T13AnnualMeans(t1 = TR$mean13.1,
-                                 t2 = prxytools::Lag(TR$mean13.2,
-                                                 TR$k13 / TR$LoRes),
-                                 depth = TR$depth,
-                                 cheat = cheat)
+    trPar <- loadKohnenTrenchPar()
+
+    mean13.1 <- t13.trench1 %>%
+      dplyr::filter(profileName != "T13-1-01") %>%
+      makeMean(df = TRUE)
+    mean13.2 <- t13.trench2 %>%
+      makeMean(df = TRUE) %>%
+      dplyr::mutate(d18O = prxytools::Lag(.data$d18O, trPar$k13 / trPar$loRes))
+
+    T13.annual <- T13AnnualMeans(t1 = mean13.1$d18O, t2 = mean13.2$d18O,
+                                 depth = mean13.1$depth, cheat = cheat)
 
     op <- grfxtools::Par(mar = c(5, 5, 4, 2), mfrow = c(1, 2),
                          lwd = 2, font.lab = 2, font.axis = 2)
@@ -494,9 +390,8 @@ TC17.Fig01 <- function(cheat = TRUE) {
     #---------------------------------------------------------------------------
     # Fig01-a
 
-    plot(TR$depth[1 : 38], TR$mean12.1, type = 'n',
-         xlim = c(0, 125), ylim = c(-49, -39), axes = FALSE,
-         xlab = "", ylab = "")
+    plot(mean13.1, type = "n", xlim = c(0, 125), ylim = c(-49, -39),
+         axes = FALSE, xlab = "", ylab = "")
     axis(1)
     axis(2, las = 1)
     box()
@@ -505,25 +400,21 @@ TC17.Fig01 <- function(cheat = TRUE) {
          cex.axis = 0.75 * par()$cex.lab)
     mtext("Depth (cm)", side = 1, line = 3.5, cex = par()$cex.lab,
           font = par()$font.lab)
-    mtext(expression(bold("Trench ") *
-                     delta^bold("18") * bold("O") * bold(" (\u2030)")),
-          side = 2, line = 3.25, las = 0,
-          cex = par()$cex.lab, font = par()$font.lab)
+    mtext(grfxtools::LabelAxis(prefix = "Trench", font = par()$font.lab),
+          side = 2, line = 3.25, las = 0, cex = par()$cex.lab)
     mtext("Year", side = 3, line = 2.75,
           cex = par()$cex.lab, font = par()$font.lab)
 
     abline(v = T13.annual$summer.max$depth,
            lty = 5, lwd = 1.5, col = "darkgrey")
 
-    lines(TR$depth[1 : 38], TR$mean13.1, lty = 1, col = "black")
-    lines(TR$depth[1 : 38],
-          prxytools::Lag(TR$mean13.2, TR$k13 / TR$LoRes),
-          col = "firebrick3")
+    lines(mean13.1, col = "black")
+    lines(mean13.2, col = "firebrick3")
 
     lines(T13.annual$means$depth, T13.annual$means$T1,
-          type = 'b', lty = 1, pch = 19, col = "black")
+          type = "b", lty = 1, pch = 19, col = "black")
     lines(T13.annual$means$depth, T13.annual$means$T2,
-          type = 'b', lty = 1, pch = 19, col = "firebrick3")
+          type = "b", lty = 1, pch = 19, col = "firebrick3")
 
     grfxtools::Polyplot(T13.annual$means$depth,
                         T13.annual$means$max.T1, T13.annual$means$min.T1,
@@ -568,9 +459,9 @@ TC17.Fig01 <- function(cheat = TRUE) {
 
     mtext("Year", side = c(1, 3), line = c(3.5, 2.75),
           cex = par()$cex.lab, font = par()$font.lab)
-    mtext(bquote(bold("AWS 2m air temperature"~paste('(',degree,'C)'))),
-          side = 2, line = 3.25, las = 0,
-          cex = par()$cex.lab, font = par()$font.lab)
+    mtext(grfxtools::LabelAxis("AWS 2m air temperature", unit = "celsius",
+                               font = par()$font.lab),
+          side = 2, line = 3.25, las = 0, cex = par()$cex.lab)
 
     legend("bottomright", c("Monthly mean", "Annual mean"),
            col = c("black", "dodgerblue"), lty = c(1, NA), pch = c(NA, 19),
@@ -719,118 +610,80 @@ TC17.Fig02 <- function() {
 
 }
 
-##' Produce TC17 Figure 03a
-##'
-##' @param TR the data set; defaults to the processed T15 oxygen isotope data.
-##' @author Thomas Münch
-##' @noRd
+#' Produce TC17 Figure 03a
+#'
+#' @author Thomas Münch
+#' @noRd
 TC17.Fig03a <- function() {
 
-    TR <- prepareTrenchData(na.treat = TRUE)$oxy
+  op <- grfxtools::Par(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2),
+                       lwd = 2, font.lab = 2, font.axis = 2)
 
-    op <- grfxtools::Par(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2),
-                         lwd = 2, font.lab = 2, font.axis = 2)
+  # plot without DUNE1 profile
+  t15.trench1 %>%
+    dplyr::filter(profileName != "T15-1-DUNE1") %>%
+    plot2D(rescale.v = 0.01,
+           label = grfxtools::LabelAxis(font = par()$font.lab),
+           xlim = c(0, 50), ylim = c(1.755, -0.15), zlim = c(-55, -35),
+           filledContour = TRUE, fill = TRUE)
 
-    # limit the colorscale
-    MAX <- -35
-    MIN <- -55
-    T1 <- TR$trench15.1
-    T1[T1 > MAX] <- MAX
-    T1[T1 < MIN] <- MIN
-
-    # fill part of surface layer with first non-NA value/profile
-    # to improve plot appearance
-    first.not.na <- apply(T1, 2, function(x) {which(!is.na(x))[1]})
-    for (i in 1 : 11) {
-        T1[first.not.na[i] - 1, i] <- T1[first.not.na[i], i]
-    }
-
-    top <- -15
-    bottom <- TR$depth[length(TR$depth)]
-    palette <- colorRampPalette(rev(RColorBrewer::brewer.pal(10, "RdYlBu")))
-
-    filled.contour(TR$XPOS, TR$depth / 100, t(T1),
-                   color.palette = palette,
-                   plot.title = {
-                       grid(col = "black", nx = NA, ny = NULL);
-                       title(xlab = "Trench position (m)");
-                       lines(TR$SPRF.t1$x, TR$SPRF.t1$y / 100)},
-                   zlim = c(MIN, MAX), ylim = c(bottom, top) / 100)
-    mtext("Depth (m)", side = 2, line = 3.5,
-          cex = par()$cex.lab, font = par()$font.lab, las = 0)
-    text(51, mean(c(bottom, top)) / 100,
-         labels = expression(delta^bold("18") * bold("O") * bold(" (\u2030)")),
-         srt = -90, xpd = NA, cex = par()$cex.lab, font = par()$font.lab)
-
-    par(op)
+  par(op)
 
 }
 
-##' Produce TC17 Figure 03b
-##'
-##' @param TR the data set; defaults to the processed T15 oxygen isotope data.
-##' @author Thomas Münch
-##' @noRd
+#' Produce TC17 Figure 03b
+#'
+#' @author Thomas Münch
+#' @noRd
 TC17.Fig03b <- function() {
 
-    TR <- prepareTrenchData(na.treat = TRUE)$oxy
+  op <- grfxtools::Par(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2),
+                       lwd = 2, font.lab = 2, font.axis = 2)
 
-    op <- grfxtools::Par(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2),
-                         lwd = 2, font.lab = 2, font.axis = 2)
+  plot2D(t15.trench2, rescale.v = 0.01,
+         label = grfxtools::LabelAxis(font = par()$font.lab),
+         ylab = "", xlim = c(0, 50), ylim = c(1.755, -0.15), zlim = c(-55, -35),
+         filledContour = TRUE, fill = TRUE)
 
-    # limit the colorscale
-    MAX <- -35
-    MIN <- -55
-    T2 <- TR$trench15.2
-    T2[T2 > MAX] <- MAX
-    T2[T2 < MIN] <- MIN
-
-    # fill part of surface layer with first non-NA value/profile
-    # to improve plot appearance
-    first.not.na <- apply(T2 ,2, function(x) {which(!is.na(x))[1]})
-    for (i in 1 : 11) {
-        T2[first.not.na[i] - 1, i] <- T2[first.not.na[i], i]}
-
-    top <- -15
-    bottom <- TR$depth[length(TR$depth)]
-    palette <- colorRampPalette(rev(RColorBrewer::brewer.pal(10, "RdYlBu")))
-
-    filled.contour(TR$XPOS, TR$depth / 100, t(T2),
-                   color.palette = palette,
-                   plot.title = {
-                     grid(col = "black", nx = NA, ny = NULL);
-                     title(xlab = "Trench position (m)");
-                     lines(TR$SPRF.t2$x, TR$SPRF.t2$y / 100)},
-                   zlim = c(MIN, MAX), ylim = c(bottom, top) / 100)
-    text(51, mean(c(bottom, top)) / 100,
-         labels = expression(delta^bold("18") * bold("O") * bold(" (\u2030)")),
-         srt = -90, xpd = NA, cex = par()$cex.lab, font = par()$font.lab)
-
-    par(op)
+  par(op)
 
 }
 
-##' Produce TC17 Figure 03c
-##'
-##' @param TR the data set; defaults to the processed T15 oxygen isotope data.
-##' @author Thomas Münch
-##' @noRd
+#' Produce TC17 Figure 03c
+#'
+#' @author Thomas Münch
+#' @noRd
 TC17.Fig03c <- function() {
 
-    TR <- prepareTrenchData(na.treat = TRUE)$oxy
+    trPar <- loadKohnenTrenchPar()
 
     op <- grfxtools::Par(lwd = 2, font.lab = 2, font.axis = 2)
 
-    ind1 <- which(TR$depth <= TR$SRF.b$t15.1)
-    ind2 <- which(TR$depth <= TR$SRF.b$t15.2)
-    v1 <- TR$mean15.1
-    v2 <- TR$mean15.2
-    p1 <- (p1 <- which(!is.na(v1)))[c(1, length(p1))]
-    p2 <- (p2 <- which(!is.na(v2)))[c(1, length(p2))]
-    v1[ind1[-length(ind1)]] <- NA
-    v2[ind2[-length(ind2)]] <- NA
+    # obtain mean profiles for depth range <= ~ 175 cm
+    mean15.1 <- v1 <- t15.trench1 %>%
+      dplyr::filter(profileName != "T15-1-DUNE1") %>% # neglect DUNE-1 profile
+      makeMean(na.rm = TRUE, df = TRUE) %>%
+      dplyr::slice(trPar$ix) %>%
+      dplyr::mutate(depth = depth / 100) # depth in m
+    mean15.2 <- v2 <- t15.trench2 %>%
+      makeMean(na.rm = TRUE, df = TRUE) %>%
+      dplyr::slice(trPar$ix) %>%
+      dplyr::mutate(depth = depth / 100) # depth in m
 
-    plot(TR$depth / 100, TR$mean15.1, type = "n", las = 1,
+    # differentiate from surface layer
+    ind1 <- which(mean15.1$depth <= trPar$surfaceBot["t15.1"] / 100)
+    ind2 <- which(mean15.2$depth <= trPar$surfaceBot["t15.2"] / 100)
+    p1 <- (p1 <- which(!is.na(v1$d18O)))[c(1, length(p1))]
+    p2 <- (p2 <- which(!is.na(v2$d18O)))[c(1, length(p2))]
+    v1[ind1[-length(ind1)], "d18O"] <- NA
+    v2[ind2[-length(ind2)], "d18O"] <- NA
+
+    # account for optimal vertical shift
+    mean15.2 <- dplyr::mutate(mean15.2, depth = .data$depth + (trPar$k15 / 100))
+    v2 <- dplyr::mutate(v2, depth = .data$depth + (trPar$k15 / 100))
+
+    # plot
+    plot(mean15.1, type = "n", las = 1,
          xlim = c(-5, 175) / 100, ylim = c(-52, -34),
          axes = FALSE, xlab = "", ylab = "")
     par(xaxp = c(0, 1.5, 3))
@@ -844,27 +697,25 @@ TC17.Fig03c <- function() {
 
     mtext("Depth (m)", side = 1, line = 3.5,
           cex = par()$cex.lab, font = par()$font.lab)
-    mtext(expression(delta^bold("18") * bold("O") * bold("  (\u2030)")),
-          side = 2, line = 3.25, las = 0,
-          cex = par()$cex.lab, font = par()$font.lab)
+    mtext(grfxtools::LabelAxis(font = par()$font.lab),
+          side = 2, line = 3.25, las = 0, cex = par()$cex.lab)
 
-    lines(TR$depth / 100, v1, col = "black")
-    lines((TR$depth + TR$k15) / 100, v2, col = "firebrick3")
+    lines(v1, col = "black")
+    lines(v2, col = "firebrick3")
 
-    lines(TR$depth[ind1] / 100, TR$mean15.1[ind1],
-          col = "black", lwd = 1.5, lty = 5)
-    lines((TR$depth[ind2] + TR$k15) / 100, TR$mean15.2[ind2],
-          col = "firebrick3", lwd = 1.5, lty = 5)
+    lines(mean15.1[ind1, ], col = "black", lwd = 0.75 * par()$lwd, lty = 5)
+    lines(mean15.2[ind2, ], col = "firebrick3", lwd = 0.75 * par()$lwd, lty = 5)
 
-    points(TR$depth[p1] / 100, TR$mean15.1[p1],
-           col = "black", pch = 1, lwd = 1.5, cex = 0.75)
-    points((TR$depth[p2] + TR$k15) / 100, TR$mean15.2[p2],
-           col = "firebrick3", pch = 23, lwd = 1.5, cex = 0.75)
+    points(mean15.1[p1, ], col = "black", pch = 1,
+           lwd = 0.75 * par()$lwd, cex = 0.75)
+    points(mean15.2[p2, ], col = "firebrick3", pch = 23,
+           lwd = 0.75 * par()$lwd, cex = 0.75)
 
     grfxtools::Legend("bottomright", legend = c("T15-1", "T15-2"),
-                      pch = c(1, 23), lwd = 1.5, lty = c(1, 1),
-                      col = c(1, "firebrick3"), cex = 1.25, text.font = 2,
-                      pt.cex = 0.75, pt.lwd = 1.5, bty = "n",
+                      pch = c(1, 23), lwd = 0.75 * par()$lwd, lty = c(1, 1),
+                      col = c(1, "firebrick3"), cex = 1.25,
+                      text.font = par()$font.lab,
+                      pt.cex = 0.75, pt.lwd = 0.75 * par()$lwd, bty = "n",
                       end.pch = TRUE, pch.xoff = 0.2)
 
     par(op)
@@ -878,40 +729,38 @@ TC17.Fig03c <- function() {
 ##' @noRd
 TC17.Fig04 <- function() {
 
-    TR = prepareTrenchData(na.treat = TRUE)$oxy
-    
+    trPar <- loadKohnenTrenchPar()
+    TR <- makeHiResKohnenTrenches(na.rm = TRUE)
+
+    v1 <- TR$mean15
+    v2 <- TR$mean13
+
+    # differentiate from surface layer
+    ind1 <- which(TR$mean15$depth <= trPar$surfaceBot["t15"])
+    ind2 <- which(TR$mean15$depth <= trPar$surfaceBot["t13"])
+    v1[ind1[-length(ind1)], "d18O"] <- NA
+    v2[ind2[-length(ind2)], "d18O"] <- NA
+
     op <- grfxtools::Par(oma = c(5, 0, 0.5, 0), mar = c(0, 6, 0, 6),
                          lwd = 2, font.lab = 2, font.axis = 2)
 
-    ind1 <- which(TR$depth <= TR$SRF.b$t15)
-    ind2 <- which(TR$depth <= TR$SRF.b$t13)
-    v1 <- TR$mean15
-    v2 <- TR$mean13
-    v1[ind1[-length(ind1)]] <- NA
-    v2[ind2[-length(ind2)]] <- NA
-
-    plot(TR$depth, v1, type = "l", axes = FALSE,
-         xlab = "", ylab = "", xlim = c(0, 175), ylim = c(-58, -36))
-    lines(TR$depth[ind1], TR$mean15[ind1],
-          lwd = 1.5, lty = 5, col = "black")
+    plot(v1, type = "l", axes = FALSE, xlab = "", ylab = "",
+         xlim = c(0, 175), ylim = c(-58, -36))
+    lines(TR$mean15[ind1, ], lwd = 1.5, lty = 5, col = "black")
 
     par(yaxp = c(-52, -36, 4))
     axis(2)
     grfxtools::MinorTick(n = 2, side = 2)
-    text(-35, -44,
-         labels = expression(delta^bold("18") * bold("O")*bold(" (\u2030)")),
-         srt = 90, xpd = NA, cex = par()$cex.lab, font = par()$font.lab,
-         col = "black")
+    text(-35, -44, labels = grfxtools::LabelAxis(font = par()$font.lab),
+         srt = 90, xpd = NA, cex = par()$cex.lab, col = "black")
     text(17.5, -37, "T15 (2015)",
          cex = par()$cex.lab, font = par()$font.lab)
 
     par(new = TRUE)
 
-    plot(TR$depth[1:38], v2, type = "l", axes = FALSE,
-         xlab = "", ylab = "", xlim = c(0, 175), ylim = c(-48, -26),
-         col = "dodgerblue")
-    lines(TR$depth[ind2], TR$mean13[ind2], lwd = 1.5, lty = 5,
-          col = "dodgerblue")
+    plot(v2, type = "l", axes = FALSE, xlab = "", ylab = "",
+         xlim = c(0, 175), ylim = c(-48, -26), col = "dodgerblue")
+    lines(TR$mean13[ind2, ], lwd = 1.5, lty = 5, col = "dodgerblue")
 
     par(yaxp = c(-48, -40, 2))
     axis(4, col = "dodgerblue", col.axis = "dodgerblue")
@@ -919,10 +768,8 @@ TC17.Fig04 <- function() {
     par(xaxp = c(0, 175, 7))
     axis(1)
 
-    text(210, -44,
-         labels = expression(delta^bold("18") * bold("O") * bold(" (\u2030)")),
-         srt = -90, xpd = NA, cex = par()$cex.lab, font = par()$font.lab,
-         col = "dodgerblue")
+    text(210, -44, labels = grfxtools::LabelAxis(font = par()$font.lab),,
+         srt = -90, xpd = NA, cex = par()$cex.lab, col = "dodgerblue")
     mtext("Depth (cm)", side = 1, line = 3.5,
           cex = par()$cex.lab, font = par()$font.lab)
     text(175 - 17.5, -40.75, "T13 (2013)",
@@ -983,46 +830,48 @@ TC17.Fig05 <- function(dat = NULL) {
 ##' @noRd
 TC17.Fig06 <- function() {
 
+    trPar <- loadKohnenTrenchPar()
     mod.param <- SetModificationPar()
-
-    op <- grfxtools::Par(oma = c(5, 0, 0.5, 0), mar = c(0, 6, 0, 6),
-                         mfrow = c(1, 2), lwd = 2, font.lab = 2, font.axis = 2)
 
     # color scale
     my.col <- c("dodgerblue", "#1b9e77", "#d95f02", "#7570b3")
 
     # T13* and T13**
-    TR <- prepareTrenchData(na.treat = TRUE)$oxy
-    T13.star     <- ModifyRecord(rec.in = TR$mean13_HiRes,
-                                 res = TR$HiRes,
-                                 depth.hires = TR$depth_HiRes,
-                                 depth.lores = TR$depth,
+    TR <- makeHiResKohnenTrenches(na.rm = TRUE)
+    T13.star     <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
+                                 res = trPar$hiRes,
+                                 depth.hires = TR$mean13_HiRes$depth,
+                                 depth.lores = TR$mean15$depth,
                                  SIGMA = mod.param$SIGMA.opt,
                                  STRETCH = mod.param$STRETCH.opt,
                                  ADV = mod.param$ADV.opt)
-    T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes,
-                                 res = TR$HiRes,
-                                 depth.hires = TR$depth_HiRes,
-                                 depth.lores = TR$depth,
+    T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
+                                 res = trPar$hiRes,
+                                 depth.hires = TR$mean13_HiRes$depth,
+                                 depth.lores = TR$mean15$depth,
                                  SIGMA = mod.param$SIGMA.ind,
                                  STRETCH = mod.param$STRETCH.ind,
                                  ADV = mod.param$ADV.ind)
 
+    #---------------------------------------------------------------------------
+
+    op <- grfxtools::Par(oma = c(5, 0, 0.5, 0), mar = c(0, 6, 0, 6),
+                         mfrow = c(1, 2), lwd = 2, font.lab = 2, font.axis = 2)
 
     #---------------------------------------------------------------------------
     # Fig06-a
 
     # auxiliary variables
-    v11 <- v1 <- TR$mean13
-    v22 <- v2 <- ModifyRecord(rec.in = TR$mean13_HiRes,
-                              res = TR$HiRes,
-                              depth.hires = TR$depth_HiRes,
-                              depth.lores = TR$depth,
+    v11 <- v1 <- TR$mean13$d18O
+    v22 <- v2 <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
+                              res = trPar$hiRes,
+                              depth.hires = TR$mean13_HiRes$depth,
+                              depth.lores = TR$mean13$depth,
                               STRETCH = mod.param$STRETCH.opt)$HiRes
-    v33 <- v3 <- ModifyRecord(rec.in = TR$mean13_HiRes,
-                              res = TR$HiRes,
-                              depth.hires = TR$depth_HiRes,
-                              depth.lores = TR$depth,
+    v33 <- v3 <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
+                              res = trPar$hiRes,
+                              depth.hires = TR$mean13_HiRes$depth,
+                              depth.lores = TR$mean13$depth,
                               SIGMA = mod.param$SIGMA.opt)$LoRes
     v44 <- v4 <- T13.star$LoRes
 
@@ -1031,9 +880,9 @@ TC17.Fig06 <- function() {
     p3 <- (p3 <- which(!is.na(v4)))[c(1, length(p3))]
 
     # define surface region
-    ind1 <- which(TR$depth <= TR$SRF.b$t13)
-    ind2 <- which(TR$depth_HiRes <= TR$SRF.b$t13)
-    ind4 <- which(TR$depth <= TR$SRF.b$t13 +
+    ind1 <- which(TR$mean15$depth <= trPar$surfaceBot["t13"])
+    ind2 <- which(TR$mean15_HiRes$depth <= trPar$surfaceBot["t13"])
+    ind4 <- which(TR$mean15$depth <= trPar$surfaceBot["t13"] +
                   ceiling(mod.param$ADV.opt))
 
     # profiles w/o surface region
@@ -1042,31 +891,29 @@ TC17.Fig06 <- function() {
     v33[ind1[-length(ind1)]] <- NA
     v44[ind4[-length(ind4)]] <- NA
 
-    plot(TR$depth[1:38], v1, type = "n", axes = FALSE,
+    plot(TR$mean13$depth, v1, type = "n", axes = FALSE,
          xlab = "", ylab = "", xlim = c(0, 125), ylim = c(-54, -40))
 
-    lines(TR$depth[1:38], v11, lwd = 2.5, col = my.col[1])
-    lines(TR$depth[ind1], v1[ind1],
+    lines(TR$mean13$depth, v11, lwd = 2.5, col = my.col[1])
+    lines(TR$mean13$depth[ind1], v1[ind1],
           lwd = 1.5, lty = 5, col = my.col[1])
 
-    lines(TR$depth_HiRes, v22, lwd = 1.5, col = "firebrick")
-    lines(TR$depth_HiRes[ind2], v2[ind2],
+    lines(TR$mean13_HiRes$depth, v22, lwd = 1.5, col = "firebrick")
+    lines(TR$mean13_HiRes$depth[ind2], v2[ind2],
           lwd = 1.5, lty = 5, col = "firebrick")
-    points(TR$depth_HiRes[p1], v2[p1],
+    points(TR$mean13_HiRes$depth[p1], v2[p1],
            col = "firebrick", pch = 25, lwd = 1.5, cex = 0.75)
 
-    lines(TR$depth, v33, lwd = 1.5, col = "black")
-    lines(TR$depth[ind2], v3[ind2], lwd = 1.5, lty = 5, col = "black")
-    points(TR$depth[p2], v3[p2], col = "black",
+    lines(TR$mean13$depth, v33, lwd = 1.5, col = "black")
+    lines(TR$mean13$depth[ind2], v3[ind2], lwd = 1.5, lty = 5, col = "black")
+    points(TR$mean13$depth[p2], v3[p2], col = "black",
            pch = 24, lwd = 1.5, cex = 0.75)
 
     par(yaxp = c(-48, -40, 4))
     axis(2)
 
-    text(-27.5, -44,
-         labels = expression(delta^bold("18") * bold("O") * bold(" (\u2030)")),
-         srt = 90, xpd = NA, cex = par()$cex.lab, font = par()$font.lab,
-         col = "black")
+    text(-27.5, -44, labels = grfxtools::LabelAxis(font = par()$font.lab),
+         srt = 90, xpd = NA, cex = par()$cex.lab, col = "black")
 
     legend("topleft", "T13 record", lwd = 2, col = my.col[1],
            lty = 1, cex = 1.1, text.font = 1, bty = "n")
@@ -1079,26 +926,24 @@ TC17.Fig06 <- function() {
 
     par(new = TRUE)
 
-    plot(TR$depth[1:38], v1, type = "n", axes = FALSE,
+    plot(TR$mean13$depth, v1, type = "n", axes = FALSE,
          xlab = "", ylab = "", xlim = c(0, 125), ylim = c(-48, -34))
 
-    lines(TR$depth[1:38], v11, lwd = 2.5, col = my.col[1])
-    lines(TR$depth[ind1], v1[ind1],
+    lines(TR$mean13$depth, v11, lwd = 2.5, col = my.col[1])
+    lines(TR$mean13$depth[ind1], v1[ind1],
           lwd = 1.5, lty = 5, col = my.col[1])
 
-    lines(TR$depth - mod.param$ADV.opt, v44, col = my.col[2])
-    lines(TR$depth[ind4] - mod.param$ADV.opt,
+    lines(TR$mean15$depth - mod.param$ADV.opt, v44, col = my.col[2])
+    lines(TR$mean15$depth[ind4] - mod.param$ADV.opt,
           v4[ind4], lwd = 1.5, lty = 5, col = my.col[2])
-    points(TR$depth[p3] - mod.param$ADV.opt,
+    points(TR$mean15$depth[p3] - mod.param$ADV.opt,
            v4[p3], col = my.col[2], pch = 23, lwd = 1.5, cex = 0.75)
 
     par(yaxp = c(-48, -40, 4))
     axis(4)
 
-    text(152.5,-44,
-         labels = expression(delta^bold("18") * bold("O") * bold(" (\u2030)")),
-         srt = -90, xpd = NA, cex = par()$cex.lab, font = par()$font.lab,
-         col = "black")
+    text(152.5,-44, labels = grfxtools::LabelAxis(font = par()$font.lab),
+         srt = -90, xpd = NA, cex = par()$cex.lab, col = "black")
 
     par(xaxp = c(0, 125, 5))
     axis(1)
@@ -1117,22 +962,22 @@ TC17.Fig06 <- function() {
     # Fig06-b
 
     # auxiliary variables
-    v11 <- v1 <- TR$mean15
+    v11 <- v1 <- TR$mean15$d18O
     v22 <- v2 <- T13.star$LoRes
     v33 <- v3 <- T13.starstar$LoRes
     # only optimal advection
-    v4 <- ModifyRecord(rec.in = TR$mean13_HiRes,
-                       res = TR$HiRes,
-                       depth.hires = TR$depth_HiRes,
-                       depth.lores = TR$depth,
+    v4 <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
+                       res = trPar$hiRes,
+                       depth.hires = TR$mean13_HiRes$depth,
+                       depth.lores = TR$mean15$depth,
                        ADV = mod.param$ADV.only)$LoRes
 
     p1 <- (p1 <- which(!is.na(v2)))[c(1, length(p1))]
     p2 <- (p2 <- which(!is.na(v3)))[c(1, length(p2))]
 
     # define surface region
-    ind1 <- which(TR$depth <= TR$SRF.b$t15)
-    ind2 <- which(TR$depth <= TR$SRF.b$t13 +
+    ind1 <- which(TR$mean15$depth <= trPar$surfaceBot["t15"])
+    ind2 <- which(TR$mean15$depth <= trPar$surfaceBot["t13"] +
                   ceiling(mod.param$ADV.opt))
     ind3 <- ind2 # force consistency
 
@@ -1143,30 +988,28 @@ TC17.Fig06 <- function() {
 
     sum.max <- prxytools::LocatePeaks(v11, partial = TRUE)[3 : 6]
 
-    plot(TR$depth, v1, type = "n",
-         xlim = c(0, 175), ylim = c(-52, -36),
+    plot(TR$mean15$depth, v1, type = "n", xlim = c(0, 175), ylim = c(-52, -36),
          axes = FALSE, xlab = "", ylab = "")
 
     for (i in 1 : length(sum.max))
-        segments(x0 = TR$depth[sum.max[i]], y0 = -52 * 1.04,
+        segments(x0 = TR$mean15$depth[sum.max[i]], y0 = -52 * 1.04,
                  y1 = ifelse(v3[sum.max[i]] > v1[sum.max[i]],
                              v3[sum.max[i]], v1[sum.max[i]]),
                  lty = 5, lwd = 1, col = "gray50")
     segments(x0 = 50, y0 = -48, x1 = 182, lty = 1, lwd = 1, col = "gray50")
 
-    lines(TR$depth, v11)
-    lines(TR$depth[ind1], v1[ind1],
-          lwd = 1.5, lty = 5, col = "black")
+    lines(TR$mean15$depth, v11)
+    lines(TR$mean15$depth[ind1], v1[ind1], lwd = 1.5, lty = 5, col = "black")
 
-    lines(TR$depth, v33, col = my.col[3])
-    lines(TR$depth[ind3], v3[ind3], lwd = 1.5, lty = 5, col = my.col[3])
-    points(TR$depth[p2], v3[p2], lwd = 1.5, cex = 1, pch = 23,
+    lines(TR$mean15$depth, v33, col = my.col[3])
+    lines(TR$mean15$depth[ind3], v3[ind3], lwd = 1.5, lty = 5, col = my.col[3])
+    points(TR$mean15$depth[p2], v3[p2], lwd = 1.5, cex = 1, pch = 23,
            col = my.col[3])
 
-    lines(TR$depth, v22, col = my.col[2])
-    lines(TR$depth[ind2], v2[ind2],
+    lines(TR$mean15$depth, v22, col = my.col[2])
+    lines(TR$mean15$depth[ind2], v2[ind2],
           lwd = 1.5, lty = 5, col = my.col[2])
-    points(TR$depth[p1], v2[p1], lwd = 1.5, cex = 0.75, pch = 1,
+    points(TR$mean15$depth[p1], v2[p1], lwd = 1.5, cex = 0.75, pch = 1,
            col = my.col[2])
 
     par(yaxp = c(-52, -36, 4))
@@ -1177,9 +1020,8 @@ TC17.Fig06 <- function() {
 
     mtext("Depth (cm)", side = 1, line = 3.5,
           cex = par()$cex.lab, font = par()$font.lab)
-    mtext(expression(delta^bold("18") * bold("O") * bold(" (\u2030)")),
-          side = 2, line = 3.5, las = 0,
-          cex = par()$cex.lab, font = par()$font.lab)
+    mtext(grfxtools::LabelAxis(font = par()$font.lab),
+          side = 2, line = 3.5, las = 0, cex = par()$cex.lab)
 
     grfxtools::Legend("topleft", c("T15", "T13* (opt. param.)",
                                    "T13** (ind. param.)"),
@@ -1191,22 +1033,21 @@ TC17.Fig06 <- function() {
 
     par(new = TRUE)
 
-    plot(TR$depth, v1, type = "n",
+    plot(TR$mean15$depth, v1, type = "n",
          xlim = c(0, 175), ylim = c(-4, 12),
          axes = FALSE, xlab = "", ylab = "")
 
-    lines(TR$depth, v11 - v33, col = my.col[4])
-    lines(TR$depth[ind3], v1[ind3] - v3[ind3],
+    lines(TR$mean15$depth, v11 - v33, col = my.col[4])
+    lines(TR$mean15$depth[ind3], v1[ind3] - v3[ind3],
           lwd = 1.5, lty = 5, col = my.col[4])
-    lines(TR$depth, v1 - v4,
+    lines(TR$mean15$depth, v1 - v4,
           lwd = 1.5, lty = 3, col = "dimgrey")
 
     par(yaxp = c(-4, 4, 4))
     axis(4, col = my.col[4], col.axis = my.col[4])
 
-    text(205, 0, "T15 - T13** (\u2030)",
-         cex = par()$cex.lab, font = par()$font.lab,
-         col = my.col[4], srt = -90, xpd = NA)
+    text(205, 0, grfxtools::LabelAxis("T15 - T13**", font = par()$font.lab),
+         cex = par()$cex.lab, col = my.col[4], srt = -90, xpd = NA)
 
     par(op)
 
@@ -1219,32 +1060,34 @@ TC17.Fig06 <- function() {
 ##' @author Thomas Münch
 ##' @noRd
 TC17.Fig07 <- function() {
-    
+
+    trPar <- loadKohnenTrenchPar()
     mod.param <- SetModificationPar()
 
-    op <- grfxtools::Par(mfrow = c(1, 2), xaxs = "r", yaxs = "i", lwd = 1.5,
-                       mar = c(5, 5.5, 0.5, 0.5), font.lab = 2, font.axis = 2)
-
     # T13**
-    TR <- prepareTrenchData()$oxy
-    T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes,
-                                 res = TR$HiRes,
-                                 depth.hires = TR$depth_HiRes,
-                                 depth.lores = TR$depth,
+    TR <- makeHiResKohnenTrenches()
+    T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
+                                 res = trPar$hiRes,
+                                 depth.hires = TR$mean13_HiRes$depth,
+                                 depth.lores = TR$mean15$depth,
                                  SIGMA = mod.param$SIGMA.ind,
                                  STRETCH = mod.param$STRETCH.ind,
                                  ADV = mod.param$ADV.ind)
 
     # profile differences
-    diff.13 <- TR$mean13.1 -
-        prxytools::Lag(TR$mean13.2, shift = TR$k13 / TR$LoRes)
+    diff.13 <- TR$mean13.1$d18O -
+        prxytools::Lag(TR$mean13.2$d18O, shift = trPar$k13 / trPar$loRes)
 
-    diff.15 <- TR$mean15.1_HiRes -
-        prxytools::Lag(TR$mean15.2_HiRes, shift = TR$k15 / TR$HiRes)
-    diff.15 <- diff.15[match(TR$depth, TR$depth_HiRes)]
+    diff.15 <- TR$mean15.1_HiRes$d18O -
+        prxytools::Lag(TR$mean15.2_HiRes$d18O, shift = trPar$k15 / trPar$hiRes)
+    diff.15 <- diff.15[match(TR$mean15$depth, TR$mean15_HiRes$depth)]
 
-    diff.2yr <- TR$mean15 - T13.starstar$LoRes
+    diff.2yr <- TR$mean15$d18O - T13.starstar$LoRes
 
+    #---------------------------------------------------------------------------
+
+    op <- grfxtools::Par(mfrow = c(1, 2), xaxs = "r", yaxs = "i", lwd = 1.5,
+                         mar = c(5, 5.5, 0.5, 0.5), font.lab = 2, font.axis = 2)
     
     #---------------------------------------------------------------------------
     # Fig07-a

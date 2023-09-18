@@ -73,10 +73,10 @@ et al. (2017).
 # Run the analysis for Fig. (5) in Münch et al. (2017)
 # (note that this takes some amount of computation time):
 \donttest{
-TR <- TrenchR:::prepareTrenchData()$oxy
-ParamSpace <- LoopParamSpace(rec.in = TR$mean13_HiRes,
-                             reference = TR$mean15_HiRes,
-                             res = TR$HiRes, depth = TR$depth_HiRes,
+TR <- TrenchR:::makeHiResKohnenTrenches()
+ParamSpace <- LoopParamSpace(rec.in = TR$mean13_HiRes$d18O,
+                             reference = TR$mean15_HiRes$d18O,
+                             res = 0.5, depth = TR$mean15_HiRes$depth,
                              advSpace = seq(40, 60, 0.5),
                              sigmaSpace = seq(0, 8, 0.1),
                              densfSpace = seq(0, 10, 0.1))
