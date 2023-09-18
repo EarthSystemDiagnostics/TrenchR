@@ -10,18 +10,25 @@ load(dataFile)
 
 test_that("fig01 is reproducible", {
 
-  TR <- prepareTrenchData()$oxy
-  T13.annual <- T13AnnualMeans(t1 = TR$mean13.1,
-                               t2 = prxytools::Lag(TR$mean13.2,
-                                               TR$k13 / TR$LoRes),
-                               depth = TR$depth,
-                               cheat = TRUE)
+  trPar <- loadKohnenTrenchPar()
 
-  expect_equal(TR$depth[1 : 38], fig01$TR.depth)
-  expect_equal(TR$mean13.1, fig01$TR.mean13.1)
-  expect_equal(TR$mean13.2, fig01$TR.mean13.2)
-  expect_equal(TR$k13, fig01$TR.k13)
-  expect_equal(TR$LoRes, fig01$TR.LoRes)
+  mean13.1 <- t13.trench1 %>%
+    dplyr::filter(profileName != "T13-1-01") %>%
+    makeMean(df = TRUE)
+  mean13.2 <- t13.trench2 %>%
+    makeMean(df = TRUE)
+
+  T13.annual <- T13AnnualMeans(
+    t1 = mean13.1$d18O,
+    t2 = prxytools::Lag(mean13.2$d18O, trPar$k13 / trPar$loRes),
+    depth = mean13.1$depth, cheat = TRUE)
+
+  expect_equal(mean13.1$depth, fig01$TR.depth)
+  expect_equal(mean13.2$depth, fig01$TR.depth)
+  expect_equal(mean13.1$d18O, fig01$TR.mean13.1)
+  expect_equal(mean13.2$d18O, fig01$TR.mean13.2)
+  expect_equal(trPar$k13, fig01$TR.k13)
+  expect_equal(trPar$loRes, fig01$TR.LoRes)
 
   expect_equal(T13.annual, fig01$T13.annual)
 
@@ -32,30 +39,55 @@ test_that("fig01 is reproducible", {
 
 test_that("fig03 is reproducible", {
 
-  TR <- prepareTrenchData(na.treat = TRUE)$oxy
+  trPar <- loadKohnenTrenchPar()
 
-  expect_equal(TR$trench15.1, fig03$TR.trench15.1)
-  expect_equal(TR$trench15.2, fig03$TR.trench15.2)
+  t15.1.2d <- t15.trench1 %>%
+    dplyr::filter(profileName != "T15-1-DUNE1") %>%
+    make2D(simplify = TRUE)
+  t15.2.2d <- t15.trench2 %>%
+    make2D(simplify = TRUE)
+  attr(t15.1.2d, "dimnames") <- NULL
+  attr(t15.2.2d, "dimnames") <- NULL
 
-  expect_equal(TR$depth, fig03$TR.depth)
-  expect_equal(TR$XPOS, fig03$TR.XPOS)
-  expect_equal(TR$SPRF.t1, fig03$TR.SPRF.t1)
-  expect_equal(TR$SPRF.t2, fig03$TR.SPRF.t2)
-  expect_equal(TR$SRF.b, fig03$TR.SRF.b)
+  mean15.1 <- t15.trench1 %>%
+    dplyr::filter(profileName != "T15-1-DUNE1") %>%
+    makeMean(na.rm = TRUE, df = TRUE) %>%
+    dplyr::slice(trPar$ix)
+  mean15.2 <- t15.trench2 %>%
+    makeMean(na.rm = TRUE, df = TRUE) %>%
+    dplyr::slice(trPar$ix)
+  sprf.t1 <- getSurfaceProfile(t15.trench1)
+  sprf.t2 <- getSurfaceProfile(t15.trench2)
 
-  expect_equal(TR$mean15.1, fig03$TR.mean15.1)
-  expect_equal(TR$mean15.2, fig03$TR.mean15.2)
+  expect_equal(t15.1.2d[1 : 59, ], fig03$TR.trench15.1)
+  expect_equal(t15.2.2d[1 : 59, ], fig03$TR.trench15.2)
 
-  expect_equal(TR$k15, fig03$TR.k15)
+  expect_equal(mean15.1$depth, fig03$TR.depth)
+  expect_equal(mean15.2$depth, fig03$TR.depth)
+
+  expect_equal(sprf.t1$position[-7], fig03$TR.XPOS)
+  expect_equal(sprf.t2$position, fig03$TR.XPOS)
+
+  expect_equal(sprf.t1$position, fig03$TR.SPRF.t1$x)
+  expect_equal(sprf.t2$position, fig03$TR.SPRF.t2$x)
+  expect_equal(sprf.t1$height, fig03$TR.SPRF.t1$y)
+  expect_equal(sprf.t2$height, fig03$TR.SPRF.t2$y)
+
+  expect_equal(trPar$surfaceBot, simplify2array(fig03$TR.SRF.b))
+
+  expect_equal(mean15.1$d18O, fig03$TR.mean15.1)
+  expect_equal(mean15.2$d18O, fig03$TR.mean15.2)
+
+  expect_equal(trPar$k15, fig03$TR.k15)
 
 })
 
 test_that("fig04 is reproducible", {
 
-  TR <- prepareTrenchData(na.treat = TRUE)$oxy
+  TR <- makeHiResKohnenTrenches(na.rm = TRUE)
 
-  expect_equal(TR$mean13, fig04$TR.mean13)
-  expect_equal(TR$mean15, fig04$TR.mean15)
+  expect_equal(TR$mean13$d18O, fig04$TR.mean13)
+  expect_equal(TR$mean15$d18O, fig04$TR.mean15)
 
 })
 
@@ -70,64 +102,62 @@ test_that("fig06 is reproducible", {
   # ------------------------------------------------------------------------------
   # expectation values
 
-  TR <- prepareTrenchData(na.treat = TRUE)$oxy
+    trPar <- loadKohnenTrenchPar()
+    mod.param <- SetModificationPar()
 
-  mod.param <- SetModificationPar()
+    TR <- makeHiResKohnenTrenches(na.rm = TRUE)
+    T13.star     <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
+                                 res = trPar$hiRes,
+                                 depth.hires = TR$mean13_HiRes$depth,
+                                 depth.lores = TR$mean15$depth,
+                                 SIGMA = mod.param$SIGMA.opt,
+                                 STRETCH = mod.param$STRETCH.opt,
+                                 ADV = mod.param$ADV.opt)
+    T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
+                                 res = trPar$hiRes,
+                                 depth.hires = TR$mean13_HiRes$depth,
+                                 depth.lores = TR$mean15$depth,
+                                 SIGMA = mod.param$SIGMA.ind,
+                                 STRETCH = mod.param$STRETCH.ind,
+                                 ADV = mod.param$ADV.ind)
 
-  T13.star <- ModifyRecord(rec.in = TR$mean13_HiRes,
-                           res = TR$HiRes,
-                           depth.hires = TR$depth_HiRes,
-                           depth.lores = TR$depth,
-                           SIGMA = mod.param$SIGMA.opt,
-                           STRETCH = mod.param$STRETCH.opt,
-                           ADV = mod.param$ADV.opt)
-  T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes,
-                               res = TR$HiRes,
-                               depth.hires = TR$depth_HiRes,
-                               depth.lores = TR$depth,
-                               SIGMA = mod.param$SIGMA.ind,
-                               STRETCH = mod.param$STRETCH.ind,
-                               ADV = mod.param$ADV.ind)
+    v2 <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
+                       res = trPar$hiRes,
+                       depth.hires = TR$mean13_HiRes$depth,
+                       depth.lores = TR$mean13$depth,
+                       STRETCH = mod.param$STRETCH.opt)$HiRes
+    v3 <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
+                       res = trPar$hiRes,
+                       depth.hires = TR$mean13_HiRes$depth,
+                       depth.lores = TR$mean13$depth,
+                       SIGMA = mod.param$SIGMA.opt)$LoRes
+    v4 <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
+                       res = trPar$hiRes,
+                       depth.hires = TR$mean13_HiRes$depth,
+                       depth.lores = TR$mean13$depth,
+                       ADV = mod.param$ADV.only)$LoRes
 
-  v2 <- ModifyRecord(rec.in = TR$mean13_HiRes,
-                     res = TR$HiRes,
-                     depth.hires = TR$depth_HiRes,
-                     depth.lores = TR$depth,
-                     STRETCH = mod.param$STRETCH.opt)$HiRes
+    v11 <- TR$mean15$d18O
+    ind1 <- which(TR$mean15$depth <= trPar$surfaceBot["t15"])
+    v11[ind1[-length(ind1)]] <- NA
 
-  v3 <- ModifyRecord(rec.in = TR$mean13_HiRes,
-                     res = TR$HiRes,
-                     depth.hires = TR$depth_HiRes,
-                     depth.lores = TR$depth,
-                     SIGMA = mod.param$SIGMA.opt)$LoRes
-
-  v4 <- ModifyRecord(rec.in = TR$mean13_HiRes,
-                     res = TR$HiRes,
-                     depth.hires = TR$depth_HiRes,
-                     depth.lores = TR$depth,
-                     ADV = mod.param$ADV.only)$LoRes
-
-  v11 <- TR$mean15
-  ind1 <- which(TR$depth <= TR$SRF.b$t15)                 
-  v11[ind1[-length(ind1)]] <- NA
-
-  sum.max <- prxytools::LocatePeaks(v11, partial = TRUE)[3 : 6]
+    sum.max <- prxytools::LocatePeaks(v11, partial = TRUE)[3 : 6]
 
   # ------------------------------------------------------------------------------
   # tests
   
   expect_equal(mod.param, fig06$mod.param)
   
-  expect_equal(TR$HiRes, fig06$TR.HiRes)
-  expect_equal(TR$depth_HiRes, fig06$TR.depth_HiRes)
-  expect_equal(TR$mean13_HiRes, fig06$TR.mean13_HiRes)
+  expect_equal(trPar$hiRes, fig06$TR.HiRes)
+  expect_equal(TR$mean15_HiRes$depth, fig06$TR.depth_HiRes)
+  expect_equal(TR$mean13_HiRes$d18O, fig06$TR.mean13_HiRes)
 
   expect_equal(T13.star, fig06$T13.star)
   expect_equal(T13.starstar, fig06$T13.starstar)
 
   expect_equal(v2, fig06$v2)
-  expect_equal(v3, fig06$v3)
-  expect_equal(v4, fig06$v4)
+  expect_equal(v3, fig06$v3[1 : 38])
+  expect_equal(v4, fig06$v4[1 : 38])
 
   expect_equal(sum.max, fig06$sum.max)
 
@@ -137,26 +167,27 @@ test_that("fig07 is reproducible", {
 
   # ------------------------------------------------------------------------------
   # expectation values
-  
-  TR <- prepareTrenchData()$oxy
+
+  trPar <- loadKohnenTrenchPar()
   mod.param <- SetModificationPar()
 
-  T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes,
-                               res = TR$HiRes,
-                               depth.hires = TR$depth_HiRes,
-                               depth.lores = TR$depth,
+  TR <- makeHiResKohnenTrenches()
+  T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
+                               res = trPar$hiRes,
+                               depth.hires = TR$mean13_HiRes$depth,
+                               depth.lores = TR$mean15$depth,
                                SIGMA = mod.param$SIGMA.ind,
                                STRETCH = mod.param$STRETCH.ind,
                                ADV = mod.param$ADV.ind)
 
-  diff.13 <- TR$mean13.1 -
-    prxytools::Lag(TR$mean13.2, shift = TR$k13 / TR$LoRes)
+  diff.13 <- TR$mean13.1$d18O -
+    prxytools::Lag(TR$mean13.2$d18O, shift = trPar$k13 / trPar$loRes)
 
-  diff.15 <- TR$mean15.1_HiRes -
-    prxytools::Lag(TR$mean15.2_HiRes, shift = TR$k15 / TR$HiRes)
-  diff.15 <- diff.15[match(TR$depth, TR$depth_HiRes)]
+  diff.15 <- TR$mean15.1_HiRes$d18O -
+    prxytools::Lag(TR$mean15.2_HiRes$d18O, shift = trPar$k15 / trPar$hiRes)
+  diff.15 <- diff.15[match(TR$mean15$depth, TR$mean15_HiRes$depth)]
 
-  diff.2yr <- TR$mean15 - T13.starstar$LoRes
+  diff.2yr <- TR$mean15$d18O - T13.starstar$LoRes
 
   # ------------------------------------------------------------------------------
   # tests
