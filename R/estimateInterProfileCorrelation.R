@@ -10,10 +10,14 @@
 #' profiles is calculated using pairwise complete observations, and the
 #' correlations are averaged across all pairs. Uncertainty of the mean
 #' correlation is given by the standard deviation across the correlations from
-#' all pairs, and by the standard error. The latter is calculated using the
-#' number of found pairs, or the effective horizontal number of profiles
-#' (degrees of freedom; as determined from the given horizontal autocorrelation
-#' at lag 1), whichever number is smaller.
+#' all pairs, and by the standard error. The latter is obtained from dividing
+#' the standard deviation by the square root of an effective number of
+#' observations, which is calculated from the number of found pairs and the
+#' average horizontal distance between the trench profiles for the given
+#' horizontal autocorrelation (see \code{\link{getEffectiveTrenchDOF}}). This is
+#' still an optimistic error estimate, since e.g. the correlation values from
+#' two profile pairs located at positions [1, 2] and [2, 3] are certainly not
+#' independent, even when accounting for autocorrelation.
 #'
 #' @param trench a trench data set in form of a matrix or a data frame, where
 #'   columns represent the horizontal trench profile positions and rows
@@ -47,6 +51,8 @@ estimateInterProfileCorrelation <- function(trench, profilePosition, distances,
   if (!is.matrix(trench) & !is.data.frame(trench)) {
     stop("Input 'trench' must be a matrix or a data frame.")
   }
+
+  distAvg <- mean(diff(profilePosition))
 
   results <- list()
   meanCor <- stdDev <- stdErr <- Nfound <- vector()
@@ -83,8 +89,10 @@ estimateInterProfileCorrelation <- function(trench, profilePosition, distances,
     Nfound[count]  <- length(tmp)
     meanCor[count] <- mean(tmp)
     stdDev[count]  <- sd(tmp)
-    stdErr[count]  <- sd(tmp) /
-      sqrt(min(Nfound[count], stattools::getEffectiveDOF(ncol(trench), a1)))
+    stdErr[count]  <- ifelse(
+      Nfound[count] == 0, as.numeric(NA),
+      sd(tmp) /
+      sqrt(getEffectiveTrenchDOF(a1, N = Nfound[count], delta = distAvg)))
 
     count <- count + 1
 

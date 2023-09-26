@@ -48,10 +48,14 @@ counted only once. For every found pair, the correlation between the two
 profiles is calculated using pairwise complete observations, and the
 correlations are averaged across all pairs. Uncertainty of the mean
 correlation is given by the standard deviation across the correlations from
-all pairs, and by the standard error. The latter is calculated using the
-number of found pairs, or the effective horizontal number of profiles
-(degrees of freedom; as determined from the given horizontal autocorrelation
-at lag 1), whichever number is smaller.
+all pairs, and by the standard error. The latter is obtained from dividing
+the standard deviation by the square root of an effective number of
+observations, which is calculated from the number of found pairs and the
+average horizontal distance between the trench profiles for the given
+horizontal autocorrelation (see \code{\link{getEffectiveTrenchDOF}}). This is
+still an optimistic error estimate, since e.g. the correlation values from
+two profile pairs located at positions [1, 2] and [2, 3] are certainly not
+independent, even when accounting for autocorrelation.
 }
 \examples{
 

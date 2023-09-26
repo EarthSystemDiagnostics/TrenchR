@@ -30,9 +30,10 @@ test_that("inter profile correlation calculation works", {
     actual3 <- estimateInterProfileCorrelation(
       as.matrix(trench), profilePosition, distances = 1 : 3, a1 = 0.9) %>%
       round(digits = 5)
+    dof <- getEffectiveTrenchDOF(a1 = 0.9, N = 2, delta = mean(diff(profilePosition)))
     expected2 <- tibble::tibble(
       distances = 1 : 3, N = c(2, 2, 1), cor = c(1, 0, -1),
-      sd = c(0, sqrt(2), NA), se = c(0, sqrt(2) / sqrt(1.134913), NA)) %>%
+      sd = c(0, sqrt(2), NA), se = c(0, sqrt(2) / sqrt(dof), NA)) %>%
       round(digits = 5)
 
     expect_equal(actual1, expected1)
