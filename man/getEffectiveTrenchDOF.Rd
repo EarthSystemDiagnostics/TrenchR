@@ -8,8 +8,7 @@ getEffectiveTrenchDOF(a1, positions = NULL, N = length(positions), delta = 1)
 }
 \arguments{
 \item{a1}{horizontal autocorrelation of the trench data at lag 1, where lag 1
-is measured relative to the profile distances (i.e. lag 1 is evaluated at
-the smallest observed inter-profile distance).}
+is measured relative to unit profile distance.}
 
 \item{positions}{a vector of horizontal profile positions.}
 

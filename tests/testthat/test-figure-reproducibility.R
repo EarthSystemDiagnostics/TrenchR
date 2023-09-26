@@ -1,4 +1,4 @@
-context("Ensure TC17 figure data reproducibility")
+context("TC17 figure data reproducibility")
 
 dataFile <- if (endsWith(getwd(), "testthat")) {
               "test_data/figure_data_tc17.rda"

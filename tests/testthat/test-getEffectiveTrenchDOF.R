@@ -1,3 +1,5 @@
+context("trench-DOF")
+
 test_that("calculating effective DOF works", {
 
   msg <- "Specify number of profiles."
@@ -24,6 +26,10 @@ test_that("calculating effective DOF works", {
   expect_equal(getEffectiveTrenchDOF(a1 = 0, N = 2, delta = 1), 2)
   expect_equal(getEffectiveTrenchDOF(a1 = 0, N = 159, delta = 1), 159)
   expect_equal(getEffectiveTrenchDOF(a1 = 0, positions = c(1, 34, 78)), 3)
+
+  # for uniform unit profile distances, DOF != generic DOF calculation
+  expect_equal(getEffectiveTrenchDOF(a1 = 0.71, N = 1587),
+               stattools::getEffectiveDOF(n = 1587, a1 = 0.71))
 
   # from old 'getSigmaStar' function
   expect_equal(round(
