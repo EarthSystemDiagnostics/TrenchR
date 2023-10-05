@@ -1,3 +1,25 @@
+#' Horizontal trench profile positions
+#'
+#' Easily retrieve the horizontal profile positions of a trench data set.
+#'
+#' @param data a tibble with a trench data set with horizontal profile positions
+#'   listed in the column \code{profilePosition}.
+#' @return numeric vector of the profile positions.
+#' @author Thomas Münch
+#' @examples
+#' getX(t13.trench1)
+#' @export
+#'
+getX <- function(data) {
+
+  if (!"profilePosition" %in% colnames(data)) {
+    stop("No column 'profilePosition' found in trench data.", call. = FALSE)
+  }
+
+  unique(data[["profilePosition"]])
+
+}
+
 #' Common vertical trench scale
 #'
 #' Easily retrieve the absolute vertical scale that is common to all profiles of

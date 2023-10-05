@@ -1,5 +1,20 @@
 test_that("extraction of depth profile works", {
 
+  msg <- "No column 'profilePosition' found in trench data."
+
+  foo <- tibble::tibble(x = 1, y = 2)
+  expect_error(getX(foo), msg)
+
+  foo <- tibble::tibble(x = 1, y = 2, profilePosition = 0)
+  expect_equal(getX(foo), 0)
+
+  expect_error(getX(dplyr::select(t15.trench1, -"profilePosition")), msg)
+  expect_equal(getX(t15.trench2), seq(0, 50, 5))
+
+})
+
+test_that("extraction of depth profile works", {
+
   expect_error(getZ(t13.trench1, var = "foo"),
                "Unknown column name for vertical scale.")
   expect_equal(getZ(t13.trench1), seq(from = 1.5, by = 3, length.out = 38))

@@ -23,7 +23,7 @@
 #'   columns represent the horizontal trench profile positions and rows
 #'   represent the vertical scale of the data; see also \code{\link{make2D}}.
 #' @param profilePosition vector of the horizontal trench profile positions; see
-#'   also \code{\link{getSurfaceProfile}}.
+#'   also \code{\link{getX}}.
 #' @param distances vector of profile spacings for which profile pairs shall be
 #'   seeked and analysed for their correlation; must have the same units as
 #'   \code{profilePosition}.
@@ -40,7 +40,7 @@
 #'
 #' IPC <- make2D(t13.trench2) %>%
 #'   estimateInterProfileCorrelation(
-#'     profilePosition = getSurfaceProfile(t13.trench2)$position,
+#'     profilePosition = getX(t13.trench2),
 #'     distances = c(10, 30))
 #'
 #' @export

@@ -31,8 +31,7 @@ estimateSNR <- function(data, distances, a1 = 0, rangeTol = 0.05, ...) {
 
   data %>%
     make2D(...) %>%
-    estimateInterProfileCorrelation(getSurfaceProfile(data)$position,
-                                    distances, rangeTol, a1) %>%
+    estimateInterProfileCorrelation(getX(data), distances, rangeTol, a1) %>%
     dplyr::summarise(cor = mean(.data$cor),
                      lim = sqrt(sum(.data$se^2)) / dplyr::n()) %>%
     dplyr::transmute(snr = .data$cor / (1 - .data$cor),
