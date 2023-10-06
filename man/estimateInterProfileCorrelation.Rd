@@ -5,24 +5,31 @@
 \title{Correlation between profiles depending on distance}
 \usage{
 estimateInterProfileCorrelation(
-  trench,
-  profilePosition,
+  data,
   distances,
+  profilePosition = NULL,
+  var = "d18O",
   rangeTol = 0.05,
   a1 = 0
 )
 }
 \arguments{
-\item{trench}{a trench data set in form of a matrix or a data frame, where
-columns represent the horizontal trench profile positions and rows
-represent the vertical scale of the data; see also \code{\link{make2D}}.}
+\item{data}{either a generic trench data set, or a trench data set in form
+of a numeric matrix or data frame, where columns represent the horizontal
+trench profile positions and rows represent the vertical scale of the
+data.}
 
-\item{profilePosition}{vector of the horizontal trench profile positions; see
-also \code{\link{getX}}.}
+\item{distances}{a vector of inter-profile distances for which profile pairs
+shall be seeked and analysed for their correlation; must be measured in the
+same units as the profile positions of the trench data set.}
 
-\item{distances}{vector of profile spacings for which profile pairs shall be
-seeked and analysed for their correlation; must have the same units as
-\code{profilePosition}.}
+\item{profilePosition}{optional vector of the horizontal trench profile
+positions; only needed when \code{data} is passed as a simple matrix or
+data frame.}
+
+\item{var}{character string with the name of the trench variable for which to
+compute the correlations; see also \code{\link{make2D}}. Only needed when
+the \code{data} is passed as a generic trench data set.}
 
 \item{rangeTol}{relative tolerance allowed for profile spacings; i.e. for a
 given spacing d, all profile pairs separated by d * (1 +/- rangeTol) are
@@ -38,7 +45,10 @@ a tibble of five variables: the analysed profile spacings, the found
 }
 \description{
 Estimate the pairwise correlation between trench profiles as a function of
-the distance between the profiles.
+the distance between the profiles. To allow for more flexibility, the trench
+data can be passed in the generic package form, or as a numeric simple matrix
+or data frame where columns represent the horizontal trench profile positions
+and rows represent the vertical scale of the data.
 }
 \details{
 For a given distance, the function searches the trench data set for all pairs
@@ -59,10 +69,15 @@ independent, even when accounting for autocorrelation.
 }
 \examples{
 
-IPC <- make2D(t13.trench2) \%>\%
+IPC <- t13.trench2 \%>\%
+  estimateInterProfileCorrelation(distances = c(10, 30))
+# you can pass data also in 2D form,
+# but then the profile positions need to be provided seperately
+IPC2 <- make2D(t13.trench2) \%>\%
   estimateInterProfileCorrelation(
     profilePosition = getX(t13.trench2),
     distances = c(10, 30))
+all.equal(IPC, IPC2) # by definition
 
 }
 \author{

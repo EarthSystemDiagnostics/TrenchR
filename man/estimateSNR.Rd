@@ -4,15 +4,33 @@
 \alias{estimateSNR}
 \title{Trench signal-to-noise ratio}
 \usage{
-estimateSNR(data, distances, a1 = 0, rangeTol = 0.05, ...)
+estimateSNR(
+  data,
+  distances,
+  profilePosition = NULL,
+  var = "d18O",
+  a1 = 0,
+  rangeTol = 0.05,
+  ...
+)
 }
 \arguments{
-\item{data}{a trench data set following the generic structure used in the
-package.}
+\item{data}{either a generic trench data set, or a trench data set in form
+of a numeric matrix or data frame, where columns represent the horizontal
+trench profile positions and rows represent the vertical scale of the
+data.}
 
 \item{distances}{a vector of inter-profile distances at which average
 pairwise profile correlations are to be estimated in order to calculate the
 SNR.}
+
+\item{profilePosition}{optional vector of the horizontal trench profile
+positions; only needed when \code{data} is passed as a simple matrix or
+data frame.}
+
+\item{var}{character string with the name of the trench variable for which to
+estimate the SNR; see also \code{\link{make2D}}. Only needed when the
+\code{data} is passed as a generic trench data set.}
 
 \item{a1}{horizontal autocorrelation of the trench data at lag 1, where lag 1
 is measured relative to unit profile distance, used for the error estimate
@@ -20,9 +38,6 @@ is measured relative to unit profile distance, used for the error estimate
 
 \item{rangeTol}{relative tolerance allowed for inter-profile distances (see
 \code{\link{estimateInterProfileCorrelation}}).}
-
-\item{...}{parameters passed on to other functions; currently used for
-\code{\link{make2D}} to specify the trench variable (see examples).}
 }
 \value{
 a tibble of two variables: estimated signal-to-noise ratio
@@ -30,7 +45,11 @@ a tibble of two variables: estimated signal-to-noise ratio
 }
 \description{
 Estimate the signal-to-noise ratio (SNR) for a trench variable from the
-average pairwise correlations evaluated at specified profile distances.
+average pairwise correlations evaluated at specified profile distances. To
+allow for more flexibility, the trench data can be passed in the generic
+package form, or as a simple numeric matrix or data frame where columns
+represent the horizontal trench profile positions and rows represent the
+vertical scale of the data.
 }
 \examples{
 
