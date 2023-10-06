@@ -114,7 +114,7 @@ getSurfaceProfile <- function(data) {
 #'
 make2D <- function(data, var = "d18O", simplify = FALSE) {
 
-  is.trench(data, full = FALSE)
+  is.trench(data, check = "minimum")
 
   if (var == "dxs" & (!"dxs" %in% colnames(data))) {
     if ((!"d18O" %in% colnames(data)) | (!"dD" %in% colnames(data))) {
@@ -197,17 +197,26 @@ makeMean <- function(data, var = "d18O", vscale = "depth",
 #' Check if data is a valid trench data set
 #'
 #' @param data a data frame.
-#' @param full logical; if \code{TRUE} check for the complete set of necessary
-#'   data frame columns, else check only that \code{profileName} and
-#'   \code{surfaceNumber} columns exist.
+#' @param check character; specify the extent of the check:
+#'   "minimum": check only for \code{profileName} and \code{surfaceNumber}
+#'     columns;
+#'   "incl.pos": check additionally for \code{profilePosition} column;
+#'   "full": check for complete set of necessary data frame columns.
 #' @return an error message is created if \code{data} is no valid trench data.
 #' @author Thomas Münch
 #' @noRd
 #'
-is.trench <- function(data, full = TRUE) {
+is.trench <- function(data, check = "full") {
 
-  trenchCols <- c("profileName", "sampleNumber")
-  if (full) trenchCols <- c(trenchCols, "profilePosition", "surfaceHeight")
+  if (!check %in% c("minimum", "incl.pos", "full")) {
+    stop("Unknown check specification.")
+  }
+
+  minCols <- c("profileName", "sampleNumber")
+  trenchCols <- switch(check,
+         minimum = minCols,
+         incl.pos = c(minCols, "profilePosition"),
+         full = c(minCols, "profilePosition", "surfaceHeight"))
 
   iMissing <- which(is.na(match(trenchCols, colnames(data))))
 

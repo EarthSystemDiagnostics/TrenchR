@@ -163,34 +163,59 @@ test_that("production of mean profile works", {
 test_that("checking for proper trench data works", {
 
   x1 <- tibble::tibble(x = 1)
+  expect_error(is.trench(x1, check = "foo"), "Unknown check specification.")
+
   msg1a <- paste("Incomplete trench data set: columns profileName,",
                  "sampleNumber missing.")
   msg1b <- paste("Incomplete trench data set: columns profileName,",
+                 "sampleNumber, profilePosition missing.")
+  msg1c <- paste("Incomplete trench data set: columns profileName,",
                  "sampleNumber, profilePosition, surfaceHeight missing.")
   x2 <- tibble::tibble(x = 1, profileName = "A")
-  msg2 <- paste("Incomplete trench data set: columns sampleNumber",
-                "missing.")
+  msg2a <- paste("Incomplete trench data set: columns sampleNumber",
+                 "missing.")
+  msg2b <- paste("Incomplete trench data set: columns sampleNumber,",
+                 "profilePosition missing.")
+  msg2c <- paste("Incomplete trench data set: columns sampleNumber,",
+                 "profilePosition, surfaceHeight missing.")
   x3 <- tibble::tibble(x = 1, profileName = "A", sampleNumber = 1)
-  msg3 <- paste("Incomplete trench data set: columns profilePosition,",
-                "surfaceHeight missing.")
+  msg3a <- paste("Incomplete trench data set: columns profilePosition",
+                 "missing.")
+  msg3b <- paste("Incomplete trench data set: columns profilePosition,",
+                 "surfaceHeight missing.")
 
-  expect_error(is.trench(x1, full = FALSE), msg1a)
-  expect_error(is.trench(x1), msg1b)
-  expect_error(is.trench(x2, full = FALSE), msg2)
-  expect_no_error(is.trench(x3, full = FALSE))
-  expect_error(is.trench(x3), msg3)
+  expect_error(is.trench(x1, check = "minimum"), msg1a)
+  expect_error(is.trench(x1, check = "incl.pos"), msg1b)
+  expect_error(is.trench(x1), msg1c)
+
+  expect_error(is.trench(x2, check = "minimum"), msg2a)
+  expect_error(is.trench(x2, check = "incl.pos"), msg2b)
+  expect_error(is.trench(x2, check = "full"), msg2c)
+
+  expect_no_error(is.trench(x3, check = "minimum"))
+  expect_error(is.trench(x3, check = "incl.pos"), msg3a)
+  expect_error(is.trench(x3), msg3b)
 
   x4 <- tibble::tibble(x = 1, profileName = "A", sampleNumber = 1,
                        profilePosition = 10)
   msg4 <- paste("Incomplete trench data set: columns surfaceHeight missing.")
+
   x5 <- tibble::tibble(x = 1, profileName = "A", sampleNumber = 1,
                        surfaceHeight = 2.68)
   msg5 <- paste("Incomplete trench data set: columns profilePosition missing.")
+
   x6 <- tibble::tibble(x = 1, profileName = "A", sampleNumber = 1,
                        profilePosition = 10, surfaceHeight = 2.68)
 
+  expect_no_error(is.trench(x4, check = "minimum"))
+  expect_no_error(is.trench(x4, check = "incl.pos"))
   expect_error(is.trench(x4), msg4)
+
+  expect_error(is.trench(x5, check = "incl.pos"), msg5)
   expect_error(is.trench(x5), msg5)
+
+  expect_no_error(is.trench(x6, check = "minimum"))
+  expect_no_error(is.trench(x6, check = "incl.pos"))
   expect_no_error(is.trench(x6))
 
 })
