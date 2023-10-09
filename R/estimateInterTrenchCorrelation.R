@@ -6,8 +6,8 @@
 #'
 #' @param t1 a generic trench data set.
 #' @param t2 a second generic trench data set.
-#' @param var character string with the name of the trench variable for which to
-#'   compute the correlations; see also \code{\link{make2D}}.
+#' @param .var character string with the name of the trench variable for which
+#'   to compute the correlations; see also \code{\link{make2D}}.
 #' @param optimize logical; set to \code{TRUE} to allow for relative shifts
 #'   of the records, specified by \code{lag}, to maximize their correlations.
 #' @param lag a vector of lags, i.e. positive and negative index shifts, used
@@ -34,13 +34,13 @@
 #'
 #' @export
 #'
-estimateInterTrenchCorrelation <- function(t1, t2, var = "d18O",
+estimateInterTrenchCorrelation <- function(t1, t2, .var = "d18O",
                                            optimize = FALSE, lag = NULL) {
 
   if (!optimize) {
     
-    x <- make2D(t1, var = var)
-    y <- make2D(t2, var = var)
+    x <- make2D(t1, .var = .var)
+    y <- make2D(t2, .var = .var)
     cor(x, y, use = "pairwise.complete.obs")
 
   } else {
@@ -49,8 +49,8 @@ estimateInterTrenchCorrelation <- function(t1, t2, var = "d18O",
       stop("Need vector of lags to optimize correlations.", call. = FALSE)
     }
 
-    x <- make2D(t1, var = var, simplify = TRUE)
-    y <- make2D(t2, var = var, simplify = TRUE)
+    x <- make2D(t1, .var = .var, simplify = TRUE)
+    y <- make2D(t2, .var = .var, simplify = TRUE)
     n <- ncol(x)
     m <- ncol(y)
 

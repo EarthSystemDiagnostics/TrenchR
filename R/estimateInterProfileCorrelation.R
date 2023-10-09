@@ -32,7 +32,7 @@
 #' @param profilePosition optional vector of the horizontal trench profile
 #'   positions; only needed when \code{data} is passed as a simple matrix or
 #'   data frame.
-#' @param var character string with the name of the trench variable for which to
+#' @param .var character string with the name of the trench variable for which to
 #'   compute the correlations; see also \code{\link{make2D}}. Only needed when
 #'   the \code{data} is passed as a generic trench data set.
 #' @param rangeTol relative tolerance allowed for profile spacings; i.e. for a
@@ -60,7 +60,7 @@
 #'
 estimateInterProfileCorrelation <- function(data, distances,
                                             profilePosition = NULL,
-                                            var = "d18O",
+                                            .var = "d18O",
                                             rangeTol = 0.05, a1 = 0) {
 
   is.generic.trench <- TRUE
@@ -70,7 +70,7 @@ estimateInterProfileCorrelation <- function(data, distances,
   if (is.generic.trench) {
 
     profilePosition <- getX(data)
-    trench <- make2D(data, var = var)
+    trench <- make2D(data, .var = .var)
 
   } else {
 

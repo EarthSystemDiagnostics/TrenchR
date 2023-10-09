@@ -28,17 +28,17 @@ test_that("inter-trench correlation works", {
     nrow = 2, ncol = 4, byrow = TRUE,
     dimnames = list(letters[1 : 2], letters[3 : 6]))
 
-  actual1 <- estimateInterTrenchCorrelation(t1, t2, var = "foo")
+  actual1 <- estimateInterTrenchCorrelation(t1, t2, .var = "foo")
   expect_equal(expected1, actual1)
 
   expected2 <- list(cor = expected1,
                     i = matrix(0, nrow = 2, ncol = 4, byrow = TRUE,
                                dimnames = list(letters[1 : 2], letters[3 : 6])))
-  actual2 <- estimateInterTrenchCorrelation(t1, t2, var = "foo",
+  actual2 <- estimateInterTrenchCorrelation(t1, t2, .var = "foo",
                                             optimize = TRUE, lag = 0)
 
   expect_error(
-    estimateInterTrenchCorrelation(t1, t2, var = "foo", optimize = TRUE),
+    estimateInterTrenchCorrelation(t1, t2, .var = "foo", optimize = TRUE),
     "Need vector of lags to optimize correlations.")
   expect_equal(expected2, actual2)
 

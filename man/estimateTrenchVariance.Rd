@@ -51,7 +51,7 @@ rows represent the vertical scale of the data.
 estimateTrenchVariance(t15.trench1, .var = "d18O")
 
 # different input format and some example DOFs to see the effect:
-make2D(t15.trench1, var = "d18O") \%>\%
+make2D(t15.trench1, .var = "d18O") \%>\%
   estimateTrenchVariance(dof.h = 5, dof.v = 30) # (no realistic DOFs!)
 
 }

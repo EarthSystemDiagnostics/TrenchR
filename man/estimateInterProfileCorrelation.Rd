@@ -8,7 +8,7 @@ estimateInterProfileCorrelation(
   data,
   distances,
   profilePosition = NULL,
-  var = "d18O",
+  .var = "d18O",
   rangeTol = 0.05,
   a1 = 0
 )
@@ -27,7 +27,7 @@ same units as the profile positions of the trench data set.}
 positions; only needed when \code{data} is passed as a simple matrix or
 data frame.}
 
-\item{var}{character string with the name of the trench variable for which to
+\item{.var}{character string with the name of the trench variable for which to
 compute the correlations; see also \code{\link{make2D}}. Only needed when
 the \code{data} is passed as a generic trench data set.}
 

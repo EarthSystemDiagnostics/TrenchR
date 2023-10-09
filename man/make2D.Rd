@@ -4,13 +4,13 @@
 \alias{make2D}
 \title{2D trench record}
 \usage{
-make2D(data, var = "d18O", simplify = FALSE)
+make2D(data, .var = "d18O", simplify = FALSE)
 }
 \arguments{
 \item{data}{a trench data set following the default structure used in the
 package.}
 
-\item{var}{character string with the name of the requested variable; must
+\item{.var}{character string with the name of the requested variable; must
 match one of the data column variables in \code{data}, or be one of the
 following:
 \describe{
@@ -40,9 +40,9 @@ variable for a given trench data set.
 make2D(t13.trench2)
 
 # Request another variable:
-make2D(t13.trench2, var = "dD")
+make2D(t13.trench2, .var = "dD")
 # Obtain the same result as a simple matrix:
-make2D(t13.trench2, var = "dD", simplify = TRUE)
+make2D(t13.trench2, .var = "dD", simplify = TRUE)
 
 }
 \author{

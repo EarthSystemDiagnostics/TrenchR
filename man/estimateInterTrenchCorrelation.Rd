@@ -7,7 +7,7 @@
 estimateInterTrenchCorrelation(
   t1,
   t2,
-  var = "d18O",
+  .var = "d18O",
   optimize = FALSE,
   lag = NULL
 )
@@ -17,8 +17,8 @@ estimateInterTrenchCorrelation(
 
 \item{t2}{a second generic trench data set.}
 
-\item{var}{character string with the name of the trench variable for which to
-compute the correlations; see also \code{\link{make2D}}.}
+\item{.var}{character string with the name of the trench variable for which
+to compute the correlations; see also \code{\link{make2D}}.}
 
 \item{optimize}{logical; set to \code{TRUE} to allow for relative shifts
 of the records, specified by \code{lag}, to maximize their correlations.}

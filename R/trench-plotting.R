@@ -19,7 +19,7 @@
 #'
 #' @param data a trench data set following the default structure used in the
 #'   package.
-#' @param var character string with the name of the variable to be plotted,
+#' @param .var character string with the name of the variable to be plotted,
 #'   defaults to "d18O"; must match one of the data column variables in
 #'   \code{data}. See also more options as explained in \code{\link{make2D}}.
 #' @param vscale a character string giving the name of the vertical scale
@@ -73,11 +73,11 @@
 #'   \code{\link[grfxtools]{ColorPal}}
 #' @export
 #'
-plot2D <- function(data, var = "d18O", vscale = "depth",
+plot2D <- function(data, .var = "d18O", vscale = "depth",
                    rescale.h = 1, rescale.v = 1,
                    xlim, ylim, zlim = NULL, qProbs = c(0.01, 0.99),
                    xlab = "Trench position (m)", ylab = "Depth (m)",
-                   label = var, main = "", palette = NULL,
+                   label = .var, main = "", palette = NULL,
                    filledContour = FALSE, log = FALSE, horizontal = FALSE,
                    fill = FALSE, hadj = 0, vadj = 0, line.h = 3, line.v = 3.5,
                    ...) {
@@ -97,8 +97,8 @@ plot2D <- function(data, var = "d18O", vscale = "depth",
                   height = rescale.v * .data$height)
 
   x <- surfaceProfile$position
-  y <- rescale.v * getZ(data, var = vscale)
-  z <- make2D(data, var, simplify = TRUE)
+  y <- rescale.v * getZ(data, .var = vscale)
+  z <- make2D(data, .var, simplify = TRUE)
 
   if (!length(zlim)) zlim <- unname(quantile(z, probs = qProbs))
 

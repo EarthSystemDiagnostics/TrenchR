@@ -5,7 +5,7 @@
 #' High-depth resolution set of Kohnen T13 and T15 mean profiles for the
 #' analyses in Münch et al. (2017).
 #'
-#' @param var character string with the name of the trench data variable for
+#' @param .var character string with the name of the trench data variable for
 #'   which mean profiles are to be calculated.
 #' @param na.rm a logical evaluating to \code{TRUE} or \code{FALSE} indicating
 #'   whether \code{NA} values should be stripped before the computation of the
@@ -15,20 +15,20 @@
 #'   higher depth resolution as specified in \code{loadKohnenTrenchPar()}.
 #' @author Thomas Münch
 #' @noRd
-makeHiResKohnenTrenches <- function(var = "d18O", na.rm = FALSE) {
+makeHiResKohnenTrenches <- function(.var = "d18O", na.rm = FALSE) {
 
-  intpl <- function(x, var, newdepth) {
-    tibble::tibble(newdepth, approx(x$depth, x[[var]], newdepth)$y) %>%
-      setNames(c("depth", var))
+  intpl <- function(x, .var, newdepth) {
+    tibble::tibble(newdepth, approx(x$depth, x[[.var]], newdepth)$y) %>%
+      setNames(c("depth", .var))
   }
-  seasonalMean <- function(t1, t2, lag, var) {
+  seasonalMean <- function(t1, t2, lag, .var) {
     tibble::tibble(
       t1$depth,
       {
-        cbind(t1[[var]], prxytools::Lag(t2[[var]], shift = lag)) %>%
+        cbind(t1[[.var]], prxytools::Lag(t2[[.var]], shift = lag)) %>%
           rowMeans()
       }) %>%
-      setNames(c("depth", var))
+      setNames(c("depth", .var))
   }
 
   trPar <- loadKohnenTrenchPar()
@@ -39,41 +39,41 @@ makeHiResKohnenTrenches <- function(var = "d18O", na.rm = FALSE) {
   # T13 mean profiles
   mean13.1 <- t13.trench1 %>%
     dplyr::filter(profileName != "T13-1-01") %>%
-    makeMean(var = var, na.rm = na.rm, df = TRUE)
+    makeMean(.var = .var, na.rm = na.rm, df = TRUE)
   mean13.2 <- t13.trench2 %>%
-    makeMean(var = var, na.rm = na.rm, df = TRUE)
+    makeMean(.var = .var, na.rm = na.rm, df = TRUE)
 
   # T15 mean profiles for depth range analysed in paper
   mean15.1 <- t15.trench1 %>%
     dplyr::filter(profileName != "T15-1-DUNE1") %>%
-    makeMean(var = var, na.rm = na.rm, df = TRUE) %>%
+    makeMean(.var = .var, na.rm = na.rm, df = TRUE) %>%
     dplyr::slice(trPar$ix)
   mean15.2 <- t15.trench2 %>%
-    makeMean(var = var, na.rm = na.rm, df = TRUE) %>%
+    makeMean(.var = .var, na.rm = na.rm, df = TRUE) %>%
     dplyr::slice(trPar$ix)
 
   # interpolate mean profiles onto higher depth resolution
 
-  mean13.1_HiRes <- intpl(mean13.1, var = var, depth_HiRes)
-  mean13.2_HiRes <- intpl(mean13.2, var = var, depth_HiRes)
-  mean15.1_HiRes <- intpl(mean15.1, var = var, depth_HiRes)
-  mean15.2_HiRes <- intpl(mean15.2, var = var, depth_HiRes)
+  mean13.1_HiRes <- intpl(mean13.1, .var = .var, depth_HiRes)
+  mean13.2_HiRes <- intpl(mean13.2, .var = .var, depth_HiRes)
+  mean15.1_HiRes <- intpl(mean15.1, .var = .var, depth_HiRes)
+  mean15.2_HiRes <- intpl(mean15.2, .var = .var, depth_HiRes)
 
   # calculate overall mean profiles for each Kohnen season
 
-  mean13_HiRes <- seasonalMean(mean13.1_HiRes, mean13.2_HiRes, var = var,
+  mean13_HiRes <- seasonalMean(mean13.1_HiRes, mean13.2_HiRes, .var = .var,
                                lag = trPar$k13 / trPar$hiRes)
-  mean15_HiRes <- seasonalMean(mean15.1_HiRes, mean15.2_HiRes, var = var,
+  mean15_HiRes <- seasonalMean(mean15.1_HiRes, mean15.2_HiRes, .var = .var,
                                lag = trPar$k15 / trPar$hiRes)
 
   mean13 <- tibble::tibble(
     mean13.1$depth,
-    approx(depth_HiRes, mean13_HiRes[[var]], mean13.1$depth)$y) %>%
-    setNames(c("depth", var))
+    approx(depth_HiRes, mean13_HiRes[[.var]], mean13.1$depth)$y) %>%
+    setNames(c("depth", .var))
   mean15 <- tibble::tibble(
     mean15.1$depth,
-    approx(depth_HiRes, mean15_HiRes[[var]], mean15.1$depth)$y) %>%
-    setNames(c("depth", var))
+    approx(depth_HiRes, mean15_HiRes[[.var]], mean15.1$depth)$y) %>%
+    setNames(c("depth", .var))
 
   list(mean13.1 = mean13.1, mean13.2 = mean13.2,
        mean15.1 = mean15.1, mean15.2 = mean15.2,

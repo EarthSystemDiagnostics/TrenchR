@@ -27,7 +27,7 @@ getX <- function(data) {
 #'
 #' @param data a trench data set following the default structure used in the
 #'   package.
-#' @param var the name of the vertical scale as a character string; defaults to
+#' @param .var the name of the vertical scale as a character string; defaults to
 #'   \code{"depth"}.
 #' @return numeric vector of the vertical scale.
 #' @author Thomas Münch
@@ -35,13 +35,13 @@ getX <- function(data) {
 #' getZ(t13.trench1)
 #' @export
 #'
-getZ <- function(data, var = "depth") {
+getZ <- function(data, .var = "depth") {
 
-  if (!var %in% colnames(data)) {
+  if (!.var %in% colnames(data)) {
     stop("Unknown column name for vertical scale.")
   }
 
-  unique(data[[var]])
+  unique(data[[.var]])
 
 }
 
@@ -80,7 +80,7 @@ getSurfaceProfile <- function(data) {
 #' Obtain a two-dimensional (vertical x horizontal) representation of a certain
 #' variable for a given trench data set.
 #'
-#' @param var character string with the name of the requested variable; must
+#' @param .var character string with the name of the requested variable; must
 #'   match one of the data column variables in \code{data}, or be one of the
 #'   following:
 #'   \describe{
@@ -106,24 +106,24 @@ getSurfaceProfile <- function(data) {
 #' make2D(t13.trench2)
 #'
 #' # Request another variable:
-#' make2D(t13.trench2, var = "dD")
+#' make2D(t13.trench2, .var = "dD")
 #' # Obtain the same result as a simple matrix:
-#' make2D(t13.trench2, var = "dD", simplify = TRUE)
+#' make2D(t13.trench2, .var = "dD", simplify = TRUE)
 #'
 #' @export
 #'
-make2D <- function(data, var = "d18O", simplify = FALSE) {
+make2D <- function(data, .var = "d18O", simplify = FALSE) {
 
   is.trench(data, check = "minimum")
 
-  if (var == "dxs" & (!"dxs" %in% colnames(data))) {
+  if (.var == "dxs" & (!"dxs" %in% colnames(data))) {
     if ((!"d18O" %in% colnames(data)) | (!"dD" %in% colnames(data))) {
       stop("Column variable(s) missing to calculate 'dexcess'.", call. = FALSE)
     }
     data <- data %>%
       dplyr::mutate(dxs = .data$dD - 8 * .data$d18O)
   }
-  if (var == "nssSulfate" & (!"nssSulfate" %in% colnames(data))) {
+  if (.var == "nssSulfate" & (!"nssSulfate" %in% colnames(data))) {
     if ((!"Sulfate" %in% colnames(data)) | (!"Sodium" %in% colnames(data))) {
       stop("Column variable(s) missing to calculate 'nssSulfate'.",
            call. = FALSE)
@@ -132,14 +132,14 @@ make2D <- function(data, var = "d18O", simplify = FALSE) {
       dplyr::mutate(nssSulfate = .data$Sulfate - 0.252 * .data$Sodium)
   }
 
-  if (!var %in% colnames(data)) {
+  if (!.var %in% colnames(data)) {
     stop("Unknown column variable selected.", call. = FALSE)
   }
 
   result <- data %>%
-    dplyr::select("profileName", "sampleNumber", dplyr::all_of(var)) %>%
+    dplyr::select("profileName", "sampleNumber", dplyr::all_of(.var)) %>%
     tidyr::pivot_wider(names_from = "profileName",
-                       values_from = dplyr::all_of(var)) %>%
+                       values_from = dplyr::all_of(.var)) %>%
     dplyr::select(-"sampleNumber")
 
   if (simplify) {
@@ -177,19 +177,19 @@ make2D <- function(data, var = "d18O", simplify = FALSE) {
 #' makeMean(t13.trench2, na.rm = TRUE)
 #'
 #' # get dD data as a simple vector
-#' makeMean(t13.trench2, var = "dD", df = FALSE)
+#' makeMean(t13.trench2, .var = "dD", df = FALSE)
 #'
 #' @export
 #'
-makeMean <- function(data, var = "d18O", vscale = "depth",
+makeMean <- function(data, .var = "d18O", vscale = "depth",
                      na.rm = FALSE, df = TRUE) {
 
   if (df) {
     tibble::tibble(
-      getZ(data, var = vscale), rowMeans(make2D(data, var), na.rm = na.rm)) %>%
-      stats::setNames(c(vscale, var))
+      getZ(data, .var = vscale), rowMeans(make2D(data, .var), na.rm = na.rm)) %>%
+      stats::setNames(c(vscale, .var))
   } else {
-    rowMeans(make2D(data, var), na.rm = na.rm)
+    rowMeans(make2D(data, .var), na.rm = na.rm)
   }
 
 }
@@ -243,24 +243,24 @@ is.trench <- function(data, check = "full") {
 #'
 #' @param data a trench data set following the default structure used in the
 #'   package.
-#' @param var character string with the name of a trench data variable.
+#' @param .var character string with the name of a trench data variable.
 #' @param vscale  character string giving the name of the vertical scale
 #'   variable used in the trench data; defaults to \code{"depth"}.
 #' @return value of \code{vscale} for the first vertical bin where all profiles
-#'   exhibit data in \code{var}.
+#'   exhibit data in \code{.var}.
 #' @author Thomas Münch
 #' @examples
 #' getFirstCompleteDepthBin(t13.trench1)
 #' # per definition, all data variables should give the same result
-#' getFirstCompleteDepthBin(t13.trench1, var = "dD")
+#' getFirstCompleteDepthBin(t13.trench1, .var = "dD")
 #' @export
 #'
-getFirstCompleteDepthBin <- function(data, var = "d18O", vscale = "depth") {
+getFirstCompleteDepthBin <- function(data, .var = "d18O", vscale = "depth") {
 
   if (!vscale %in% colnames(data)) {
     stop("Unknown column name for vertical scale.")
   }
-  if (!var %in% colnames(data)) {
+  if (!.var %in% colnames(data)) {
     stop("Unknown data variable.")
   }
   if (!"profileName" %in% colnames(data)) {
@@ -269,7 +269,7 @@ getFirstCompleteDepthBin <- function(data, var = "d18O", vscale = "depth") {
 
   data %>%
     dplyr::group_by(.data$profileName) %>%
-    tidyr::drop_na(dplyr::all_of(var)) %>%
+    tidyr::drop_na(dplyr::all_of(.var)) %>%
     dplyr::select("profileName", dplyr::all_of(vscale)) %>%
     dplyr::slice(1L) %>%
     dplyr::ungroup() %>%

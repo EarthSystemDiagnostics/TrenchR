@@ -15,7 +15,7 @@ test_that("extraction of depth profile works", {
 
 test_that("extraction of depth profile works", {
 
-  expect_error(getZ(t13.trench1, var = "foo"),
+  expect_error(getZ(t13.trench1, .var = "foo"),
                "Unknown column name for vertical scale.")
   expect_equal(getZ(t13.trench1), seq(from = 1.5, by = 3, length.out = 38))
 
@@ -55,27 +55,27 @@ test_that("production of 2D profile works", {
   foo <- tibble::tibble(x = 1, sampleNumber = 1)
   expect_error(make2D(foo))
   foo <- tibble::tibble(x = 1, profileName = "A", sampleNumber = 1)
-  expect_no_error(make2D(foo, var = "x"))
+  expect_no_error(make2D(foo, .var = "x"))
 
   foo <- dplyr::select(t15.trench1, -d18O)
   expect_error(make2D(foo), "Unknown column variable selected.")
-  expect_no_error(make2D(foo, var = "dxs"))
+  expect_no_error(make2D(foo, .var = "dxs"))
 
   foo <- dplyr::select(t15.trench1, -d18O, -dxs)
-  expect_error(make2D(foo, var = "dxs"),
+  expect_error(make2D(foo, .var = "dxs"),
                "Column variable(s) missing to calculate 'dexcess'.",
                fixed = TRUE)
 
   foo <- dplyr::select(t15.trench1, -dD, -dxs)
-  expect_error(make2D(foo, var = "dxs"),
+  expect_error(make2D(foo, .var = "dxs"),
                "Column variable(s) missing to calculate 'dexcess'.",
                fixed = TRUE)
 
   foo <- dplyr::select(t15.trench1, -d18O, -dD, -dxs)
-  expect_error(make2D(foo, var = "dxs"),
+  expect_error(make2D(foo, .var = "dxs"),
                "Column variable(s) missing to calculate 'dexcess'.",
                fixed = TRUE)
-  expect_error(make2D(foo, var = "nssSulfate"),
+  expect_error(make2D(foo, .var = "nssSulfate"),
                "Column variable(s) missing to calculate 'nssSulfate'.",
                fixed = TRUE)
 
@@ -89,7 +89,7 @@ test_that("production of 2D profile works", {
     dxs = c(4.38, 0.18, -0.62, 6.18, 7.34, 5.34)
   )
   target <- tibble::tibble(A = c(4.38, 0.18, -0.62), B = c(6.18, 7.34, 5.34))
-  expect_equal(make2D(dplyr::select(foo, -dxs), var = "dxs"), target)
+  expect_equal(make2D(dplyr::select(foo, -dxs), .var = "dxs"), target)
 
   foo <- tibble::tibble(
     profileName = rep(c("A", "B"), each = 2),
@@ -100,7 +100,7 @@ test_that("production of 2D profile works", {
   )
   target <- tibble::tibble(A = c(-38.54, -19.86), B = c(74.4, 61.22))
   expect_equal(
-    round(make2D(dplyr::select(foo, -nssSulfate), var = "nssSulfate"),
+    round(make2D(dplyr::select(foo, -nssSulfate), .var = "nssSulfate"),
           digits = 2), target)
 
   # test purely synthetic data
@@ -113,10 +113,10 @@ test_that("production of 2D profile works", {
   )
 
   target <- tibble::tibble(A = c(4, 7), B = c(1, 25), C = c(2, 56))
-  expect_equal(make2D(foo, var = "foovar1"), target)
+  expect_equal(make2D(foo, .var = "foovar1"), target)
   target <- as.matrix(
     tibble::tibble(A = c(35, 875), B = c(213, 76), C = c(3, 24)))
-  expect_equal(make2D(foo, var = "foovar2", simplify = TRUE), target)
+  expect_equal(make2D(foo, .var = "foovar2", simplify = TRUE), target)
 
   # tests with actual trench data
 
@@ -138,7 +138,7 @@ test_that("production of 2D profile works", {
   colnames(target) <- c("T15-1-L", "T15-1-M")
 
   expect_equal(
-    make2D(t15.trench1, var = "dD", simplify = TRUE)[10 : 13, 11 : 12],
+    make2D(t15.trench1, .var = "dD", simplify = TRUE)[10 : 13, 11 : 12],
     target)
 
 })
@@ -150,13 +150,13 @@ test_that("production of mean profile works", {
 
   # return type should be a simple vector
   target <- c(NA, 3, 4)
-  expect_equal(makeMean(foo, var = "foovar", df = FALSE), target)
+  expect_equal(makeMean(foo, .var = "foovar", df = FALSE), target)
   target <- c(2, 3, 4)
-  expect_equal(makeMean(foo, var = "foovar", na.rm = TRUE, df = FALSE), target)
+  expect_equal(makeMean(foo, .var = "foovar", na.rm = TRUE, df = FALSE), target)
 
   # return type should be a tibble
   target <- tibble::tibble(depth = c(1.5, 4.5, 7.5), foovar = target)
-  expect_equal(makeMean(foo, var = "foovar", na.rm = TRUE), target)
+  expect_equal(makeMean(foo, .var = "foovar", na.rm = TRUE), target)
 
 })
 
@@ -222,7 +222,7 @@ test_that("checking for proper trench data works", {
 
 test_that("extracting the bottom of the surface layer works", {
 
-  expect_error(getFirstCompleteDepthBin(t13.trench1, var = "foo"))
+  expect_error(getFirstCompleteDepthBin(t13.trench1, .var = "foo"))
   expect_error(getFirstCompleteDepthBin(t13.trench1, vscale = "foo"))
 
   foo <- tibble::tibble(

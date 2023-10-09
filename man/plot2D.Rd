@@ -6,7 +6,7 @@
 \usage{
 plot2D(
   data,
-  var = "d18O",
+  .var = "d18O",
   vscale = "depth",
   rescale.h = 1,
   rescale.v = 1,
@@ -16,7 +16,7 @@ plot2D(
   qProbs = c(0.01, 0.99),
   xlab = "Trench position (m)",
   ylab = "Depth (m)",
-  label = var,
+  label = .var,
   main = "",
   palette = NULL,
   filledContour = FALSE,
@@ -34,7 +34,7 @@ plot2D(
 \item{data}{a trench data set following the default structure used in the
 package.}
 
-\item{var}{character string with the name of the variable to be plotted,
+\item{.var}{character string with the name of the variable to be plotted,
 defaults to "d18O"; must match one of the data column variables in
 \code{data}. See also more options as explained in \code{\link{make2D}}.}
 

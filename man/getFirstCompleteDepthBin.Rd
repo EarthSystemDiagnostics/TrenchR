@@ -4,20 +4,20 @@
 \alias{getFirstCompleteDepthBin}
 \title{Bottom of varying trench surface region}
 \usage{
-getFirstCompleteDepthBin(data, var = "d18O", vscale = "depth")
+getFirstCompleteDepthBin(data, .var = "d18O", vscale = "depth")
 }
 \arguments{
 \item{data}{a trench data set following the default structure used in the
 package.}
 
-\item{var}{character string with the name of a trench data variable.}
+\item{.var}{character string with the name of a trench data variable.}
 
 \item{vscale}{character string giving the name of the vertical scale
 variable used in the trench data; defaults to \code{"depth"}.}
 }
 \value{
 value of \code{vscale} for the first vertical bin where all profiles
-  exhibit data in \code{var}.
+  exhibit data in \code{.var}.
 }
 \description{
 Extract the value of the bin in vertical dimension ("depth") for which a
@@ -34,7 +34,7 @@ have a data value for the first time.
 \examples{
 getFirstCompleteDepthBin(t13.trench1)
 # per definition, all data variables should give the same result
-getFirstCompleteDepthBin(t13.trench1, var = "dD")
+getFirstCompleteDepthBin(t13.trench1, .var = "dD")
 }
 \author{
 Thomas Münch

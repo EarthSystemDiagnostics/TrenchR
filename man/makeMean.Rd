@@ -4,13 +4,13 @@
 \alias{makeMean}
 \title{Trench mean profile}
 \usage{
-makeMean(data, var = "d18O", vscale = "depth", na.rm = FALSE, df = TRUE)
+makeMean(data, .var = "d18O", vscale = "depth", na.rm = FALSE, df = TRUE)
 }
 \arguments{
 \item{data}{a trench data set following the default structure used in the
 package.}
 
-\item{var}{character string with the name of the requested variable; must
+\item{.var}{character string with the name of the requested variable; must
 match one of the data column variables in \code{data}, or be one of the
 following:
 \describe{
@@ -50,7 +50,7 @@ makeMean(t13.trench2)
 makeMean(t13.trench2, na.rm = TRUE)
 
 # get dD data as a simple vector
-makeMean(t13.trench2, var = "dD", df = FALSE)
+makeMean(t13.trench2, .var = "dD", df = FALSE)
 
 }
 \author{

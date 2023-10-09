@@ -8,7 +8,7 @@ estimateSNR(
   data,
   distances,
   profilePosition = NULL,
-  var = "d18O",
+  .var = "d18O",
   a1 = 0,
   rangeTol = 0.05,
   ...
@@ -28,8 +28,8 @@ SNR.}
 positions; only needed when \code{data} is passed as a simple matrix or
 data frame.}
 
-\item{var}{character string with the name of the trench variable for which to
-estimate the SNR; see also \code{\link{make2D}}. Only needed when the
+\item{.var}{character string with the name of the trench variable for which
+to estimate the SNR; see also \code{\link{make2D}}. Only needed when the
 \code{data} is passed as a generic trench data set.}
 
 \item{a1}{horizontal autocorrelation of the trench data at lag 1, where lag 1
@@ -55,7 +55,7 @@ vertical scale of the data.
 
 distances <- c(10, 20, 30)
 estimateSNR(t15.trench1, distances, a1 = exp(-1 / 1.53))
-estimateSNR(t15.trench1, distances, a1 = exp(-1 / 1.53), var = "dxs")
+estimateSNR(t15.trench1, distances, a1 = exp(-1 / 1.53), .var = "dxs")
 
 }
 \author{
