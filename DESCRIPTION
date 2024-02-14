@@ -29,7 +29,9 @@ Suggests:
     covr,
     FirnR,
     testthat,
-    rmarkdown
+    rmarkdown,
+    plyr (>= 1.8.9),
+    usethis
 BugReports: https://github.com/EarthSystemDiagnostics/TrenchR/issues
 VignetteBuilder: knitr
 Remotes:
