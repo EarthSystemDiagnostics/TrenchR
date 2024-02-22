@@ -12,7 +12,7 @@
 #'   mean profile proceeds.
 #' @return a list of the T13 and T15 mean profiles (for each individual trench
 #'   and the seasonal mean) on the original depth resolution as well as on the
-#'   higher depth resolution as specified in \code{loadKohnenTrenchPar()}.
+#'   higher depth resolution as specified in the variable tc17.paper.param.
 #' @author Thomas Münch
 #' @noRd
 makeHiResKohnenTrenches <- function(.var = "d18O", na.rm = FALSE) {
@@ -30,7 +30,7 @@ makeHiResKohnenTrenches <- function(.var = "d18O", na.rm = FALSE) {
       setNames(c("depth", "y"))
   }
 
-  trPar <- loadKohnenTrenchPar()
+  trPar <- tc17.paper.param
 
   x <- range(getZ(t15.trench1)[trPar$ix])
   depth_HiRes <- seq(x[1], x[2], by = trPar$hiRes)
@@ -85,58 +85,6 @@ makeHiResKohnenTrenches <- function(.var = "d18O", na.rm = FALSE) {
        mean13 = mean13, mean15 = mean15,
        mean13_HiRes = mean13_HiRes,
        mean15_HiRes = mean15_HiRes)
-
-}
-
-##' Set T13 temporal change parameters
-##'
-##' This function provides a list of the parameters used in Münch et al. (2017)
-##' according to which the temporal change of the original T13 mean trench
-##' profile was modelled.
-##'
-##' The modification parameters are given as arguments to this function. Default
-##' values are the ones presented and used in Münch et al. (2017); different
-##' values can be specified by setting the respective parameter values in the
-##' function call. The default optimal parameters stem from the analysis in
-##' \code{\link{LoopParamSpace}} stored in \code{ParamSpace}. The parameters
-##' can be used to model the temporal change of the T13 mean profile using the
-##' function \code{\link{ModifyRecord}}.
-##' @return A list of the following modification parameters:
-##' \itemize{
-##'   \item ADV.opt optimal 2-yr downward advection [cm];
-##'   \item SIGMA.opt optimal 2-yr differential diffusion length for oxygen
-##'     isotopes [cm];
-##'   \item STRETCH.opt optimal 2-yr compression from densification [cm];
-##'   \item ADV.ind independently inferred 2-yr downward advection [cm];
-##'   \item SIGMA.ind independently inferred 2-yr differential diffusion length
-##'     for oxygen isotopes [cm];
-##'   \item STRETCH.ind independently inferred 2-yr compression [cm];
-##'   \item ADV.only optimal 2-yr downward advection [cm] allowing no diffusion
-##'     and densification ("advection only").
-##' }
-##' @seealso \code{\link{LoopParamSpace}}; \code{\link{ModifyRecord}}
-##' @author Thomas Münch
-##' @examples
-##' mod.par <- TrenchR:::SetModificationPar()
-##' @noRd
-SetModificationPar <- function(ADV.opt = unname(ParamSpace$optimum["advection"]),
-                               SIGMA.opt = unname(ParamSpace$optimum["sigma"]),
-                               STRETCH.opt = unname(ParamSpace$optimum["compression"]),
-                               ADV.ind = 50,
-                               SIGMA.ind = suppressWarnings(round(
-                                   DifferentialDiffusion(
-                                       z00 = 0, z01 = 1,
-                                       z10 = ADV.ind / 100,
-                                       z11 = 1 + ADV.ind / 100)[1],
-                                   digits = 1)),
-                               STRETCH.ind = round(
-                                   RecordCompression(adv = ADV.ind,
-                                     length.in = 100, rate = 4.5),
-                                   digits = 1),
-                               ADV.only = 48.5) {
-
-    mod.param <- as.list(environment())
-    return(mod.param)
 
 }
 
@@ -309,48 +257,6 @@ T13AnnualMeans <- function(t1, t2, depth,
 
 }
 
-#' Load depth resolution, mean profile shift parameters for Kohnen T13 and
-#' T15 trenches, T15 depth index range, and bottom of trench surface layers as
-#' used for the papers.
-#'
-#' @return a list with four elements:
-#'   \code{loRes}: original T13 and T15 depth sampling resolution [cm];
-#'   \code{hiRes}: higher depth resolution to interpolate trench data [cm];
-#'   \code{k13}: optimal vertical shift [cm] of the mean T13-2 relative to the
-#'     mean T13-1 profile;
-#'   \code{k15}: optimal vertical shift [cm] of the mean T15-2 relative to the
-#'     mean T15-1 profile;
-#'   \code{ix}: index vector for the T15 depth range analysed in the TC17 paper;
-#'   \code{surfaceBot}: the depth of the trench surface layers from which
-#'     onwards a full horizontal data set is available; also given for the mean
-#'     T13 and T15 data.
-#' @author Thomas Münch
-#' @noRd
-loadKohnenTrenchPar <- function() {
-
-  res <- list(
-    loRes = 3,
-    hiRes = 0.5,
-    k13 = 3,
-    k15 = -0.5,
-    ix = 1 : 59,
-    surfaceBot = c(
-      t13.1 = getFirstCompleteDepthBin(t13.trench1),
-      t13.2 = getFirstCompleteDepthBin(t13.trench2),
-      t15.1 = getFirstCompleteDepthBin(t15.trench1),
-      t15.2 = getFirstCompleteDepthBin(t15.trench2))
-  )
-
-  res$surfaceBot <- c(
-    res$surfaceBot,
-    t13 = max(res$surfaceBot["t13.1"], res$surfaceBot["t13.2"]) + res$k13,
-    t15 = max(res$surfaceBot["t15.1"], res$surfaceBot["t15.2"])
-  )
-
-  return(res)
-
-}
-
 #
 # ----- Plotting functions -----------------------------------------------------
 #
@@ -372,7 +278,7 @@ loadKohnenTrenchPar <- function() {
 ##' @noRd
 TC17.Fig01 <- function(cheat = TRUE) {
 
-    trPar <- loadKohnenTrenchPar()
+    trPar <- tc17.paper.param
 
     mean13.1 <- t13.trench1 %>%
       dplyr::filter(profileName != "T13-1-01") %>%
@@ -656,7 +562,7 @@ TC17.Fig03b <- function() {
 #' @noRd
 TC17.Fig03c <- function() {
 
-    trPar <- loadKohnenTrenchPar()
+    trPar <- tc17.paper.param
 
     op <- grfxtools::Par(lwd = 2, font.lab = 2, font.axis = 2)
 
@@ -730,7 +636,7 @@ TC17.Fig03c <- function() {
 ##' @noRd
 TC17.Fig04 <- function() {
 
-    trPar <- loadKohnenTrenchPar()
+    trPar <- tc17.paper.param
     TR <- makeHiResKohnenTrenches(.var = "d18O", na.rm = TRUE)
 
     v1 <- TR$mean15
@@ -832,8 +738,8 @@ TC17.Fig05 <- function() {
 ##' @noRd
 TC17.Fig06 <- function() {
 
-    trPar <- loadKohnenTrenchPar()
-    mod.param <- SetModificationPar()
+    trPar <- tc17.paper.param
+    mod.param <- tc17.modif.param
 
     # color scale
     my.col <- c("dodgerblue", "#1b9e77", "#d95f02", "#7570b3")
@@ -1063,8 +969,8 @@ TC17.Fig06 <- function() {
 ##' @noRd
 TC17.Fig07 <- function() {
 
-    trPar <- loadKohnenTrenchPar()
-    mod.param <- SetModificationPar()
+    trPar <- tc17.paper.param
+    mod.param <- tc17.modif.param
 
     # T13**
     TR <- makeHiResKohnenTrenches(.var = "d18O")

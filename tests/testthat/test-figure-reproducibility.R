@@ -10,7 +10,7 @@ load(dataFile)
 
 test_that("fig01 is reproducible", {
 
-  trPar <- loadKohnenTrenchPar()
+  trPar <- tc17.paper.param
 
   mean13.1 <- t13.trench1 %>%
     dplyr::filter(profileName != "T13-1-01") %>%
@@ -39,7 +39,7 @@ test_that("fig01 is reproducible", {
 
 test_that("fig03 is reproducible", {
 
-  trPar <- loadKohnenTrenchPar()
+  trPar <- tc17.paper.param
 
   t15.1.2d <- t15.trench1 %>%
     dplyr::filter(profileName != "T15-1-DUNE1") %>%
@@ -124,8 +124,8 @@ test_that("fig06 is reproducible", {
   # ------------------------------------------------------------------------------
   # expectation values
 
-    trPar <- loadKohnenTrenchPar()
-    mod.param <- SetModificationPar()
+    trPar <- tc17.paper.param
+    mod.param <- tc17.modif.param
 
     TR <- makeHiResKohnenTrenches(na.rm = TRUE)
     T13.star     <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
@@ -167,7 +167,8 @@ test_that("fig06 is reproducible", {
 
   # ------------------------------------------------------------------------------
   # tests
-  
+
+  names(fig06$mod.param$SIGMA.ind) <- NULL
   expect_equal(mod.param, fig06$mod.param)
   
   expect_equal(trPar$hiRes, fig06$TR.HiRes)
@@ -190,8 +191,8 @@ test_that("fig07 is reproducible", {
   # ------------------------------------------------------------------------------
   # expectation values
 
-  trPar <- loadKohnenTrenchPar()
-  mod.param <- SetModificationPar()
+  trPar <- tc17.paper.param
+  mod.param <- tc17.modif.param
 
   TR <- makeHiResKohnenTrenches()
   T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes$y,

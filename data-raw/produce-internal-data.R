@@ -96,7 +96,82 @@ ParamSpace <- FirnR::LoopRecordModifications(
 
 
 # ==============================================================================
+# III. Store analysis parameters used for Münch et al. (2017) paper
+# ==============================================================================
+
+# loRes:      original T13 and T15 depth sampling resolution [cm];
+# hiRes:      higher depth resolution to interpolate trench data [cm];
+# k13:        optimal vertical shift [cm] of the mean T13-2 relative to the
+#             mean T13-1 profile;
+# k15:        optimal vertical shift [cm] of the mean T15-2 relative to the
+#             mean T15-1 profile;
+# ix:         index vector for the T15 depth range analysed in the paper;
+# surfaceBot: the depth of the trench surface layers from which onwards a full
+#             horizontal data set is available; also given for the mean T13 and
+#             T15 data.
+
+tc17.paper.param <- list(
+  loRes = 3,
+  hiRes = 0.5,
+  k13 = 3,
+  k15 = -0.5,
+  ix = 1 : 59,
+  surfaceBot = c(
+    t13.1 = getFirstCompleteDepthBin(t13.trench1),
+    t13.2 = getFirstCompleteDepthBin(t13.trench2),
+    t15.1 = getFirstCompleteDepthBin(t15.trench1),
+    t15.2 = getFirstCompleteDepthBin(t15.trench2))
+)
+
+tc17.paper.param$surfaceBot <- c(
+  tc17.paper.param$surfaceBot,
+  t13 = max(tc17.paper.param$surfaceBot["t13.1"],
+            tc17.paper.param$surfaceBot["t13.2"]) + tc17.paper.param$k13,
+  t15 = max(tc17.paper.param$surfaceBot["t15.1"],
+            tc17.paper.param$surfaceBot["t15.2"])
+)
+
+
+# ==============================================================================
+# IV. Store temporal change parameters used in Münch et al. (2017) paper
+# ==============================================================================
+
+# ADV.*:     2-yr downward advection [cm];
+# SIGMA.*:   2-yr differential diffusion length for oxygen isotopes [cm];
+# STRETCH.*: 2-yr compression from densification [cm].
+
+tc17.modif.param <- list(
+
+  # optimal parameters from parameter space analysis (II. above)
+  ADV.opt = unname(ParamSpace$optimum["advection"]),
+  SIGMA.opt = unname(ParamSpace$optimum["sigma"]),
+  STRETCH.opt = unname(ParamSpace$optimum["compression"]),
+
+  # independent parameter estimations
+  ADV.ind = 50, # from snow stake measurements
+  SIGMA.ind = data.frame(
+    depth = FirnR::b41.b42.density$stack$depth,
+    sigma = FirnR::DiffusionLength(
+                     FirnR::b41.b42.density$stack$depth,
+                     FirnR::b41.b42.density$stack$fitDensity,
+                     P = 650, T = 228.5, bdot = 64)
+  ) %>%
+    FirnR::GetDifferentialDiffusion(0, 1, 0.5, 1.5) %>%
+    round(1),
+  STRETCH.ind = FirnR::EstimateCompression(top.depth = 0, length = 1,
+                                           advection = 0.5, rate = 0.046) %>%
+    {{.} * 1e2} %>%
+    round(1),
+
+  # best match for only advection
+  ADV.only = ParamSpace$advection[which.min(ParamSpace$RMSD[, 1, 1])]
+
+)
+
+
+# ==============================================================================
 # Save package data
 # ==============================================================================
 
-usethis::use_data(aws9, ParamSpace, internal = TRUE, overwrite = TRUE)
+usethis::use_data(aws9, ParamSpace, tc17.paper.param, tc17.modif.param,
+                  internal = TRUE, overwrite = TRUE)
