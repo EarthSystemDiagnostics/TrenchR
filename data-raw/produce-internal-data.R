@@ -1,9 +1,13 @@
 ##
-## Read Kohnen AWS9 weather station observational data and
-## process it into the desired structure
+## Produce internal TrenchR data
 ##
 ## Thomas Muench, AWI, 02/2024
 ##
+
+# ==============================================================================
+# I. Read Kohnen AWS9 weather station observational data and process it into the
+#    desired structure
+# ==============================================================================
 
 # required packages
 
@@ -14,7 +18,7 @@ rlang::check_installed(c("plyr", "dplyr", "usethis"),
 library(magrittr) # installed by dplyr
 
 # ------------------------------------------------------------------------------
-# Read data and store in package
+# read and process data
 
 # set working directory to your package source folder
 # setwd("<path>")
@@ -63,4 +67,36 @@ aws9 <- list(
 
 )
 
-usethis::use_data(aws9, internal = TRUE, overwrite = TRUE)
+
+# ==============================================================================
+# II. Run the analysis for Fig. (5) in Münch et al. (2017)
+# ==============================================================================
+
+# required packages
+
+library(TrenchR)
+
+if (!require(FirnR))
+  stop("Package 'FirnR' needed. ",
+       "It is available on request from the 'TrenchR' package author(s).")
+rlang::check_installed("usethis", version = NA)
+
+# load data
+
+TR <- TrenchR:::makeHiResKohnenTrenches(.var = "d18O")
+
+# calculate
+
+ParamSpace <- FirnR::LoopRecordModifications(
+  record = TR$mean13_HiRes, reference = TR$mean15_HiRes,
+  advection = seq(40, 60, 0.5),
+  sigma = seq(0, 8, 0.1),
+  compression = seq(0, 10, 0.1)
+  )
+
+
+# ==============================================================================
+# Save package data
+# ==============================================================================
+
+usethis::use_data(aws9, ParamSpace, internal = TRUE, overwrite = TRUE)

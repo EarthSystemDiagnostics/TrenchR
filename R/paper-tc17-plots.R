@@ -119,9 +119,9 @@ makeHiResKohnenTrenches <- function(.var = "d18O", na.rm = FALSE) {
 ##' @examples
 ##' mod.par <- TrenchR:::SetModificationPar()
 ##' @noRd
-SetModificationPar <- function(ADV.opt = ParamSpace$adv.opt,
-                               SIGMA.opt = ParamSpace$sigma.opt,
-                               STRETCH.opt = ParamSpace$densf.opt,
+SetModificationPar <- function(ADV.opt = unname(ParamSpace$optimum["advection"]),
+                               SIGMA.opt = unname(ParamSpace$optimum["sigma"]),
+                               STRETCH.opt = unname(ParamSpace$optimum["compression"]),
                                ADV.ind = 50,
                                SIGMA.ind = suppressWarnings(round(
                                    DifferentialDiffusion(
@@ -784,33 +784,34 @@ TC17.Fig04 <- function() {
 ##'
 ##' This function makes all necessary calculations and plots the results for
 ##' Figure 05 shown in Münch et al. (2017).
-##' @param dat input data structure resulting from a call of
-##' \code{\link{LoopParamSpace}}; if \code{NULL} (the default), the original
-##' data presented in Münch et al. (2017) is used for plotting which is
-##' supplied with this package in the variable \code{\link{ParamSpace}}.
 ##' @author Thomas Münch
 ##' @noRd
-TC17.Fig05 <- function(dat = NULL) {
-
-    if (is.null(dat)) {
-        message(paste("Fig05: No specific input data supplied --",
-                      "using data of paper for plotting."))
-        dat <- ParamSpace
-    }
+TC17.Fig05 <- function() {
 
     op <- grfxtools::Par(lwd = 2, font.lab = 2, font.axis = 2)
 
     palette <- colorRampPalette(rev(RColorBrewer::brewer.pal(10, "RdYlBu")))
 
-    filled.contour(dat$sigma, dat$densf, dat$adv.opt.arr,
+    data <- ParamSpace
+
+    # project RMSD data onto surface of optimal advection values
+
+    opt.adv.surface <- apply(data$RMSD, c(2, 3), which.min) %>%
+      apply(c(1, 2), function(i) {data$advection[i]})
+
+    RMSD.opt.adv.surface <- apply(data$RMSD, c(2, 3), min)
+
+    # make plot
+
+    filled.contour(data$sigma, data$compression, opt.adv.surface,
                    color.palette = palette, zlim = c(40, 60),
                    plot.title =
                        title(xlab = "Differential diffusion length (cm)",
                              ylab = "Compression (cm)"),
                    plot.axes = {
-                       contour(dat$sigma,
-                               dat$densf,
-                               dat$RMSD.opt,
+                       contour(data$sigma,
+                               data$compression,
+                               RMSD.opt.adv.surface,
                                add = TRUE, labcex = 1);
                        points(2.3, 3.5, pch = 21, col = "black",
                               bg = "black", cex = 1.25);

@@ -93,7 +93,29 @@ test_that("fig04 is reproducible", {
 
 test_that("fig05 is reproducible", {
 
-  expect_equal(ParamSpace, fig05$ParamSpace)
+  expect_equal(ParamSpace$advection, fig05$ParamSpace$adv / 2)
+  expect_equal(ParamSpace$sigma, fig05$ParamSpace$sigma)
+  expect_equal(ParamSpace$compression, fig05$ParamSpace$densf)
+
+  expect_equal(unname(ParamSpace$optimum["advection"]),
+               fig05$ParamSpace$adv.opt)
+  expect_equal(unname(ParamSpace$optimum["sigma"]),
+               fig05$ParamSpace$sigma.opt)
+  expect_equal(unname(ParamSpace$optimum["compression"]),
+               fig05$ParamSpace$densf.opt)
+
+  # take into account the rounding of the source data for the trench datasets
+  # (commit 5a9999c)
+  is.equal <- function(x, y, tolerance = sqrt(.Machine$double.eps)) {
+
+    r <- all.equal(x, y, tolerance = tolerance)
+    if (is.logical(r)) return(TRUE) else return(FALSE)
+
+  }
+
+  expect_true(
+    is.equal(ParamSpace$RMSD, fig05$ParamSpace$RMSD, tolerance = 1e-4)
+  )
 
 })
 
