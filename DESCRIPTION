@@ -25,12 +25,15 @@ Imports:
     tidyr (>= 1.3.0)
 RoxygenNote: 7.2.3
 Suggests:
-    knitr,
     covr,
     FirnR,
-    testthat,
-    rmarkdown,
+    fs (>= 1.6.3),
+    knitr,
     plyr (>= 1.8.9),
+    purrr (>= 1.0.2),
+    rmarkdown,
+    stringr (>= 1.5.1),
+    testthat,
     usethis
 BugReports: https://github.com/EarthSystemDiagnostics/TrenchR/issues
 VignetteBuilder: knitr

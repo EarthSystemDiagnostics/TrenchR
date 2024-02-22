@@ -6,14 +6,12 @@
 ##
 
 # required packages
-library(magrittr)
+library(rlang)
 
-library(dplyr)   # v>=1.1.3
-library(fs)      # v>=1.6.3
-library(purrr)   # v>=1.0.2
-library(stringr) # v>=1.5.0
-library(tidyr)   # v>=1.3.0
-library(usethis) # v>=2.2.1
+rlang::check_installed(c("dplyr", "fs", "purrr", "stringr", "tidyr", "usethis"),
+                       version = c("1.1.3", "1.6.3", "1.0.2",
+                                   "1.5.0", "1.3.0", NA))
+library(magrittr) # installed by dplyr
 
 # ------------------------------------------------------------------------------
 # Library function to do the actual work
