@@ -17,18 +17,17 @@
 #' @noRd
 makeHiResKohnenTrenches <- function(.var = "d18O", na.rm = FALSE) {
 
-  intpl <- function(x, .var, newdepth) {
-    tibble::tibble(newdepth, approx(x$depth, x[[.var]], newdepth)$y) %>%
-      setNames(c("depth", .var))
+  intpl <- function(x, newdepth) {
+    tibble::tibble(depth = newdepth, y = approx(x$depth, x$y, newdepth)$y)
   }
-  seasonalMean <- function(t1, t2, lag, .var) {
+  seasonalMean <- function(t1, t2, lag) {
     tibble::tibble(
       t1$depth,
       {
-        cbind(t1[[.var]], prxytools::Lag(t2[[.var]], shift = lag)) %>%
+        cbind(t1[["y"]], prxytools::Lag(t2[["y"]], shift = lag)) %>%
           rowMeans()
       }) %>%
-      setNames(c("depth", .var))
+      setNames(c("depth", "y"))
   }
 
   trPar <- loadKohnenTrenchPar()
@@ -39,41 +38,43 @@ makeHiResKohnenTrenches <- function(.var = "d18O", na.rm = FALSE) {
   # T13 mean profiles
   mean13.1 <- t13.trench1 %>%
     dplyr::filter(profileName != "T13-1-01") %>%
-    makeMean(.var = .var, na.rm = na.rm, df = TRUE)
+    makeMean(.var = .var, na.rm = na.rm, df = TRUE) %>%
+    setNames(c("depth", "y"))
   mean13.2 <- t13.trench2 %>%
-    makeMean(.var = .var, na.rm = na.rm, df = TRUE)
+    makeMean(.var = .var, na.rm = na.rm, df = TRUE) %>%
+    setNames(c("depth", "y"))
 
   # T15 mean profiles for depth range analysed in paper
   mean15.1 <- t15.trench1 %>%
     dplyr::filter(profileName != "T15-1-DUNE1") %>%
     makeMean(.var = .var, na.rm = na.rm, df = TRUE) %>%
-    dplyr::slice(trPar$ix)
+    dplyr::slice(trPar$ix) %>%
+    setNames(c("depth", "y"))
   mean15.2 <- t15.trench2 %>%
     makeMean(.var = .var, na.rm = na.rm, df = TRUE) %>%
-    dplyr::slice(trPar$ix)
+    dplyr::slice(trPar$ix) %>%
+    setNames(c("depth", "y"))
 
   # interpolate mean profiles onto higher depth resolution
 
-  mean13.1_HiRes <- intpl(mean13.1, .var = .var, depth_HiRes)
-  mean13.2_HiRes <- intpl(mean13.2, .var = .var, depth_HiRes)
-  mean15.1_HiRes <- intpl(mean15.1, .var = .var, depth_HiRes)
-  mean15.2_HiRes <- intpl(mean15.2, .var = .var, depth_HiRes)
+  mean13.1_HiRes <- intpl(mean13.1, depth_HiRes)
+  mean13.2_HiRes <- intpl(mean13.2, depth_HiRes)
+  mean15.1_HiRes <- intpl(mean15.1, depth_HiRes)
+  mean15.2_HiRes <- intpl(mean15.2, depth_HiRes)
 
   # calculate overall mean profiles for each Kohnen season
 
-  mean13_HiRes <- seasonalMean(mean13.1_HiRes, mean13.2_HiRes, .var = .var,
+  mean13_HiRes <- seasonalMean(mean13.1_HiRes, mean13.2_HiRes,
                                lag = trPar$k13 / trPar$hiRes)
-  mean15_HiRes <- seasonalMean(mean15.1_HiRes, mean15.2_HiRes, .var = .var,
+  mean15_HiRes <- seasonalMean(mean15.1_HiRes, mean15.2_HiRes,
                                lag = trPar$k15 / trPar$hiRes)
 
   mean13 <- tibble::tibble(
-    mean13.1$depth,
-    approx(depth_HiRes, mean13_HiRes[[.var]], mean13.1$depth)$y) %>%
-    setNames(c("depth", .var))
+    depth = mean13.1$depth,
+    y = approx(depth_HiRes, mean13_HiRes$y, mean13.1$depth)$y)
   mean15 <- tibble::tibble(
-    mean15.1$depth,
-    approx(depth_HiRes, mean15_HiRes[[.var]], mean15.1$depth)$y) %>%
-    setNames(c("depth", .var))
+    depth = mean15.1$depth,
+    y = approx(depth_HiRes, mean15_HiRes$y, mean15.1$depth)$y)
 
   list(mean13.1 = mean13.1, mean13.2 = mean13.2,
        mean15.1 = mean15.1, mean15.2 = mean15.2,
@@ -730,7 +731,7 @@ TC17.Fig03c <- function() {
 TC17.Fig04 <- function() {
 
     trPar <- loadKohnenTrenchPar()
-    TR <- makeHiResKohnenTrenches(na.rm = TRUE)
+    TR <- makeHiResKohnenTrenches(.var = "d18O", na.rm = TRUE)
 
     v1 <- TR$mean15
     v2 <- TR$mean13
@@ -738,8 +739,8 @@ TC17.Fig04 <- function() {
     # differentiate from surface layer
     ind1 <- which(TR$mean15$depth <= trPar$surfaceBot["t15"])
     ind2 <- which(TR$mean15$depth <= trPar$surfaceBot["t13"])
-    v1[ind1[-length(ind1)], "d18O"] <- NA
-    v2[ind2[-length(ind2)], "d18O"] <- NA
+    v1[ind1[-length(ind1)], "y"] <- NA
+    v2[ind2[-length(ind2)], "y"] <- NA
 
     op <- grfxtools::Par(oma = c(5, 0, 0.5, 0), mar = c(0, 6, 0, 6),
                          lwd = 2, font.lab = 2, font.axis = 2)
@@ -837,15 +838,15 @@ TC17.Fig06 <- function() {
     my.col <- c("dodgerblue", "#1b9e77", "#d95f02", "#7570b3")
 
     # T13* and T13**
-    TR <- makeHiResKohnenTrenches(na.rm = TRUE)
-    T13.star     <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
+    TR <- makeHiResKohnenTrenches(.var = "d18O", na.rm = TRUE)
+    T13.star     <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
                                  res = trPar$hiRes,
                                  depth.hires = TR$mean13_HiRes$depth,
                                  depth.lores = TR$mean15$depth,
                                  SIGMA = mod.param$SIGMA.opt,
                                  STRETCH = mod.param$STRETCH.opt,
                                  ADV = mod.param$ADV.opt)
-    T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
+    T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
                                  res = trPar$hiRes,
                                  depth.hires = TR$mean13_HiRes$depth,
                                  depth.lores = TR$mean15$depth,
@@ -862,13 +863,13 @@ TC17.Fig06 <- function() {
     # Fig06-a
 
     # auxiliary variables
-    v11 <- v1 <- TR$mean13$d18O
-    v22 <- v2 <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
+    v11 <- v1 <- TR$mean13$y
+    v22 <- v2 <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
                               res = trPar$hiRes,
                               depth.hires = TR$mean13_HiRes$depth,
                               depth.lores = TR$mean13$depth,
                               STRETCH = mod.param$STRETCH.opt)$HiRes
-    v33 <- v3 <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
+    v33 <- v3 <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
                               res = trPar$hiRes,
                               depth.hires = TR$mean13_HiRes$depth,
                               depth.lores = TR$mean13$depth,
@@ -962,11 +963,11 @@ TC17.Fig06 <- function() {
     # Fig06-b
 
     # auxiliary variables
-    v11 <- v1 <- TR$mean15$d18O
+    v11 <- v1 <- TR$mean15$y
     v22 <- v2 <- T13.star$LoRes
     v33 <- v3 <- T13.starstar$LoRes
     # only optimal advection
-    v4 <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
+    v4 <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
                        res = trPar$hiRes,
                        depth.hires = TR$mean13_HiRes$depth,
                        depth.lores = TR$mean15$depth,
@@ -1065,8 +1066,8 @@ TC17.Fig07 <- function() {
     mod.param <- SetModificationPar()
 
     # T13**
-    TR <- makeHiResKohnenTrenches()
-    T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
+    TR <- makeHiResKohnenTrenches(.var = "d18O")
+    T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
                                  res = trPar$hiRes,
                                  depth.hires = TR$mean13_HiRes$depth,
                                  depth.lores = TR$mean15$depth,
@@ -1075,14 +1076,14 @@ TC17.Fig07 <- function() {
                                  ADV = mod.param$ADV.ind)
 
     # profile differences
-    diff.13 <- TR$mean13.1$d18O -
-        prxytools::Lag(TR$mean13.2$d18O, shift = trPar$k13 / trPar$loRes)
+    diff.13 <- TR$mean13.1$y -
+        prxytools::Lag(TR$mean13.2$y, shift = trPar$k13 / trPar$loRes)
 
-    diff.15 <- TR$mean15.1_HiRes$d18O -
-        prxytools::Lag(TR$mean15.2_HiRes$d18O, shift = trPar$k15 / trPar$hiRes)
+    diff.15 <- TR$mean15.1_HiRes$y -
+        prxytools::Lag(TR$mean15.2_HiRes$y, shift = trPar$k15 / trPar$hiRes)
     diff.15 <- diff.15[match(TR$mean15$depth, TR$mean15_HiRes$depth)]
 
-    diff.2yr <- TR$mean15$d18O - T13.starstar$LoRes
+    diff.2yr <- TR$mean15$y - T13.starstar$LoRes
 
     #---------------------------------------------------------------------------
 

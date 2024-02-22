@@ -86,8 +86,8 @@ test_that("fig04 is reproducible", {
 
   TR <- makeHiResKohnenTrenches(na.rm = TRUE)
 
-  expect_equal(TR$mean13$d18O, fig04$TR.mean13)
-  expect_equal(TR$mean15$d18O, fig04$TR.mean15)
+  expect_equal(TR$mean13$y, fig04$TR.mean13)
+  expect_equal(TR$mean15$y, fig04$TR.mean15)
 
 })
 
@@ -106,14 +106,14 @@ test_that("fig06 is reproducible", {
     mod.param <- SetModificationPar()
 
     TR <- makeHiResKohnenTrenches(na.rm = TRUE)
-    T13.star     <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
+    T13.star     <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
                                  res = trPar$hiRes,
                                  depth.hires = TR$mean13_HiRes$depth,
                                  depth.lores = TR$mean15$depth,
                                  SIGMA = mod.param$SIGMA.opt,
                                  STRETCH = mod.param$STRETCH.opt,
                                  ADV = mod.param$ADV.opt)
-    T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
+    T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
                                  res = trPar$hiRes,
                                  depth.hires = TR$mean13_HiRes$depth,
                                  depth.lores = TR$mean15$depth,
@@ -121,23 +121,23 @@ test_that("fig06 is reproducible", {
                                  STRETCH = mod.param$STRETCH.ind,
                                  ADV = mod.param$ADV.ind)
 
-    v2 <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
+    v2 <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
                        res = trPar$hiRes,
                        depth.hires = TR$mean13_HiRes$depth,
                        depth.lores = TR$mean13$depth,
                        STRETCH = mod.param$STRETCH.opt)$HiRes
-    v3 <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
+    v3 <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
                        res = trPar$hiRes,
                        depth.hires = TR$mean13_HiRes$depth,
                        depth.lores = TR$mean13$depth,
                        SIGMA = mod.param$SIGMA.opt)$LoRes
-    v4 <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
+    v4 <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
                        res = trPar$hiRes,
                        depth.hires = TR$mean13_HiRes$depth,
                        depth.lores = TR$mean13$depth,
                        ADV = mod.param$ADV.only)$LoRes
 
-    v11 <- TR$mean15$d18O
+    v11 <- TR$mean15$y
     ind1 <- which(TR$mean15$depth <= trPar$surfaceBot["t15"])
     v11[ind1[-length(ind1)]] <- NA
 
@@ -150,7 +150,7 @@ test_that("fig06 is reproducible", {
   
   expect_equal(trPar$hiRes, fig06$TR.HiRes)
   expect_equal(TR$mean15_HiRes$depth, fig06$TR.depth_HiRes)
-  expect_equal(TR$mean13_HiRes$d18O, fig06$TR.mean13_HiRes)
+  expect_equal(TR$mean13_HiRes$y, fig06$TR.mean13_HiRes)
 
   expect_equal(T13.star, fig06$T13.star)
   expect_equal(T13.starstar, fig06$T13.starstar)
@@ -172,7 +172,7 @@ test_that("fig07 is reproducible", {
   mod.param <- SetModificationPar()
 
   TR <- makeHiResKohnenTrenches()
-  T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
+  T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
                                res = trPar$hiRes,
                                depth.hires = TR$mean13_HiRes$depth,
                                depth.lores = TR$mean15$depth,
@@ -180,14 +180,14 @@ test_that("fig07 is reproducible", {
                                STRETCH = mod.param$STRETCH.ind,
                                ADV = mod.param$ADV.ind)
 
-  diff.13 <- TR$mean13.1$d18O -
-    prxytools::Lag(TR$mean13.2$d18O, shift = trPar$k13 / trPar$loRes)
+  diff.13 <- TR$mean13.1$y -
+    prxytools::Lag(TR$mean13.2$y, shift = trPar$k13 / trPar$loRes)
 
-  diff.15 <- TR$mean15.1_HiRes$d18O -
-    prxytools::Lag(TR$mean15.2_HiRes$d18O, shift = trPar$k15 / trPar$hiRes)
+  diff.15 <- TR$mean15.1_HiRes$y -
+    prxytools::Lag(TR$mean15.2_HiRes$y, shift = trPar$k15 / trPar$hiRes)
   diff.15 <- diff.15[match(TR$mean15$depth, TR$mean15_HiRes$depth)]
 
-  diff.2yr <- TR$mean15$d18O - T13.starstar$LoRes
+  diff.2yr <- TR$mean15$y - T13.starstar$LoRes
 
   # ------------------------------------------------------------------------------
   # tests
