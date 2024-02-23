@@ -18,10 +18,7 @@ test_that("fig01 is reproducible", {
   mean13.2 <- t13.trench2 %>%
     makeMean(df = TRUE)
 
-  T13.annual <- T13AnnualMeans(
-    t1 = mean13.1$d18O,
-    t2 = prxytools::Lag(mean13.2$d18O, trPar$k13 / trPar$loRes),
-    depth = mean13.1$depth, cheat = TRUE)
+  T13.annual <- t13.annual.means$cheated
 
   expect_equal(mean13.1$depth, fig01$TR.depth)
   expect_equal(mean13.2$depth, fig01$TR.depth)
