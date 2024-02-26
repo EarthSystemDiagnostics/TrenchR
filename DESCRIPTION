@@ -26,7 +26,7 @@ Imports:
 RoxygenNote: 7.2.3
 Suggests:
     covr,
-    FirnR,
+    FirnR (>= 0.1.0.9004),
     fs (>= 1.6.3),
     knitr,
     plyr (>= 1.8.9),
@@ -38,6 +38,7 @@ Suggests:
 BugReports: https://github.com/EarthSystemDiagnostics/TrenchR/issues
 VignetteBuilder: knitr
 Remotes:
+    EarthSystemDiagnostics/FirnR,
     EarthSystemDiagnostics/grfxtools,
     EarthSystemDiagnostics/stattools,
     EarthSystemDiagnostics/prxytools

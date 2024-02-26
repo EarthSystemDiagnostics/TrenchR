@@ -117,6 +117,7 @@ test_that("fig05 is reproducible", {
 })
 
 test_that("fig06 is reproducible", {
+  skip_if_not_installed("FirnR", minimum_version = "0.1.0.9004")
 
   # ------------------------------------------------------------------------------
   # expectation values
@@ -185,6 +186,7 @@ test_that("fig06 is reproducible", {
 })
 
 test_that("fig07 is reproducible", {
+  skip_if_not_installed("FirnR", minimum_version = "0.1.0.9004")
 
   # ------------------------------------------------------------------------------
   # expectation values

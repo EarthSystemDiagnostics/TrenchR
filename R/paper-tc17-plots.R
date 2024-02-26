@@ -553,6 +553,11 @@ produceTC17Figures <- function(which.figure = c("f1", "f2", "f3a", "f3b", "f3c",
 
   TC17.Fig06 <- function() {
 
+    if (!rlang::is_installed("FirnR", version = "0.1.0.9004")) {
+      stop("Package 'FirnR (>= 0.1.0.9004)' needed to plot Fig.06. ",
+           "It is available on request from the 'TrenchR' package author(s).")
+    }
+
     trPar <- tc17.paper.param
     mod.param <- tc17.modif.param
 
@@ -768,6 +773,11 @@ produceTC17Figures <- function(which.figure = c("f1", "f2", "f3a", "f3b", "f3c",
   }
 
   TC17.Fig07 <- function() {
+
+    if (!rlang::is_installed("FirnR", version = "0.1.0.9004")) {
+      stop("Package 'FirnR (>= 0.1.0.9004)' needed to plot Fig.07. ",
+           "It is available on request from the 'TrenchR' package author(s).")
+    }
 
     trPar <- tc17.paper.param
     mod.param <- tc17.modif.param

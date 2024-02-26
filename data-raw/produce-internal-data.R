@@ -76,10 +76,11 @@ aws9 <- list(
 
 library(TrenchR)
 
-if (!require(FirnR))
-  stop("Package 'FirnR' needed. ",
+if (!rlang::is_installed("FirnR", version = "0.1.0.9004")) {
+  stop("Package 'FirnR (>= 0.1.0.9004)' needed. ",
        "It is available on request from the 'TrenchR' package author(s).")
-rlang::check_installed("usethis", version = NA)
+}
+rlang::check_installed("usethis", version = NULL)
 
 # load data
 
