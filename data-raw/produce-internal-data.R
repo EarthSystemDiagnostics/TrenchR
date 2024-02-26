@@ -364,6 +364,13 @@ t13.annual.means <- list(
     t1, t2, depth, i.max, i.min, start.year, cheat = TRUE)
 )
 
+attr(t13.annual.means, "note") <-
+  paste("data in element 'cheated' reproduce an earlier version of the data",
+        "as used in Münch et al. (2017) based on an erroneous implementation",
+        "of the annual binning, with the correct data stored in list element",
+        "'correct'. The difference between the data is only ~0.2 permil",
+        "(root-mean-square deviation) and does not influence any conclusions",
+        "drawn in the paper.")
 
 # ==============================================================================
 # Save package data

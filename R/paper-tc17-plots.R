@@ -134,6 +134,12 @@ produceTC17Figures <- function(which.figure = c("f1", "f2", "f3a", "f3b", "f3c",
       dplyr::mutate(d18O = prxytools::Lag(.data$d18O, trPar$k13 / trPar$loRes))
 
     T13.annual <- t13.annual.means$cheated
+    # <- the 'cheated' data reproduce an earlier version of the data which were
+    # used in Münch et al. (2017) based on a sightly erroneous implementation of
+    # the annual binning; the correct data is stored in list element
+    # 'correct'. However, the difference between the data is only of the order
+    # of ~0.2 permil (root-mean-square deviation) and does not influence any
+    # conclusions drawn in the paper.
 
     op <- grfxtools::Par(mar = c(5, 5, 4, 2), mfrow = c(1, 2),
                          lwd = 2, font.lab = 2, font.axis = 2)
