@@ -561,20 +561,16 @@ produceTC17Figures <- function(which.figure = c("f1", "f2", "f3a", "f3b", "f3c",
 
     # T13* and T13**
     TR <- makeHiResKohnenTrenches(.var = "d18O", na.rm = TRUE)
-    T13.star     <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
-                                 res = trPar$hiRes,
-                                 depth.hires = TR$mean13_HiRes$depth,
-                                 depth.lores = TR$mean15$depth,
-                                 SIGMA = mod.param$SIGMA.opt,
-                                 STRETCH = mod.param$STRETCH.opt,
-                                 ADV = mod.param$ADV.opt)
-    T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
-                                 res = trPar$hiRes,
-                                 depth.hires = TR$mean13_HiRes$depth,
-                                 depth.lores = TR$mean15$depth,
-                                 SIGMA = mod.param$SIGMA.ind,
-                                 STRETCH = mod.param$STRETCH.ind,
-                                 ADV = mod.param$ADV.ind)
+    T13.star     <- FirnR::ModifyRecord(TR$mean13_HiRes,
+                                        sigma = mod.param$SIGMA.opt,
+                                        compression = mod.param$STRETCH.opt,
+                                        advection = mod.param$ADV.opt,
+                                        output.res = trPar$loRes)
+    T13.starstar <- FirnR::ModifyRecord(TR$mean13_HiRes,
+                                        sigma = mod.param$SIGMA.ind,
+                                        compression = mod.param$STRETCH.ind,
+                                        advection = mod.param$ADV.ind,
+                                        output.res = trPar$loRes)
 
     #---------------------------------------------------------------------------
 
@@ -586,17 +582,14 @@ produceTC17Figures <- function(which.figure = c("f1", "f2", "f3a", "f3b", "f3c",
 
     # auxiliary variables
     v11 <- v1 <- TR$mean13$y
-    v22 <- v2 <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
-                              res = trPar$hiRes,
-                              depth.hires = TR$mean13_HiRes$depth,
-                              depth.lores = TR$mean13$depth,
-                              STRETCH = mod.param$STRETCH.opt)$HiRes
-    v33 <- v3 <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
-                              res = trPar$hiRes,
-                              depth.hires = TR$mean13_HiRes$depth,
-                              depth.lores = TR$mean13$depth,
-                              SIGMA = mod.param$SIGMA.opt)$LoRes
-    v44 <- v4 <- T13.star$LoRes
+    v22 <- v2 <- FirnR::ModifyRecord(TR$mean13_HiRes,
+                                     compression = mod.param$STRETCH.opt)$y
+    v33 <- v3 <- FirnR::ModifyRecord(TR$mean13_HiRes,
+                                     sigma = mod.param$SIGMA.opt,
+                                     output.res = trPar$loRes) %>%
+      dplyr::slice_head(n = nrow(TR$mean13)) %>%
+      dplyr::pull("y")
+    v44 <- v4 <- T13.star$y
 
     p1 <- (p1 <- which(!is.na(v2)))[c(1, length(p1))]
     p2 <- (p2 <- which(!is.na(v3)))[c(1, length(p2))]
@@ -686,14 +679,12 @@ produceTC17Figures <- function(which.figure = c("f1", "f2", "f3a", "f3b", "f3c",
 
     # auxiliary variables
     v11 <- v1 <- TR$mean15$y
-    v22 <- v2 <- T13.star$LoRes
-    v33 <- v3 <- T13.starstar$LoRes
+    v22 <- v2 <- T13.star$y
+    v33 <- v3 <- T13.starstar$y
     # only optimal advection
-    v4 <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
-                       res = trPar$hiRes,
-                       depth.hires = TR$mean13_HiRes$depth,
-                       depth.lores = TR$mean15$depth,
-                       ADV = mod.param$ADV.only)$LoRes
+    v4 <- FirnR::ModifyRecord(TR$mean13_HiRes,
+                              advection = mod.param$ADV.only,
+                              output.res = trPar$loRes)$y
 
     p1 <- (p1 <- which(!is.na(v2)))[c(1, length(p1))]
     p2 <- (p2 <- which(!is.na(v3)))[c(1, length(p2))]
@@ -783,13 +774,11 @@ produceTC17Figures <- function(which.figure = c("f1", "f2", "f3a", "f3b", "f3c",
 
     # T13**
     TR <- makeHiResKohnenTrenches(.var = "d18O")
-    T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
-                                 res = trPar$hiRes,
-                                 depth.hires = TR$mean13_HiRes$depth,
-                                 depth.lores = TR$mean15$depth,
-                                 SIGMA = mod.param$SIGMA.ind,
-                                 STRETCH = mod.param$STRETCH.ind,
-                                 ADV = mod.param$ADV.ind)
+    T13.starstar <- FirnR::ModifyRecord(TR$mean13_HiRes,
+                                        sigma = mod.param$SIGMA.ind,
+                                        compression = mod.param$STRETCH.ind,
+                                        advection = mod.param$ADV.ind,
+                                        output.res = trPar$loRes)
 
     # profile differences
     diff.13 <- TR$mean13.1$y -
@@ -799,7 +788,7 @@ produceTC17Figures <- function(which.figure = c("f1", "f2", "f3a", "f3b", "f3c",
       prxytools::Lag(TR$mean15.2_HiRes$y, shift = trPar$k15 / trPar$hiRes)
     diff.15 <- diff.15[match(TR$mean15$depth, TR$mean15_HiRes$depth)]
 
-    diff.2yr <- TR$mean15$y - T13.starstar$LoRes
+    diff.2yr <- TR$mean15$y - T13.starstar$y
 
     #---------------------------------------------------------------------------
 

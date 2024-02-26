@@ -125,36 +125,34 @@ test_that("fig06 is reproducible", {
     mod.param <- tc17.modif.param
 
     TR <- makeHiResKohnenTrenches(na.rm = TRUE)
-    T13.star     <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
-                                 res = trPar$hiRes,
-                                 depth.hires = TR$mean13_HiRes$depth,
-                                 depth.lores = TR$mean15$depth,
-                                 SIGMA = mod.param$SIGMA.opt,
-                                 STRETCH = mod.param$STRETCH.opt,
-                                 ADV = mod.param$ADV.opt)
-    T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
-                                 res = trPar$hiRes,
-                                 depth.hires = TR$mean13_HiRes$depth,
-                                 depth.lores = TR$mean15$depth,
-                                 SIGMA = mod.param$SIGMA.ind,
-                                 STRETCH = mod.param$STRETCH.ind,
-                                 ADV = mod.param$ADV.ind)
+    T13.star.lr <- FirnR::ModifyRecord(TR$mean13_HiRes,
+                                       sigma = mod.param$SIGMA.opt,
+                                       compression = mod.param$STRETCH.opt,
+                                       advection = mod.param$ADV.opt,
+                                       output.res = trPar$loRes)
+    T13.star.hr <- FirnR::ModifyRecord(TR$mean13_HiRes,
+                                       sigma = mod.param$SIGMA.opt,
+                                       compression = mod.param$STRETCH.opt,
+                                       advection = mod.param$ADV.opt)
 
-    v2 <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
-                       res = trPar$hiRes,
-                       depth.hires = TR$mean13_HiRes$depth,
-                       depth.lores = TR$mean13$depth,
-                       STRETCH = mod.param$STRETCH.opt)$HiRes
-    v3 <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
-                       res = trPar$hiRes,
-                       depth.hires = TR$mean13_HiRes$depth,
-                       depth.lores = TR$mean13$depth,
-                       SIGMA = mod.param$SIGMA.opt)$LoRes
-    v4 <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
-                       res = trPar$hiRes,
-                       depth.hires = TR$mean13_HiRes$depth,
-                       depth.lores = TR$mean13$depth,
-                       ADV = mod.param$ADV.only)$LoRes
+    T13.starstar.lr <- FirnR::ModifyRecord(TR$mean13_HiRes,
+                                           sigma = mod.param$SIGMA.ind,
+                                           compression = mod.param$STRETCH.ind,
+                                           advection = mod.param$ADV.ind,
+                                           output.res = trPar$loRes)
+    T13.starstar.hr <- FirnR::ModifyRecord(TR$mean13_HiRes,
+                                           sigma = mod.param$SIGMA.ind,
+                                           compression = mod.param$STRETCH.ind,
+                                           advection = mod.param$ADV.ind)
+
+    v2 <- FirnR::ModifyRecord(TR$mean13_HiRes,
+                              compression = mod.param$STRETCH.opt)$y
+    v3 <- FirnR::ModifyRecord(TR$mean13_HiRes,
+                              sigma = mod.param$SIGMA.opt,
+                              output.res = trPar$loRes)$y
+    v4 <- FirnR::ModifyRecord(TR$mean13_HiRes,
+                              advection = mod.param$ADV.only,
+                              output.res = trPar$loRes)$y
 
     v11 <- TR$mean15$y
     ind1 <- which(TR$mean15$depth <= trPar$surfaceBot["t15"])
@@ -172,12 +170,15 @@ test_that("fig06 is reproducible", {
   expect_equal(TR$mean15_HiRes$depth, fig06$TR.depth_HiRes)
   expect_equal(TR$mean13_HiRes$y, fig06$TR.mean13_HiRes)
 
-  expect_equal(T13.star, fig06$T13.star)
-  expect_equal(T13.starstar, fig06$T13.starstar)
+  expect_equal(T13.star.hr$y, fig06$T13.star$HiRes)
+  expect_equal(T13.star.lr$y, fig06$T13.star$LoRes)
+
+  expect_equal(T13.starstar.hr$y, fig06$T13.starstar$HiRes)
+  expect_equal(T13.starstar.lr$y, fig06$T13.starstar$LoRes)
 
   expect_equal(v2, fig06$v2)
-  expect_equal(v3, fig06$v3[1 : 38])
-  expect_equal(v4, fig06$v4[1 : 38])
+  expect_equal(v3, fig06$v3)
+  expect_equal(v4, fig06$v4)
 
   expect_equal(sum.max, fig06$sum.max)
 
@@ -192,13 +193,11 @@ test_that("fig07 is reproducible", {
   mod.param <- tc17.modif.param
 
   TR <- makeHiResKohnenTrenches()
-  T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes$y,
-                               res = trPar$hiRes,
-                               depth.hires = TR$mean13_HiRes$depth,
-                               depth.lores = TR$mean15$depth,
-                               SIGMA = mod.param$SIGMA.ind,
-                               STRETCH = mod.param$STRETCH.ind,
-                               ADV = mod.param$ADV.ind)
+  T13.starstar <- FirnR::ModifyRecord(TR$mean13_HiRes,
+                                      sigma = mod.param$SIGMA.ind,
+                                      compression = mod.param$STRETCH.ind,
+                                      advection = mod.param$ADV.ind,
+                                      output.res = trPar$loRes)
 
   diff.13 <- TR$mean13.1$y -
     prxytools::Lag(TR$mean13.2$y, shift = trPar$k13 / trPar$loRes)
@@ -207,12 +206,12 @@ test_that("fig07 is reproducible", {
     prxytools::Lag(TR$mean15.2_HiRes$y, shift = trPar$k15 / trPar$hiRes)
   diff.15 <- diff.15[match(TR$mean15$depth, TR$mean15_HiRes$depth)]
 
-  diff.2yr <- TR$mean15$y - T13.starstar$LoRes
+  diff.2yr <- TR$mean15$y - T13.starstar$y
 
   # ------------------------------------------------------------------------------
   # tests
 
-  expect_equal(T13.starstar, fig07$T13.starstar)
+  expect_equal(T13.starstar$y, fig07$T13.starstar$LoRes)
 
   expect_equal(diff.13, fig07$diff.13)
   expect_equal(diff.15, fig07$diff.15)
