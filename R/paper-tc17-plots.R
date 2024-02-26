@@ -89,16 +89,40 @@ makeHiResKohnenTrenches <- function(.var = "d18O", na.rm = FALSE) {
 }
 
 #
-# ----- Plotting functions -----------------------------------------------------
+# ----- Plotting function ------------------------------------------------------
 #
 
-##' Produce TC17 Figure 01
-##'
-##' This function makes all necessary calculations and plots the results for
-##' Figure 01 shown in Münch et al. (2017).
-##' @author Thomas Münch
-##' @noRd
-TC17.Fig01 <- function() {
+#' Münch et al. (2017) figures
+#'
+#' Reproduce a desired figure of the Münch et al. (2017) publication (TC17).
+#'
+#' Appropriate figure aspect ratios (height x width (h x w)) in inch for the
+#' graphical output device are as follows:
+#'
+#' \describe{
+#'   \item{Fig. 1:}{h = 6.75, w = 16}
+#'   \item{Fig. 2:}{h = 8, w = 8}
+#'   \item{Fig. 3a, b:}{h = 6, w = 9.75}
+#'   \item{Fig. 3c:}{h = 6, w = 8}
+#'   \item{Fig. 4:}{h = 6, w = 8}
+#'   \item{Fig. 5:}{h = 6, w = 8}
+#'   \item{Fig. 6:}{h = 6, w = 16}
+#'   \item{Fig. 7:}{h = 6, w = 12}
+#' }
+#'
+#' @param which.figure character string to name the figure which shall be
+#'   reproduced; must match one of "f1", "f2", "f3a", "f3b", "f3c", "f4", "f5",
+#'   "f6", "f7".
+#' @author Thomas Münch
+#' @inherit Muench2017 references
+#'
+produceTC17Figures <- function(which.figure = c("f1", "f2", "f3a", "f3b", "f3c",
+                                                "f4", "f5", "f6", "f7")) {
+
+  # ----------------------------------------------------------------------------
+  # individual figure function definitions
+
+  TC17.Fig01 <- function() {
 
     trPar <- tc17.paper.param
 
@@ -197,15 +221,9 @@ TC17.Fig01 <- function() {
 
     par(op)
 
-}
+  }
 
-##' Produce TC17 Figure 02
-##'
-##' This function makes all necessary calculations and plots the results for
-##' Figure 02 shown in Münch et al. (2017).
-##' @author Thomas Münch
-##' @noRd
-TC17.Fig02 <- function() {
+  TC17.Fig02 <- function() {
 
     op <- grfxtools::Par(mar = c(6, 6, 6, 6), lwd = 2,
                          font.lab = 2, font.axis = 2)
@@ -235,7 +253,7 @@ TC17.Fig02 <- function() {
     ref <- -75
     lon <- seq(0.065, 0.1, 0.001)
     dist.lon <- sapply(lon, function(l) {
-        geosphere::distGeo(c(0, ref), c(l, ref))})
+      geosphere::distGeo(c(0, ref), c(l, ref))})
 
     dist.equi <- seq(1740, 2880, 20)
     lon.equidist <- approx(dist.lon, lon, dist.equi)$y
@@ -247,7 +265,7 @@ TC17.Fig02 <- function() {
     ref <- 0.08
     lat <- seq(-74.985, -75.025, -0.001)
     dist.lat <- sapply(lat, function(l){
-        geosphere::distGeo(c(ref, lat[1]), c(ref, l))})
+      geosphere::distGeo(c(ref, lat[1]), c(ref, l))})
 
     dist.lat <- dist.lat - dist.lat[which(lat == -75)]
 
@@ -336,52 +354,40 @@ TC17.Fig02 <- function() {
 
     par(op)
 
-}
+  }
 
-#' Produce TC17 Figure 03a
-#'
-#' @author Thomas Münch
-#' @noRd
-TC17.Fig03a <- function() {
+  TC17.Fig03a <- function() {
 
-  op <- grfxtools::Par(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2),
-                       lwd = 2, font.lab = 2, font.axis = 2)
+    op <- grfxtools::Par(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2),
+                         lwd = 2, font.lab = 2, font.axis = 2)
 
-  # plot without DUNE1 profile
-  t15.trench1 %>%
-    dplyr::filter(profileName != "T15-1-DUNE1") %>%
-    plot2D(rescale.v = 0.01,
+    # plot without DUNE1 profile
+    t15.trench1 %>%
+      dplyr::filter(profileName != "T15-1-DUNE1") %>%
+      plot2D(rescale.v = 0.01,
+             label = grfxtools::LabelAxis(font = par()$font.lab),
+             xlim = c(0, 50), ylim = c(1.755, -0.15), zlim = c(-55, -35),
+             filledContour = TRUE, fill = TRUE)
+
+    par(op)
+
+  }
+
+  TC17.Fig03b <- function() {
+
+    op <- grfxtools::Par(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2),
+                         lwd = 2, font.lab = 2, font.axis = 2)
+
+    plot2D(t15.trench2, rescale.v = 0.01,
            label = grfxtools::LabelAxis(font = par()$font.lab),
-           xlim = c(0, 50), ylim = c(1.755, -0.15), zlim = c(-55, -35),
+           ylab = "", xlim = c(0, 50), ylim = c(1.755, -0.15), zlim = c(-55, -35),
            filledContour = TRUE, fill = TRUE)
 
-  par(op)
+    par(op)
 
-}
+  }
 
-#' Produce TC17 Figure 03b
-#'
-#' @author Thomas Münch
-#' @noRd
-TC17.Fig03b <- function() {
-
-  op <- grfxtools::Par(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2),
-                       lwd = 2, font.lab = 2, font.axis = 2)
-
-  plot2D(t15.trench2, rescale.v = 0.01,
-         label = grfxtools::LabelAxis(font = par()$font.lab),
-         ylab = "", xlim = c(0, 50), ylim = c(1.755, -0.15), zlim = c(-55, -35),
-         filledContour = TRUE, fill = TRUE)
-
-  par(op)
-
-}
-
-#' Produce TC17 Figure 03c
-#'
-#' @author Thomas Münch
-#' @noRd
-TC17.Fig03c <- function() {
+  TC17.Fig03c <- function() {
 
     trPar <- tc17.paper.param
 
@@ -447,15 +453,9 @@ TC17.Fig03c <- function() {
                       end.pch = TRUE, pch.xoff = 0.2)
 
     par(op)
-}
+  }
 
-##' Produce TC17 Figure 04
-##'
-##' This function makes all necessary calculations and plots the results for
-##' Figure 04 shown in Münch et al. (2017).
-##' @author Thomas Münch
-##' @noRd
-TC17.Fig04 <- function() {
+  TC17.Fig04 <- function() {
 
     trPar <- tc17.paper.param
     TR <- makeHiResKohnenTrenches(.var = "d18O", na.rm = TRUE)
@@ -505,15 +505,9 @@ TC17.Fig04 <- function() {
 
     par(op)
 
-}
+  }
 
-##' Produce TC17 Figure 05
-##'
-##' This function makes all necessary calculations and plots the results for
-##' Figure 05 shown in Münch et al. (2017).
-##' @author Thomas Münch
-##' @noRd
-TC17.Fig05 <- function() {
+  TC17.Fig05 <- function() {
 
     op <- grfxtools::Par(lwd = 2, font.lab = 2, font.axis = 2)
 
@@ -533,31 +527,25 @@ TC17.Fig05 <- function() {
     filled.contour(data$sigma, data$compression, opt.adv.surface,
                    color.palette = palette, zlim = c(40, 60),
                    plot.title =
-                       title(xlab = "Differential diffusion length (cm)",
-                             ylab = "Compression (cm)"),
+                     title(xlab = "Differential diffusion length (cm)",
+                           ylab = "Compression (cm)"),
                    plot.axes = {
-                       contour(data$sigma,
-                               data$compression,
-                               RMSD.opt.adv.surface,
-                               add = TRUE, labcex = 1);
-                       points(2.3, 3.5, pch = 21, col = "black",
-                              bg = "black", cex = 1.25);
-                       axis(1); axis(2)})
+                     contour(data$sigma,
+                             data$compression,
+                             RMSD.opt.adv.surface,
+                             add = TRUE, labcex = 1);
+                     points(2.3, 3.5, pch = 21, col = "black",
+                            bg = "black", cex = 1.25);
+                     axis(1); axis(2)})
     
     text(8.1, 5, labels = "Optimal downward advection (cm)",
          srt = -90, xpd = NA, cex = par()$cex.lab, font = par()$font.lab)
 
     par(op)
 
-}
+  }
 
-##' Produce TC17 Figure 06
-##'
-##' This function makes all necessary calculations and plots the results for
-##' Figure 06 shown in Münch et al. (2017).
-##' @author Thomas Münch
-##' @noRd
-TC17.Fig06 <- function() {
+  TC17.Fig06 <- function() {
 
     trPar <- tc17.paper.param
     mod.param <- tc17.modif.param
@@ -721,10 +709,10 @@ TC17.Fig06 <- function() {
          axes = FALSE, xlab = "", ylab = "")
 
     for (i in 1 : length(sum.max))
-        segments(x0 = TR$mean15$depth[sum.max[i]], y0 = -52 * 1.04,
-                 y1 = ifelse(v3[sum.max[i]] > v1[sum.max[i]],
-                             v3[sum.max[i]], v1[sum.max[i]]),
-                 lty = 5, lwd = 1, col = "gray50")
+      segments(x0 = TR$mean15$depth[sum.max[i]], y0 = -52 * 1.04,
+               y1 = ifelse(v3[sum.max[i]] > v1[sum.max[i]],
+                           v3[sum.max[i]], v1[sum.max[i]]),
+               lty = 5, lwd = 1, col = "gray50")
     segments(x0 = 50, y0 = -48, x1 = 182, lty = 1, lwd = 1, col = "gray50")
 
     lines(TR$mean15$depth, v11)
@@ -780,15 +768,9 @@ TC17.Fig06 <- function() {
 
     par(op)
 
-}
+  }
 
-##' Produce TC17 Figure 07
-##'
-##' This function makes all necessary calculations and plots the results for
-##' Figure 07 shown in Münch et al. (2017).
-##' @author Thomas Münch
-##' @noRd
-TC17.Fig07 <- function() {
+  TC17.Fig07 <- function() {
 
     trPar <- tc17.paper.param
     mod.param <- tc17.modif.param
@@ -805,10 +787,10 @@ TC17.Fig07 <- function() {
 
     # profile differences
     diff.13 <- TR$mean13.1$y -
-        prxytools::Lag(TR$mean13.2$y, shift = trPar$k13 / trPar$loRes)
+      prxytools::Lag(TR$mean13.2$y, shift = trPar$k13 / trPar$loRes)
 
     diff.15 <- TR$mean15.1_HiRes$y -
-        prxytools::Lag(TR$mean15.2_HiRes$y, shift = trPar$k15 / trPar$hiRes)
+      prxytools::Lag(TR$mean15.2_HiRes$y, shift = trPar$k15 / trPar$hiRes)
     diff.15 <- diff.15[match(TR$mean15$depth, TR$mean15_HiRes$depth)]
 
     diff.2yr <- TR$mean15$y - T13.starstar$LoRes
@@ -866,5 +848,26 @@ TC17.Fig07 <- function() {
            bty = "n", inset = c(0, 0.02))
 
     par(op)
+
+  }
+
+  # ----------------------------------------------------------------------------
+  # produce desired figure
+
+  which.figure <- match.arg(which.figure)
+
+  switch(which.figure,
+         f1  = TC17.Fig01(),
+         f2  = TC17.Fig02(),
+         f3a = TC17.Fig03a(),
+         f3b = TC17.Fig03b(),
+         f3c = TC17.Fig03c(),
+         f4  = TC17.Fig04(),
+         f5  = TC17.Fig05(),
+         f6  = TC17.Fig06(),
+         f7  = TC17.Fig07()
+         )
+
+  invisible()
 
 }

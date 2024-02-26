@@ -19,11 +19,6 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(TrenchR)
-
-height   <- 6
-width    <- 8
-widthf3  <- width + 1.75
-heightf1 <- 1.125 * height
 ```
 
 ## Overview
@@ -36,51 +31,50 @@ doi: [10.5194/tc-11-2175-2017](https://doi.org/10.5194/tc-11-2175-2017), 2017.
 
 ## Figure 1
 
-```{r, fig.width = 2 * width, fig.height = heightf1}
-TrenchR:::TC17.Fig01()
+```{r, fig.height = 6.75, fig.width = 16}
+TrenchR:::produceTC17Figures("f1")
 ```
 
 ## Figure 2
 
-```{r, fig.width = width, fig.height = width}
-TrenchR:::TC17.Fig02()
+```{r, fig.height = 8, fig.width = 8}
+TrenchR:::produceTC17Figures("f2")
 ```
 
 ## Figure 3
 
-```{r, fig.width = widthf3, fig.height = height}
-TrenchR:::TC17.Fig03a()
+```{r, fig.height = 6, fig.width = 9.75}
+TrenchR:::produceTC17Figures("f3a")
 ```
 
-```{r, fig.width = widthf3, fig.height = height}
-TrenchR:::TC17.Fig03b()
+```{r, fig.height = 6, fig.width = 9.75}
+TrenchR:::produceTC17Figures("f3b")
 ```
 
-```{r, fig.width = width, fig.height = height}
-TrenchR:::TC17.Fig03c()
+```{r, fig.height = 6, fig.width = 8}
+TrenchR:::produceTC17Figures("f3c")
 ```
 
 ## Figure 4
 
-```{r, fig.width = width, fig.height = height}
-TrenchR:::TC17.Fig04()
+```{r, fig.height = 6, fig.width = 8}
+TrenchR:::produceTC17Figures("f4")
 ```
 
 ## Figure 5
 
-```{r, fig.width = width, fig.height = height}
-TrenchR:::TC17.Fig05()
+```{r, fig.height = 6, fig.width = 8}
+TrenchR:::produceTC17Figures("f5")
 ```
 
 ## Figure 6
 
-```{r, fig.width = 2 * width, fig.height = height}
-TrenchR:::TC17.Fig06()
+```{r, fig.height = 6, fig.width = 16}
+TrenchR:::produceTC17Figures("f6")
 ```
-
 
 ## Figure 7
 
-```{r, fig.width = 2 * height, fig.height = height}
-TrenchR:::TC17.Fig07()
+```{r, fig.height = 6, fig.width = 12}
+TrenchR:::produceTC17Figures("f7")
 ```

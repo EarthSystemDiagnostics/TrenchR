@@ -219,3 +219,21 @@ test_that("fig07 is reproducible", {
   expect_equal(diff.2yr, fig07$diff.2yr)
   
 })
+
+test_that("running figure reproduction function works", {
+
+  expect_error(produceTC17Figures("foo"))
+
+  # suppressWarnings needed when running devtools::test() to avoid
+  # warnings of permil sign graphical conversion failures
+  suppressWarnings(expect_no_error(produceTC17Figures("f1")))
+  suppressWarnings(expect_no_error(produceTC17Figures("f2")))
+  suppressWarnings(expect_no_error(produceTC17Figures("f3a")))
+  suppressWarnings(expect_no_error(produceTC17Figures("f3b")))
+  suppressWarnings(expect_no_error(produceTC17Figures("f3c")))
+  suppressWarnings(expect_no_error(produceTC17Figures("f4")))
+  suppressWarnings(expect_no_error(produceTC17Figures("f5")))
+  suppressWarnings(expect_no_error(produceTC17Figures("f6")))
+  suppressWarnings(expect_no_error(produceTC17Figures("f7")))
+
+})
