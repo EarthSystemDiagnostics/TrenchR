@@ -1,6 +1,6 @@
 Package: TrenchR
 Title: Analyse and Plot Trench-like Proxy Records
-Version: 1.0.0.9000
+Version: 1.0.0.9090
 Authors@R: person("Thomas", "Münch", email = "thomas.muench@awi.de",
 	role = c("aut", "cre"))
 Description: This R package implements routines targeted at analysing and
