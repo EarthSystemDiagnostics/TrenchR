@@ -1,5 +1,5 @@
 #
-# ----- Data processing and helper functions -----------------------------------
+# ----- Data processing function -----------------------------------------------
 #
 
 #' High-depth resolution set of Kohnen T13 and T15 mean profiles for the
@@ -12,26 +12,25 @@
 #'   mean profile proceeds.
 #' @return a list of the T13 and T15 mean profiles (for each individual trench
 #'   and the seasonal mean) on the original depth resolution as well as on the
-#'   higher depth resolution as specified in \code{loadKohnenTrenchPar()}.
+#'   higher depth resolution as specified in the variable tc17.paper.param.
 #' @author Thomas Münch
 #' @noRd
 makeHiResKohnenTrenches <- function(.var = "d18O", na.rm = FALSE) {
 
-  intpl <- function(x, .var, newdepth) {
-    tibble::tibble(newdepth, approx(x$depth, x[[.var]], newdepth)$y) %>%
-      setNames(c("depth", .var))
+  intpl <- function(x, newdepth) {
+    tibble::tibble(depth = newdepth, y = approx(x$depth, x$y, newdepth)$y)
   }
-  seasonalMean <- function(t1, t2, lag, .var) {
+  seasonalMean <- function(t1, t2, lag) {
     tibble::tibble(
       t1$depth,
       {
-        cbind(t1[[.var]], prxytools::Lag(t2[[.var]], shift = lag)) %>%
+        cbind(t1[["y"]], prxytools::Lag(t2[["y"]], shift = lag)) %>%
           rowMeans()
       }) %>%
-      setNames(c("depth", .var))
+      setNames(c("depth", "y"))
   }
 
-  trPar <- loadKohnenTrenchPar()
+  trPar <- tc17.paper.param
 
   x <- range(getZ(t15.trench1)[trPar$ix])
   depth_HiRes <- seq(x[1], x[2], by = trPar$hiRes)
@@ -39,41 +38,43 @@ makeHiResKohnenTrenches <- function(.var = "d18O", na.rm = FALSE) {
   # T13 mean profiles
   mean13.1 <- t13.trench1 %>%
     dplyr::filter(profileName != "T13-1-01") %>%
-    makeMean(.var = .var, na.rm = na.rm, df = TRUE)
+    makeMean(.var = .var, na.rm = na.rm, df = TRUE) %>%
+    setNames(c("depth", "y"))
   mean13.2 <- t13.trench2 %>%
-    makeMean(.var = .var, na.rm = na.rm, df = TRUE)
+    makeMean(.var = .var, na.rm = na.rm, df = TRUE) %>%
+    setNames(c("depth", "y"))
 
   # T15 mean profiles for depth range analysed in paper
   mean15.1 <- t15.trench1 %>%
     dplyr::filter(profileName != "T15-1-DUNE1") %>%
     makeMean(.var = .var, na.rm = na.rm, df = TRUE) %>%
-    dplyr::slice(trPar$ix)
+    dplyr::slice(trPar$ix) %>%
+    setNames(c("depth", "y"))
   mean15.2 <- t15.trench2 %>%
     makeMean(.var = .var, na.rm = na.rm, df = TRUE) %>%
-    dplyr::slice(trPar$ix)
+    dplyr::slice(trPar$ix) %>%
+    setNames(c("depth", "y"))
 
   # interpolate mean profiles onto higher depth resolution
 
-  mean13.1_HiRes <- intpl(mean13.1, .var = .var, depth_HiRes)
-  mean13.2_HiRes <- intpl(mean13.2, .var = .var, depth_HiRes)
-  mean15.1_HiRes <- intpl(mean15.1, .var = .var, depth_HiRes)
-  mean15.2_HiRes <- intpl(mean15.2, .var = .var, depth_HiRes)
+  mean13.1_HiRes <- intpl(mean13.1, depth_HiRes)
+  mean13.2_HiRes <- intpl(mean13.2, depth_HiRes)
+  mean15.1_HiRes <- intpl(mean15.1, depth_HiRes)
+  mean15.2_HiRes <- intpl(mean15.2, depth_HiRes)
 
   # calculate overall mean profiles for each Kohnen season
 
-  mean13_HiRes <- seasonalMean(mean13.1_HiRes, mean13.2_HiRes, .var = .var,
+  mean13_HiRes <- seasonalMean(mean13.1_HiRes, mean13.2_HiRes,
                                lag = trPar$k13 / trPar$hiRes)
-  mean15_HiRes <- seasonalMean(mean15.1_HiRes, mean15.2_HiRes, .var = .var,
+  mean15_HiRes <- seasonalMean(mean15.1_HiRes, mean15.2_HiRes,
                                lag = trPar$k15 / trPar$hiRes)
 
   mean13 <- tibble::tibble(
-    mean13.1$depth,
-    approx(depth_HiRes, mean13_HiRes[[.var]], mean13.1$depth)$y) %>%
-    setNames(c("depth", .var))
+    depth = mean13.1$depth,
+    y = approx(depth_HiRes, mean13_HiRes$y, mean13.1$depth)$y)
   mean15 <- tibble::tibble(
-    mean15.1$depth,
-    approx(depth_HiRes, mean15_HiRes[[.var]], mean15.1$depth)$y) %>%
-    setNames(c("depth", .var))
+    depth = mean15.1$depth,
+    y = approx(depth_HiRes, mean15_HiRes$y, mean15.1$depth)$y)
 
   list(mean13.1 = mean13.1, mean13.2 = mean13.2,
        mean15.1 = mean15.1, mean15.2 = mean15.2,
@@ -87,291 +88,43 @@ makeHiResKohnenTrenches <- function(.var = "d18O", na.rm = FALSE) {
 
 }
 
-##' Set T13 temporal change parameters
-##'
-##' This function provides a list of the parameters used in Münch et al. (2017)
-##' according to which the temporal change of the original T13 mean trench
-##' profile was modelled.
-##'
-##' The modification parameters are given as arguments to this function. Default
-##' values are the ones presented and used in Münch et al. (2017); different
-##' values can be specified by setting the respective parameter values in the
-##' function call. The default optimal parameters stem from the analysis in
-##' \code{\link{LoopParamSpace}} stored in \code{ParamSpace}. The parameters
-##' can be used to model the temporal change of the T13 mean profile using the
-##' function \code{\link{ModifyRecord}}.
-##' @return A list of the following modification parameters:
-##' \itemize{
-##'   \item ADV.opt optimal 2-yr downward advection [cm];
-##'   \item SIGMA.opt optimal 2-yr differential diffusion length for oxygen
-##'     isotopes [cm];
-##'   \item STRETCH.opt optimal 2-yr compression from densification [cm];
-##'   \item ADV.ind independently inferred 2-yr downward advection [cm];
-##'   \item SIGMA.ind independently inferred 2-yr differential diffusion length
-##'     for oxygen isotopes [cm];
-##'   \item STRETCH.ind independently inferred 2-yr compression [cm];
-##'   \item ADV.only optimal 2-yr downward advection [cm] allowing no diffusion
-##'     and densification ("advection only").
-##' }
-##' @seealso \code{\link{LoopParamSpace}}; \code{\link{ModifyRecord}}
-##' @author Thomas Münch
-##' @examples
-##' mod.par <- TrenchR:::SetModificationPar()
-##' @noRd
-SetModificationPar <- function(ADV.opt = ParamSpace$adv.opt,
-                               SIGMA.opt = ParamSpace$sigma.opt,
-                               STRETCH.opt = ParamSpace$densf.opt,
-                               ADV.ind = 50,
-                               SIGMA.ind = suppressWarnings(round(
-                                   DifferentialDiffusion(
-                                       z00 = 0, z01 = 1,
-                                       z10 = ADV.ind / 100,
-                                       z11 = 1 + ADV.ind / 100)[1],
-                                   digits = 1)),
-                               STRETCH.ind = round(
-                                   RecordCompression(adv = ADV.ind,
-                                     length.in = 100, rate = 4.5),
-                                   digits = 1),
-                               ADV.only = 48.5) {
+#
+# ----- Plotting function ------------------------------------------------------
+#
 
-    mod.param <- as.list(environment())
-    return(mod.param)
-
-}
-
-##' Calculate T13 annual-mean isotope time series
-##'
-##' Calculate annual-mean time series of the T13 trench isotope records defined
-##' by binning the records according to the isotopic maxima and minima. From
-##' this, four different time series are created: averages from bins defined by
-##' (1) the summer maxima, (2) the winter minima, (3) the midpoints of the
-##' ascending slopes flanking the maxima and (4) the midpoints of the descending
-##' slopes.
-##' @param t1 numeric vector of the T13--1 isotope record.
-##' @param t2 numeric vector of the T13--2 isotope record.
-##' @param depth numeric vector of the common T13 depth scale (i.e. after
-##' the optimal shift of T13--2 to maximise the inter-trench correlation; see
-##' Münch et al. (2016)).
-##' @param i.max index positions of the summer maxima of the trench mean isotope
-##' record; default indices are the ones used in Münch et al. (2016).
-##' @param i.min index positions of the winter minima of the trench mean isotope
-##' record; default indices are the ones used in Münch et al. (2016).
-##' @param start.year assumed year of the first summer maximum where the maximum
-##' is defined to occur in January of the year; defaults to \code{2013}.
-##' @param cheat Originally, the annual mean isotope data have been erroneously
-##' calculated such that the last value contributing to annual bin \code{i} was
-##' also included in bin \code{i + 1}, due to an erroneous implementation within
-##' the bin averaging function. This bug has been fixed. For \code{cheat =
-##' TRUE}, the original annual mean data using this erroneous bin definition can
-##' be reproduced, while for \code{cheat = FALSE}, the correct implementation is
-##' used. The difference in the annual mean data between the two versions is,
-##' however, minor, and it thus does not influence any results or conclusions of
-##' Münch et al. (2017).
-##' @return A list of three data frames:
-##' \describe{
-##'   \item{means:}{the annual-mean time series of the T13--1, T13--2 and mean
-##'   T13 isotope records together with the range of annual means from the
-##'   different binning methods;}
-##'   \item{summer.max:}{the annual time series of summer maximum values for the
-##'   T13--1, T13--2 and mean T13 isotope records;}
-##'   \item{winter.min:}{the annual time series of winter minimum values for the
-##'   T13--1, T13--2 and mean T13 isotope records.}
-##' }
-##' @author Thomas Münch
-##' @noRd
-T13AnnualMeans <- function(t1, t2, depth,
-                           i.max = c(5, 11, 19, 24, 33, 38),
-                           i.min = c(7, 14, 21, 26, 37),
-                           start.year = 2013, cheat = FALSE) {
-
-    ind <- list()
-    ind$summer <- i.max
-    ind$winter <- i.min
-    for (i in 1 : (length(ind$summer) - 1)) {
-        ind$flk.up[i]   <- round(mean(c(ind$summer[i], ind$winter[i])))
-        ind$flk.dwn[i]  <- round(mean(c(ind$summer[i + 1], ind$winter[i])))
-    }
-
-    summer.max <- matrix(nrow = length(ind$summer), ncol = 5)
-    summer.max[, 1] <- start.year : (start.year - length(ind$summer) + 1)
-    summer.max[, 2] <- depth[ind$summer]
-    summer.max[, 3] <- t1[ind$summer]
-    summer.max[, 4] <- t2[ind$summer]
-    summer.max[, 5] <- rowMeans(cbind(summer.max[, 3], summer.max[, 4]))
-
-    winter.min <- matrix(nrow = length(ind$winter), ncol = 5)
-    winter.min[, 1] <- (start.year - 1) :
-                               ((start.year - 1) - length(ind$winter) + 1)
-    winter.min[, 2] <- depth[ind$winter]
-    winter.min[, 3] <- t1[ind$winter]
-    winter.min[, 4] <- t2[ind$winter]
-    winter.min[, 5] <- rowMeans(cbind(winter.min[, 3], winter.min[, 4]))
-
-    colnames(summer.max) <- c("years", "depth", "T1", "T2", "mean")
-    colnames(winter.min) <- c("years", "depth", "T1", "T2", "mean")
-
-    means <- matrix(nrow = length(ind$summer) - 1, ncol = 11)
-
-    if (!cheat) {
-
-        # calculate means with proper, non-overlapping bin definition
-
-        tmp1 <- cbind(
-            c(prxytools::AverageByIndex(t1, ind$summer)),
-            c(prxytools::AverageByIndex(t1, ind$winter), NA),
-            c(prxytools::AverageByIndex(t1, ind$flk.up), NA),
-            c(NA, prxytools::AverageByIndex(t1, ind$flk.dwn)))
-
-        tmp2 <- cbind(
-            c(prxytools::AverageByIndex(t2, ind$summer)),
-            c(prxytools::AverageByIndex(t2, ind$winter), NA),
-            c(prxytools::AverageByIndex(t2, ind$flk.up), NA),
-            c(NA, prxytools::AverageByIndex(t2, ind$flk.dwn)))
-
-    } else {
-
-        # calculate means with overlapping bins to reproduce the paper figure
-
-        # pad records with NA to facilitate using bug-fixed averaging function
-        t1.cheat <- c(t1, rep(NA, 10))
-        t2.cheat <- c(t2, rep(NA, 10))
-
-        j <- ind$summer
-        n <- length(j) - 1
-        x1.1 <- x1.2 <- numeric(n)
-        for (i in 1 : n) {
-            x1.1[i] <- prxytools::AverageByIndex(t1.cheat, c(j[i], j[i + 1] + 1))
-            x1.2[i] <- prxytools::AverageByIndex(t2.cheat, c(j[i], j[i + 1] + 1))
-        }
-
-        j <- ind$winter
-        n <- length(j) - 1
-        x2.1 <- x2.2 <- numeric(n)
-        for (i in 1 : n) {
-            x2.1[i] <- prxytools::AverageByIndex(t1.cheat, c(j[i], j[i + 1] + 1))
-            x2.2[i] <- prxytools::AverageByIndex(t2.cheat, c(j[i], j[i + 1] + 1))
-        }
-
-        j <- ind$flk.up
-        n <- length(j) - 1
-        x3.1 <- x3.2 <- numeric(n)
-        for (i in 1 : n) {
-            x3.1[i] <- prxytools::AverageByIndex(t1.cheat, c(j[i], j[i + 1] + 1))
-            x3.2[i] <- prxytools::AverageByIndex(t2.cheat, c(j[i], j[i + 1] + 1))
-        }
-
-        j <- ind$flk.dwn
-        n <- length(j) - 1
-        x4.1 <- x4.2 <- numeric(n)
-        for (i in 1 : n) {
-            x4.1[i] <- prxytools::AverageByIndex(t1.cheat, c(j[i], j[i + 1] + 1))
-            x4.2[i] <- prxytools::AverageByIndex(t2.cheat, c(j[i], j[i + 1] + 1))
-        }
-
-        tmp1 <- cbind(x1.1, c(x2.1, NA), c(x3.1, NA), c(NA, x4.1))
-        tmp2 <- cbind(x1.2, c(x2.2, NA), c(x3.2, NA), c(NA, x4.2))
-
-    }
-
-    tmp <- array(dim = c(dim(tmp1), 2))
-    tmp[, , 1] <- tmp1
-    tmp[, , 2] <- tmp2
-
-    trench.mean <- apply(tmp, c(1, 2), mean, na.rm = TRUE)
-
-    means[, 1] <- summer.max[, 1][-1]
-    means[, 2] <- depth[ind$summer[-length(ind$summer)]] +
-        0.5 * diff(depth[ind$summer])
-
-    means[, 3] <- rowMeans(tmp1, na.rm = TRUE)
-    means[, 4] <- rowMeans(tmp2, na.rm = TRUE)
-    means[, 5] <- rowMeans(trench.mean, na.rm = TRUE)
-
-    means[, c(6, 7)]   <- matrix(apply(tmp1, 1, range, na.rm = TRUE),
-                                       nrow = length(ind$summer) - 1, ncol = 2,
-                                       byrow = TRUE)
-    means[, c(8, 9)]   <- matrix(apply(tmp2, 1, range, na.rm = TRUE),
-                                       nrow = length(ind$summer) - 1, ncol = 2,
-                                       byrow = TRUE)
-    means[, c(10, 11)] <- matrix(apply(trench.mean, 1, range, na.rm = TRUE),
-                                       nrow = length(ind$summer) - 1, ncol = 2,
-                                       byrow = TRUE)
-
-    colnames(means) <- c("years", "depth", "T1", "T2", "total",
-                               "min.T1", "max.T1", "min.T2", "max.T2",
-                               "min.total", "max.total")
-
-    res <- list(means = as.data.frame(means),
-                summer.max = as.data.frame(summer.max),
-                winter.min = as.data.frame(winter.min))
-    return(res)
-
-}
-
-#' Load depth resolution, mean profile shift parameters for Kohnen T13 and
-#' T15 trenches, T15 depth index range, and bottom of trench surface layers as
-#' used for the papers.
+#' Münch et al. (2017) figures
 #'
-#' @return a list with four elements:
-#'   \code{loRes}: original T13 and T15 depth sampling resolution [cm];
-#'   \code{hiRes}: higher depth resolution to interpolate trench data [cm];
-#'   \code{k13}: optimal vertical shift [cm] of the mean T13-2 relative to the
-#'     mean T13-1 profile;
-#'   \code{k15}: optimal vertical shift [cm] of the mean T15-2 relative to the
-#'     mean T15-1 profile;
-#'   \code{ix}: index vector for the T15 depth range analysed in the TC17 paper;
-#'   \code{surfaceBot}: the depth of the trench surface layers from which
-#'     onwards a full horizontal data set is available; also given for the mean
-#'     T13 and T15 data.
+#' Reproduce a desired figure of the Münch et al. (2017) publication (TC17).
+#'
+#' Appropriate figure aspect ratios (height x width (h x w)) in inch for the
+#' graphical output device are as follows:
+#'
+#' \describe{
+#'   \item{Fig. 1:}{h = 6.75, w = 16}
+#'   \item{Fig. 2:}{h = 8, w = 8}
+#'   \item{Fig. 3a, b:}{h = 6, w = 9.75}
+#'   \item{Fig. 3c:}{h = 6, w = 8}
+#'   \item{Fig. 4:}{h = 6, w = 8}
+#'   \item{Fig. 5:}{h = 6, w = 8}
+#'   \item{Fig. 6:}{h = 6, w = 16}
+#'   \item{Fig. 7:}{h = 6, w = 12}
+#' }
+#'
+#' @param which.figure character string to name the figure which shall be
+#'   reproduced; must match one of "f1", "f2", "f3a", "f3b", "f3c", "f4", "f5",
+#'   "f6", "f7".
 #' @author Thomas Münch
-#' @noRd
-loadKohnenTrenchPar <- function() {
+#' @inherit Muench2017 references
+#'
+produceTC17Figures <- function(which.figure = c("f1", "f2", "f3a", "f3b", "f3c",
+                                                "f4", "f5", "f6", "f7")) {
 
-  res <- list(
-    loRes = 3,
-    hiRes = 0.5,
-    k13 = 3,
-    k15 = -0.5,
-    ix = 1 : 59,
-    surfaceBot = c(
-      t13.1 = getFirstCompleteDepthBin(t13.trench1),
-      t13.2 = getFirstCompleteDepthBin(t13.trench2),
-      t15.1 = getFirstCompleteDepthBin(t15.trench1),
-      t15.2 = getFirstCompleteDepthBin(t15.trench2))
-  )
+  # ----------------------------------------------------------------------------
+  # individual figure function definitions
 
-  res$surfaceBot <- c(
-    res$surfaceBot,
-    t13 = max(res$surfaceBot["t13.1"], res$surfaceBot["t13.2"]) + res$k13,
-    t15 = max(res$surfaceBot["t15.1"], res$surfaceBot["t15.2"])
-  )
+  TC17.Fig01 <- function() {
 
-  return(res)
-
-}
-
-#
-# ----- Plotting functions -----------------------------------------------------
-#
-
-##' Produce TC17 Figure 01
-##'
-##' This function makes all necessary calculations and plots the results for
-##' Figure 01 shown in Münch et al. (2017).
-##' @param cheat Originally, the annual mean isotope data have been erroneously
-##' calculated such that the last value contributing to annual bin \code{i} was
-##' also included in bin \code{i + 1}, due to an erroneous implementation within
-##' the bin averaging function. This bug has been fixed. For \code{cheat =
-##' TRUE}, the original paper figure with the erroneous bin definition can be
-##' reproduced, while for \code{cheat = FALSE}, the correct implementation is
-##' used. The difference in the annual mean data between the two figure versions
-##' is, however, minor, and it thus does not influence any results or
-##' conclusions of Münch et al. (2017).
-##' @author Thomas Münch
-##' @noRd
-TC17.Fig01 <- function(cheat = TRUE) {
-
-    trPar <- loadKohnenTrenchPar()
+    trPar <- tc17.paper.param
 
     mean13.1 <- t13.trench1 %>%
       dplyr::filter(profileName != "T13-1-01") %>%
@@ -380,8 +133,13 @@ TC17.Fig01 <- function(cheat = TRUE) {
       makeMean(df = TRUE) %>%
       dplyr::mutate(d18O = prxytools::Lag(.data$d18O, trPar$k13 / trPar$loRes))
 
-    T13.annual <- T13AnnualMeans(t1 = mean13.1$d18O, t2 = mean13.2$d18O,
-                                 depth = mean13.1$depth, cheat = cheat)
+    T13.annual <- t13.annual.means$cheated
+    # <- the 'cheated' data reproduce an earlier version of the data which were
+    # used in Münch et al. (2017) based on a sightly erroneous implementation of
+    # the annual binning; the correct data is stored in list element
+    # 'correct'. However, the difference between the data is only of the order
+    # of ~0.2 permil (root-mean-square deviation) and does not influence any
+    # conclusions drawn in the paper.
 
     op <- grfxtools::Par(mar = c(5, 5, 4, 2), mfrow = c(1, 2),
                          lwd = 2, font.lab = 2, font.axis = 2)
@@ -469,15 +227,9 @@ TC17.Fig01 <- function(cheat = TRUE) {
 
     par(op)
 
-}
+  }
 
-##' Produce TC17 Figure 02
-##'
-##' This function makes all necessary calculations and plots the results for
-##' Figure 02 shown in Münch et al. (2017).
-##' @author Thomas Münch
-##' @noRd
-TC17.Fig02 <- function() {
+  TC17.Fig02 <- function() {
 
     op <- grfxtools::Par(mar = c(6, 6, 6, 6), lwd = 2,
                          font.lab = 2, font.axis = 2)
@@ -507,7 +259,7 @@ TC17.Fig02 <- function() {
     ref <- -75
     lon <- seq(0.065, 0.1, 0.001)
     dist.lon <- sapply(lon, function(l) {
-        geosphere::distGeo(c(0, ref), c(l, ref))})
+      geosphere::distGeo(c(0, ref), c(l, ref))})
 
     dist.equi <- seq(1740, 2880, 20)
     lon.equidist <- approx(dist.lon, lon, dist.equi)$y
@@ -519,7 +271,7 @@ TC17.Fig02 <- function() {
     ref <- 0.08
     lat <- seq(-74.985, -75.025, -0.001)
     dist.lat <- sapply(lat, function(l){
-        geosphere::distGeo(c(ref, lat[1]), c(ref, l))})
+      geosphere::distGeo(c(ref, lat[1]), c(ref, l))})
 
     dist.lat <- dist.lat - dist.lat[which(lat == -75)]
 
@@ -608,54 +360,42 @@ TC17.Fig02 <- function() {
 
     par(op)
 
-}
+  }
 
-#' Produce TC17 Figure 03a
-#'
-#' @author Thomas Münch
-#' @noRd
-TC17.Fig03a <- function() {
+  TC17.Fig03a <- function() {
 
-  op <- grfxtools::Par(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2),
-                       lwd = 2, font.lab = 2, font.axis = 2)
+    op <- grfxtools::Par(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2),
+                         lwd = 2, font.lab = 2, font.axis = 2)
 
-  # plot without DUNE1 profile
-  t15.trench1 %>%
-    dplyr::filter(profileName != "T15-1-DUNE1") %>%
-    plot2D(rescale.v = 0.01,
+    # plot without DUNE1 profile
+    t15.trench1 %>%
+      dplyr::filter(profileName != "T15-1-DUNE1") %>%
+      plot2D(rescale.v = 0.01,
+             label = grfxtools::LabelAxis(font = par()$font.lab),
+             xlim = c(0, 50), ylim = c(1.755, -0.15), zlim = c(-55, -35),
+             filledContour = TRUE, fill = TRUE)
+
+    par(op)
+
+  }
+
+  TC17.Fig03b <- function() {
+
+    op <- grfxtools::Par(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2),
+                         lwd = 2, font.lab = 2, font.axis = 2)
+
+    plot2D(t15.trench2, rescale.v = 0.01,
            label = grfxtools::LabelAxis(font = par()$font.lab),
-           xlim = c(0, 50), ylim = c(1.755, -0.15), zlim = c(-55, -35),
+           ylab = "", xlim = c(0, 50), ylim = c(1.755, -0.15), zlim = c(-55, -35),
            filledContour = TRUE, fill = TRUE)
 
-  par(op)
+    par(op)
 
-}
+  }
 
-#' Produce TC17 Figure 03b
-#'
-#' @author Thomas Münch
-#' @noRd
-TC17.Fig03b <- function() {
+  TC17.Fig03c <- function() {
 
-  op <- grfxtools::Par(oma = c(0, 0, 0, 0.5), mar = c(5, 5, 0.5, 2),
-                       lwd = 2, font.lab = 2, font.axis = 2)
-
-  plot2D(t15.trench2, rescale.v = 0.01,
-         label = grfxtools::LabelAxis(font = par()$font.lab),
-         ylab = "", xlim = c(0, 50), ylim = c(1.755, -0.15), zlim = c(-55, -35),
-         filledContour = TRUE, fill = TRUE)
-
-  par(op)
-
-}
-
-#' Produce TC17 Figure 03c
-#'
-#' @author Thomas Münch
-#' @noRd
-TC17.Fig03c <- function() {
-
-    trPar <- loadKohnenTrenchPar()
+    trPar <- tc17.paper.param
 
     op <- grfxtools::Par(lwd = 2, font.lab = 2, font.axis = 2)
 
@@ -719,18 +459,12 @@ TC17.Fig03c <- function() {
                       end.pch = TRUE, pch.xoff = 0.2)
 
     par(op)
-}
+  }
 
-##' Produce TC17 Figure 04
-##'
-##' This function makes all necessary calculations and plots the results for
-##' Figure 04 shown in Münch et al. (2017).
-##' @author Thomas Münch
-##' @noRd
-TC17.Fig04 <- function() {
+  TC17.Fig04 <- function() {
 
-    trPar <- loadKohnenTrenchPar()
-    TR <- makeHiResKohnenTrenches(na.rm = TRUE)
+    trPar <- tc17.paper.param
+    TR <- makeHiResKohnenTrenches(.var = "d18O", na.rm = TRUE)
 
     v1 <- TR$mean15
     v2 <- TR$mean13
@@ -738,8 +472,8 @@ TC17.Fig04 <- function() {
     # differentiate from surface layer
     ind1 <- which(TR$mean15$depth <= trPar$surfaceBot["t15"])
     ind2 <- which(TR$mean15$depth <= trPar$surfaceBot["t13"])
-    v1[ind1[-length(ind1)], "d18O"] <- NA
-    v2[ind2[-length(ind2)], "d18O"] <- NA
+    v1[ind1[-length(ind1)], "y"] <- NA
+    v2[ind2[-length(ind2)], "y"] <- NA
 
     op <- grfxtools::Par(oma = c(5, 0, 0.5, 0), mar = c(0, 6, 0, 6),
                          lwd = 2, font.lab = 2, font.axis = 2)
@@ -777,81 +511,71 @@ TC17.Fig04 <- function() {
 
     par(op)
 
-}
+  }
 
-##' Produce TC17 Figure 05
-##'
-##' This function makes all necessary calculations and plots the results for
-##' Figure 05 shown in Münch et al. (2017).
-##' @param dat input data structure resulting from a call of
-##' \code{\link{LoopParamSpace}}; if \code{NULL} (the default), the original
-##' data presented in Münch et al. (2017) is used for plotting which is
-##' supplied with this package in the variable \code{\link{ParamSpace}}.
-##' @author Thomas Münch
-##' @noRd
-TC17.Fig05 <- function(dat = NULL) {
-
-    if (is.null(dat)) {
-        message(paste("Fig05: No specific input data supplied --",
-                      "using data of paper for plotting."))
-        dat <- ParamSpace
-    }
+  TC17.Fig05 <- function() {
 
     op <- grfxtools::Par(lwd = 2, font.lab = 2, font.axis = 2)
 
     palette <- colorRampPalette(rev(RColorBrewer::brewer.pal(10, "RdYlBu")))
 
-    filled.contour(dat$sigma, dat$densf, dat$adv.opt.arr,
+    data <- ParamSpace
+
+    # project RMSD data onto surface of optimal advection values
+
+    opt.adv.surface <- apply(data$RMSD, c(2, 3), which.min) %>%
+      apply(c(1, 2), function(i) {data$advection[i]})
+
+    RMSD.opt.adv.surface <- apply(data$RMSD, c(2, 3), min)
+
+    # make plot
+
+    filled.contour(data$sigma, data$compression, opt.adv.surface,
                    color.palette = palette, zlim = c(40, 60),
                    plot.title =
-                       title(xlab = "Differential diffusion length (cm)",
-                             ylab = "Compression (cm)"),
+                     title(xlab = "Differential diffusion length (cm)",
+                           ylab = "Compression (cm)"),
                    plot.axes = {
-                       contour(dat$sigma,
-                               dat$densf,
-                               dat$RMSD.opt,
-                               add = TRUE, labcex = 1);
-                       points(2.3, 3.5, pch = 21, col = "black",
-                              bg = "black", cex = 1.25);
-                       axis(1); axis(2)})
+                     contour(data$sigma,
+                             data$compression,
+                             RMSD.opt.adv.surface,
+                             add = TRUE, labcex = 1);
+                     points(2.3, 3.5, pch = 21, col = "black",
+                            bg = "black", cex = 1.25);
+                     axis(1); axis(2)})
     
     text(8.1, 5, labels = "Optimal downward advection (cm)",
          srt = -90, xpd = NA, cex = par()$cex.lab, font = par()$font.lab)
 
     par(op)
 
-}
+  }
 
-##' Produce TC17 Figure 06
-##'
-##' This function makes all necessary calculations and plots the results for
-##' Figure 06 shown in Münch et al. (2017).
-##' @author Thomas Münch
-##' @noRd
-TC17.Fig06 <- function() {
+  TC17.Fig06 <- function() {
 
-    trPar <- loadKohnenTrenchPar()
-    mod.param <- SetModificationPar()
+    if (!rlang::is_installed("FirnR", version = "0.1.0.9004")) {
+      stop("Package 'FirnR (>= 0.1.0.9004)' needed to plot Fig.06. ",
+           "It is available on request from the 'TrenchR' package author(s).")
+    }
+
+    trPar <- tc17.paper.param
+    mod.param <- tc17.modif.param
 
     # color scale
     my.col <- c("dodgerblue", "#1b9e77", "#d95f02", "#7570b3")
 
     # T13* and T13**
-    TR <- makeHiResKohnenTrenches(na.rm = TRUE)
-    T13.star     <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
-                                 res = trPar$hiRes,
-                                 depth.hires = TR$mean13_HiRes$depth,
-                                 depth.lores = TR$mean15$depth,
-                                 SIGMA = mod.param$SIGMA.opt,
-                                 STRETCH = mod.param$STRETCH.opt,
-                                 ADV = mod.param$ADV.opt)
-    T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
-                                 res = trPar$hiRes,
-                                 depth.hires = TR$mean13_HiRes$depth,
-                                 depth.lores = TR$mean15$depth,
-                                 SIGMA = mod.param$SIGMA.ind,
-                                 STRETCH = mod.param$STRETCH.ind,
-                                 ADV = mod.param$ADV.ind)
+    TR <- makeHiResKohnenTrenches(.var = "d18O", na.rm = TRUE)
+    T13.star     <- FirnR::ModifyRecord(TR$mean13_HiRes,
+                                        sigma = mod.param$SIGMA.opt,
+                                        compression = mod.param$STRETCH.opt,
+                                        advection = mod.param$ADV.opt,
+                                        output.res = trPar$loRes)
+    T13.starstar <- FirnR::ModifyRecord(TR$mean13_HiRes,
+                                        sigma = mod.param$SIGMA.ind,
+                                        compression = mod.param$STRETCH.ind,
+                                        advection = mod.param$ADV.ind,
+                                        output.res = trPar$loRes)
 
     #---------------------------------------------------------------------------
 
@@ -862,18 +586,15 @@ TC17.Fig06 <- function() {
     # Fig06-a
 
     # auxiliary variables
-    v11 <- v1 <- TR$mean13$d18O
-    v22 <- v2 <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
-                              res = trPar$hiRes,
-                              depth.hires = TR$mean13_HiRes$depth,
-                              depth.lores = TR$mean13$depth,
-                              STRETCH = mod.param$STRETCH.opt)$HiRes
-    v33 <- v3 <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
-                              res = trPar$hiRes,
-                              depth.hires = TR$mean13_HiRes$depth,
-                              depth.lores = TR$mean13$depth,
-                              SIGMA = mod.param$SIGMA.opt)$LoRes
-    v44 <- v4 <- T13.star$LoRes
+    v11 <- v1 <- TR$mean13$y
+    v22 <- v2 <- FirnR::ModifyRecord(TR$mean13_HiRes,
+                                     compression = mod.param$STRETCH.opt)$y
+    v33 <- v3 <- FirnR::ModifyRecord(TR$mean13_HiRes,
+                                     sigma = mod.param$SIGMA.opt,
+                                     output.res = trPar$loRes) %>%
+      dplyr::slice_head(n = nrow(TR$mean13)) %>%
+      dplyr::pull("y")
+    v44 <- v4 <- T13.star$y
 
     p1 <- (p1 <- which(!is.na(v2)))[c(1, length(p1))]
     p2 <- (p2 <- which(!is.na(v3)))[c(1, length(p2))]
@@ -962,15 +683,13 @@ TC17.Fig06 <- function() {
     # Fig06-b
 
     # auxiliary variables
-    v11 <- v1 <- TR$mean15$d18O
-    v22 <- v2 <- T13.star$LoRes
-    v33 <- v3 <- T13.starstar$LoRes
+    v11 <- v1 <- TR$mean15$y
+    v22 <- v2 <- T13.star$y
+    v33 <- v3 <- T13.starstar$y
     # only optimal advection
-    v4 <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
-                       res = trPar$hiRes,
-                       depth.hires = TR$mean13_HiRes$depth,
-                       depth.lores = TR$mean15$depth,
-                       ADV = mod.param$ADV.only)$LoRes
+    v4 <- FirnR::ModifyRecord(TR$mean13_HiRes,
+                              advection = mod.param$ADV.only,
+                              output.res = trPar$loRes)$y
 
     p1 <- (p1 <- which(!is.na(v2)))[c(1, length(p1))]
     p2 <- (p2 <- which(!is.na(v3)))[c(1, length(p2))]
@@ -992,10 +711,10 @@ TC17.Fig06 <- function() {
          axes = FALSE, xlab = "", ylab = "")
 
     for (i in 1 : length(sum.max))
-        segments(x0 = TR$mean15$depth[sum.max[i]], y0 = -52 * 1.04,
-                 y1 = ifelse(v3[sum.max[i]] > v1[sum.max[i]],
-                             v3[sum.max[i]], v1[sum.max[i]]),
-                 lty = 5, lwd = 1, col = "gray50")
+      segments(x0 = TR$mean15$depth[sum.max[i]], y0 = -52 * 1.04,
+               y1 = ifelse(v3[sum.max[i]] > v1[sum.max[i]],
+                           v3[sum.max[i]], v1[sum.max[i]]),
+               lty = 5, lwd = 1, col = "gray50")
     segments(x0 = 50, y0 = -48, x1 = 182, lty = 1, lwd = 1, col = "gray50")
 
     lines(TR$mean15$depth, v11)
@@ -1051,38 +770,35 @@ TC17.Fig06 <- function() {
 
     par(op)
 
-}
+  }
 
-##' Produce TC17 Figure 07
-##'
-##' This function makes all necessary calculations and plots the results for
-##' Figure 07 shown in Münch et al. (2017).
-##' @author Thomas Münch
-##' @noRd
-TC17.Fig07 <- function() {
+  TC17.Fig07 <- function() {
 
-    trPar <- loadKohnenTrenchPar()
-    mod.param <- SetModificationPar()
+    if (!rlang::is_installed("FirnR", version = "0.1.0.9004")) {
+      stop("Package 'FirnR (>= 0.1.0.9004)' needed to plot Fig.07. ",
+           "It is available on request from the 'TrenchR' package author(s).")
+    }
+
+    trPar <- tc17.paper.param
+    mod.param <- tc17.modif.param
 
     # T13**
-    TR <- makeHiResKohnenTrenches()
-    T13.starstar <- ModifyRecord(rec.in = TR$mean13_HiRes$d18O,
-                                 res = trPar$hiRes,
-                                 depth.hires = TR$mean13_HiRes$depth,
-                                 depth.lores = TR$mean15$depth,
-                                 SIGMA = mod.param$SIGMA.ind,
-                                 STRETCH = mod.param$STRETCH.ind,
-                                 ADV = mod.param$ADV.ind)
+    TR <- makeHiResKohnenTrenches(.var = "d18O")
+    T13.starstar <- FirnR::ModifyRecord(TR$mean13_HiRes,
+                                        sigma = mod.param$SIGMA.ind,
+                                        compression = mod.param$STRETCH.ind,
+                                        advection = mod.param$ADV.ind,
+                                        output.res = trPar$loRes)
 
     # profile differences
-    diff.13 <- TR$mean13.1$d18O -
-        prxytools::Lag(TR$mean13.2$d18O, shift = trPar$k13 / trPar$loRes)
+    diff.13 <- TR$mean13.1$y -
+      prxytools::Lag(TR$mean13.2$y, shift = trPar$k13 / trPar$loRes)
 
-    diff.15 <- TR$mean15.1_HiRes$d18O -
-        prxytools::Lag(TR$mean15.2_HiRes$d18O, shift = trPar$k15 / trPar$hiRes)
+    diff.15 <- TR$mean15.1_HiRes$y -
+      prxytools::Lag(TR$mean15.2_HiRes$y, shift = trPar$k15 / trPar$hiRes)
     diff.15 <- diff.15[match(TR$mean15$depth, TR$mean15_HiRes$depth)]
 
-    diff.2yr <- TR$mean15$d18O - T13.starstar$LoRes
+    diff.2yr <- TR$mean15$y - T13.starstar$y
 
     #---------------------------------------------------------------------------
 
@@ -1137,5 +853,26 @@ TC17.Fig07 <- function() {
            bty = "n", inset = c(0, 0.02))
 
     par(op)
+
+  }
+
+  # ----------------------------------------------------------------------------
+  # produce desired figure
+
+  which.figure <- match.arg(which.figure)
+
+  switch(which.figure,
+         f1  = TC17.Fig01(),
+         f2  = TC17.Fig02(),
+         f3a = TC17.Fig03a(),
+         f3b = TC17.Fig03b(),
+         f3c = TC17.Fig03c(),
+         f4  = TC17.Fig04(),
+         f5  = TC17.Fig05(),
+         f6  = TC17.Fig06(),
+         f7  = TC17.Fig07()
+         )
+
+  invisible()
 
 }

@@ -43,7 +43,7 @@ remotes::install_github("EarthSystemDiagnostics/TrenchR", build_vignettes = TRUE
 
 ## Package data
 
-Several datasets are included in **TrenchR** and can be accessed from the
+Several trench datasets are included in **TrenchR** and can be accessed from the
 following variables after loading the package:
 
 * `t13.trench1`: Antarctic snow trench T13-1 stable water isotopologue data and
@@ -54,10 +54,6 @@ following variables after loading the package:
   meta information.
 * `t15.trench2`: Antarctic snow trench T15-2 stable water isotopologue data and
   meta information.
-* `aws9`: 2 m air temperature from the automatic weather station AWS9 at Kohnen
-  Station, Dronning Maud Land, Antarctica, at monthly and annual resolution for
-  the period December 1998 (start of AWS9 operation) until April 2014.
-* `ParamSpace`: Data to reproduce Figure 5 in Münch et al. (2017).
 
 ## Literature cited
 
