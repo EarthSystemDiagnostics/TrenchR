@@ -38,8 +38,9 @@ estimateSNR <- function(data, distances, profilePosition = NULL, .var = "d18O",
     estimateInterProfileCorrelation(distances, profilePosition,
                                     .var, rangeTol, a1) %>%
     dplyr::summarise(cor = mean(.data$cor),
-                     lim = sqrt(sum(.data$se^2)) / dplyr::n()) %>%
+                     lim = sqrt(sum(.data$se^2, na.rm = TRUE)),
+                     n = sum(complete.cases(.data$se))) %>%
     dplyr::transmute(snr = .data$cor / (1 - .data$cor),
-                     se  = .data$lim / (1 - .data$cor)^2)
+                     se  = .data$lim / .data$n / (1 - .data$cor)^2)
 
 }

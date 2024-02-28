@@ -100,7 +100,7 @@ plot2D <- function(data, .var = "d18O", vscale = "depth",
   y <- rescale.v * getZ(data, vscale = vscale)
   z <- make2D(data, .var, simplify = TRUE)
 
-  if (!length(zlim)) zlim <- unname(quantile(z, probs = qProbs))
+  if (!length(zlim)) zlim <- unname(quantile(z, probs = qProbs, na.rm = TRUE))
 
   z[z < zlim[1]] <- zlim[1]
   z[z > zlim[2]] <- zlim[2]
