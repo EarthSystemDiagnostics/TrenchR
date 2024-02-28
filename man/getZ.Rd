@@ -4,14 +4,14 @@
 \alias{getZ}
 \title{Common vertical trench scale}
 \usage{
-getZ(data, .var = "depth")
+getZ(data, vscale = "depth")
 }
 \arguments{
 \item{data}{a trench data set following the default structure used in the
 package.}
 
-\item{.var}{the name of the vertical scale as a character string; defaults to
-\code{"depth"}.}
+\item{vscale}{the name of the vertical scale as a character string; defaults
+to \code{"depth"}.}
 }
 \value{
 numeric vector of the vertical scale.

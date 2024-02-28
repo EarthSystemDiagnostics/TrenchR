@@ -97,7 +97,7 @@ plot2D <- function(data, .var = "d18O", vscale = "depth",
                   height = rescale.v * .data$height)
 
   x <- surfaceProfile$position
-  y <- rescale.v * getZ(data, .var = vscale)
+  y <- rescale.v * getZ(data, vscale = vscale)
   z <- make2D(data, .var, simplify = TRUE)
 
   if (!length(zlim)) zlim <- unname(quantile(z, probs = qProbs))

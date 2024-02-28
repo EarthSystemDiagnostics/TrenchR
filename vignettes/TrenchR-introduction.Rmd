@@ -144,7 +144,7 @@ getX(t13.trench2)
 the vertical scale,
 
 ```{r}
-getZ(t13.trench2) # default is the same as getZ(t13.trench2, .var = "depth")
+getZ(t13.trench2) # default is the same as getZ(t13.trench2, vscale = "depth")
 ```
 
 and the trench surface profile:

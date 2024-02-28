@@ -27,21 +27,21 @@ getX <- function(data) {
 #'
 #' @param data a trench data set following the default structure used in the
 #'   package.
-#' @param .var the name of the vertical scale as a character string; defaults to
-#'   \code{"depth"}.
+#' @param vscale the name of the vertical scale as a character string; defaults
+#'   to \code{"depth"}.
 #' @return numeric vector of the vertical scale.
 #' @author Thomas Münch
 #' @examples
 #' getZ(t13.trench1)
 #' @export
 #'
-getZ <- function(data, .var = "depth") {
+getZ <- function(data, vscale = "depth") {
 
-  if (!.var %in% colnames(data)) {
+  if (!vscale %in% colnames(data)) {
     stop("Unknown column name for vertical scale.")
   }
 
-  unique(data[[.var]])
+  unique(data[[vscale]])
 
 }
 
@@ -186,7 +186,7 @@ makeMean <- function(data, .var = "d18O", vscale = "depth",
 
   if (df) {
     tibble::tibble(
-      getZ(data, .var = vscale), rowMeans(make2D(data, .var), na.rm = na.rm)) %>%
+      getZ(data, vscale = vscale), rowMeans(make2D(data, .var), na.rm = na.rm)) %>%
       stats::setNames(c(vscale, .var))
   } else {
     rowMeans(make2D(data, .var), na.rm = na.rm)

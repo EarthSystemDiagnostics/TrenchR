@@ -15,7 +15,7 @@ test_that("extraction of depth profile works", {
 
 test_that("extraction of depth profile works", {
 
-  expect_error(getZ(t13.trench1, .var = "foo"),
+  expect_error(getZ(t13.trench1, vscale = "foo"),
                "Unknown column name for vertical scale.")
   expect_equal(getZ(t13.trench1), seq(from = 1.5, by = 3, length.out = 38))
 
