@@ -10,7 +10,7 @@ test_that("SNR calculation works", {
     depth = rep(1 : 4, times = 4),
     d18O = c(1 : 4, 1 : 4, 1 : 4, 4 : 1))
   
-  expected = tibble::tibble(snr = 0, se = as.numeric(NA))
+  expected = tibble::tibble(snr = 0, se = 0.5)
   actual <- estimateSNR(data, distances = 1 : 3)
   expect_equal(actual, expected)
 
