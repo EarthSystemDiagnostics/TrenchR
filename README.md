@@ -1,16 +1,18 @@
-# TrenchR: Analyse Trench-like Proxy Records.
+# TrenchR: Analyse Trench-like Proxy Records
 
 ------------------------------
 
 ## Introduction
 
-**TrenchR** implements routines that are targeted at the analysis, together with
-accompanying plotting, of spatial and temporal variations of proxy data
-derived from spatial arrays of records, specifically from trenches, i.e.,
-proxy depth profiles sampled longitudinally at regular intervals. This part is
-still under active development, but the package incorporates the analyses of
-Antarctic snow trench stable isotope data performed for the publication of Münch
-et al. (2017).
+A _trench_ denotes a spatial array of profiles that tabulate climate proxy data
+over depth or time, with the profiles being sampled longitudinally at regular
+or irregular intervals.  The R package **TrenchR** implements routines that are
+targeted at the analysis and the plotting of the spatial (longitudinal) and
+vertical (temporal) variations of the climate proxy data derived from such
+trenches. The range of functions in **TrenchR** were the basis for the
+publications of Münch et al. [2016](https://doi.org/10.5194/cp-12-1565-2016) and
+Münch et al. [2017](https://doi.org/10.5194/tc-11-2175-2017), which analysed
+Antarctic snow trench stable isotope data.
 
 The R code in this package has been implemented by Dr. Thomas Münch. For further
 information, code enhancements or potential bugs, please write to
@@ -24,22 +26,24 @@ Grant VG-NH900.
  
 ## Installation
 
-**TrenchR** is currently available from its [GitHub
-repository](https://github.com/EarthSystemDiagnostics/TrenchR) and is installed
+The latest version of **TrenchR** is currently available from the development
+branch of its [GitHub
+repository](https://github.com/EarthSystemDiagnostics/TrenchR), and is installed
 via:
 
 ```r
 # install.packages("remotes")
-remotes::install_github("EarthSystemDiagnostics/TrenchR", build_vignettes = TRUE)
+remotes::install_github("EarthSystemDiagnostics/TrenchR", ref = "dev")
 ```
 
-## Examples
+## Vignettes
 
-* The package vignette `Plot Münch et al. (2017) figures` shows how to
-  reproduce the plots for the publication Münch et al. (2017) and is available after
-  installing the package as shown above. The respective vignette of the package
-  development version is linked
-  [here](http://htmlpreview.github.io/?https://github.com/EarthSystemDiagnostics/TrenchR/blob/master/vignettes/tc17-figures.html).
+* The vignette `Introduction to TrenchR` gives an introduction to **TrenchR**,
+  explaining the expected generic dataset structure and giving examples of
+  applying specific **TrenchR** functions.
+* The package vignette `Plot Münch et al. (2017) figures` reproduces the plots
+  for the publication of Münch et
+  al. ([2017](https://doi.org/10.5194/tc-11-2175-2017)).
 
 ## Package data
 
@@ -56,6 +60,12 @@ following variables after loading the package:
   meta information.
 
 ## Literature cited
+
+Münch, T., Kipfstuhl, S., Freitag, J., Meyer, H., and Laepple, T.: Regional
+climate signal vs. local noise: a two-dimensional view of water isotopes in
+Antarctic firn at Kohnen Station, Dronning Maud Land, Clim. Past, 12(7),
+1565-1581, doi:
+[10.5194/cp-12-1565-2016](https://doi.org/10.5194/cp-12-1565-2016), 2016.
 
 Münch, T., Kipfstuhl, S., Freitag, J., Meyer, H., and Laepple, T.: Constraints
 on post-depositional isotope modifications in East Antarctic firn from analysing
