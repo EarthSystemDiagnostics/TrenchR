@@ -1,19 +1,15 @@
 ---
-title: "Introduction to TrenchR"
-author: "Thomas Münch"
-date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Introduction to TrenchR}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+output: github_document
 ---
 
-```{r, include = FALSE}
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  rmarkdown.html_vignette.check_title = FALSE,
-  comment = "#>"
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
 )
 
 library(TrenchR)
@@ -22,27 +18,56 @@ library(dplyr)
 
 ```
 
-## What is a trench?
+# TrenchR: Analyse Trench-like Proxy Records
 
-A "trench" denotes a spatial array of profiles that tabulate climate proxy data
+<!-- badges: start -->
+<!-- badges: end -->
+
+## Introduction
+
+A _trench_ denotes a spatial array of profiles that tabulate climate proxy data
 over depth or time, with the profiles being sampled longitudinally at regular
-or irregular intervals. The R package `TrenchR` implements routines that are
+or irregular intervals. The R package **TrenchR** implements routines that are
 targeted at the analysis and the plotting of the spatial (longitudinal) and
 vertical (temporal) variations of the climate proxy data derived from such
-trenches.
+trenches. The range of functions in **TrenchR** were the basis for the
+publications of Münch et al. ([2016](https://doi.org/10.5194/cp-12-1565-2016))
+and Münch et al. ([2017](https://doi.org/10.5194/tc-11-2175-2017)), which
+analysed Antarctic snow trench stable isotope data.
 
+The R code in this package has been implemented by Dr. Thomas Münch. For further
+information, code enhancements or potential bugs, please write to
+<<thomas.muench@awi.de>> at the Alfred Wegener Institute, Helmholtz Centre for
+Polar and Marine Research, Germany, or open an issue on the repository page.
 
-## Generic `TrenchR` dataset structure
+This work was supported by Helmholtz funding through the Polar Regions and
+Coasts in the Changing Earth System (PACES) programme of the Alfred Wegener
+Institute and by the Initiative and Networking Fund of the Helmholtz Association
+Grant VG-NH900.
 
-In order to optimally work with `TrenchR` and facilitate the application of
-`TrenchR` functions, it is convenient to prepare your "trench" dataset in a way
-that adheres to the `TrenchR` generic dataset structure. In the following, this
+## Installation
+
+The latest version of **TrenchR** is currently available from the development
+branch of its [GitHub
+repository](https://github.com/EarthSystemDiagnostics/TrenchR), and is installed
+via:
+
+```r
+# install.packages("remotes")
+remotes::install_github("EarthSystemDiagnostics/TrenchR", ref = "dev")
+```
+
+## Generic **TrenchR** dataset structure
+
+In order to optimally work with **TrenchR** and facilitate the application of
+**TrenchR** functions, it is convenient to prepare your "trench" dataset in a way
+that adheres to the **TrenchR** generic dataset structure. In the following, this
 generic structure is introduced and it is shown in a small example how to shape
 your own data into this structure.
 
 ### The structure
 
-`TrenchR` comes with four trench datasets: `t13.trench1`, `t13.trench2`,
+**TrenchR** comes with four trench datasets: `t13.trench1`, `t13.trench2`,
 `t15.trench1`, and `t15.trench2` (Münch et
 al. [2016](https://doi.org/10.5194/cp-12-1565-2016),
 [2017](https://doi.org/10.5194/tc-11-2175-2017)). Since `t13.trench2` is the
@@ -78,14 +103,14 @@ In addition, you can provide information on the horizontal profile positions
 within the trench in a column named `profilePosition`, and, if applicable, on
 the top heights of the profiles relative to some horizontal reference in the
 column `surfaceHeight`. While these additional two columns are not mandatory in
-general, they are required for some `TrenchR` functions.
+general, they are required for some **TrenchR** functions.
 
 Usually, there is also some vertical scale associated with the samples and
 sample numbers. This can be "depth", as for `t13.trench2`, or "time", or any
-other applicable scaling. `TrenchR` functions, which need to use this vertical
+other applicable scaling. **TrenchR** functions, which need to use this vertical
 scale in order to work, include the function parameter `vscale` to specify the
 name of the vertical scale column. In this context it is also important to note
-that for `TrenchR` we **inherently assume** that this vertical scale is
+that for **TrenchR** we **inherently assume** that this vertical scale is
 _absolute_, i.e. that it is the same for all profiles.
 
 ### Creating a trench dataset
@@ -127,14 +152,14 @@ my_trench <- dplyr::bind_rows(profile1 = prf1, profile2 = prf2, profile3 = prf3,
 my_trench
 ```
 
-And now you are already good to go to apply all the nice `TrenchR` functions to
+And now you are already good to go to apply all the nice **TrenchR** functions to
 your trench dataset!
 
-## Applying `TrenchR`
+## Applying **TrenchR**
 
 ### Extracting trench information
 
-For quick access, `TrenchR` provides functions to directly retrieve information
+For quick access, **TrenchR** provides functions to directly retrieve information
 on the trench dataset, such as the horizontal profile positions,
 
 ```{r}
@@ -176,7 +201,7 @@ getEffectiveTrenchDOF(a1 = 0.5, positions = seq(0, 18, 2))
 
 The inherent two-dimensional structure of a trench dataset can be directly
 visualised in matrix form; while this matrix representation is currently not
-needed for using any of the below `TrenchR` functions, since they all accept the
+needed for using any of the below **TrenchR** functions, since they all accept the
 generic dataset structure as input, it might be handy for external functions
 and usage.
 
@@ -228,14 +253,14 @@ variable the mean profile is calculated.
 The two-dimensional proxy data variations can be directly visualised using the
 function `plot2D`, either as a filled image plot,
 
-```{r, fig.height = 5.25, fig.width = 7}
+```{r image-plot, fig.height = 5.25, fig.width = 7}
 plot2D(t13.trench1, xlim = c(-0.1, 46), ylim = c(114, 0), zlim = c(-55, -35),
        ylab = "Depth (cm)", hadj = 0.2, line.v = 3)
 ```
 
 or as a filled contour plot:
 
-```{r, fig.height = 5.25, fig.width = 7}
+```{r contour-plot, fig.height = 5.25, fig.width = 7}
 plot2D(t13.trench1, xlim = c(-0.1, 46), ylim = c(114, 0), zlim = c(-55, -35),
        ylab = "Depth (cm)", hadj = 0.02, line.v = 3,
        filledContour = TRUE, fill = TRUE)
@@ -262,7 +287,7 @@ account for autocorrelation of the data the DOF can be supplied also manually
 
 An interesting application for a trench dataset is to study how the correlation
 between neighbouring profiles varies with their separation distance. In
-`TrenchR`, you can assess this question using `estimateInterProfileCorrelation`,
+**TrenchR**, you can assess this question using `estimateInterProfileCorrelation`,
 which calculates the average pairwise correlation between trench profiles for
 given separation distances (including some tolerance so that the inter-profile
 distances do not all need to exactly match the asked distances): 
