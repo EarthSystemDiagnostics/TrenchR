@@ -15,8 +15,8 @@ longitudinally at regular or irregular intervals. The R package
 the plotting of the spatial (longitudinal) and vertical (temporal)
 variations of the climate proxy data derived from such trenches. The
 range of functions in **TrenchR** were the basis for the publications of
-Münch et al. [2016](https://doi.org/10.5194/cp-12-1565-2016) and Münch
-et al. [2017](https://doi.org/10.5194/tc-11-2175-2017), which analysed
+Münch et al. ([2016](https://doi.org/10.5194/cp-12-1565-2016)) and Münch
+et al. ([2017](https://doi.org/10.5194/tc-11-2175-2017)), which analysed
 Antarctic snow trench stable isotope data.
 
 The R code in this package has been implemented by Dr. Thomas Münch. For
@@ -411,10 +411,11 @@ estimateInterProfileCorrelation(t13.trench2, distances = c(10, 30))
 #> 2        30     2 0.347 0.435 0.308
 ```
 
-As you can see, the output gives the average correlation for each
-distance and the associated standard deviation and standard error of the
-mean estimate. See `?estimateInterProfileCorrelation` for details and
-more information on the error estimation.
+As you can see, the output gives the number of found profile pairs for
+each distance, their average correlation, and the associated standard
+deviation and standard error of the mean estimate. See
+`?estimateInterProfileCorrelation` for details and more information on
+the error estimation.
 
 You can also calculate the correlation between profiles from two
 separate trenches (assuming the two trenches were sampled at the same
@@ -470,7 +471,7 @@ which is internally based on `estimateInterProfileCorrelation` and
 calculates the signal-to-noise ratio (SNR) from the mean across the
 average pairwise profile correlations evaluated at the given profile
 separation distances via
-$\mathrm{SNR} = \overline{c}\,/\,(1 - \overline{c})$, where
+$\mathrm{SNR} = \overline{c}\left(1 - \overline{c}\right)^{-1}$, where
 $\overline{c}$ is the mean correlation.
 
 ## References
