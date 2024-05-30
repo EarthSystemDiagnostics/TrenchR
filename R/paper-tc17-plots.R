@@ -7,6 +7,8 @@
 #'
 #' @param .var character string with the name of the trench data variable for
 #'   which mean profiles are to be calculated.
+#' @param paper.range logical; if \code{TRUE} the T15 data range as analysed in
+#'   Münch et al. (2017) is returned, else the entire trench data.
 #' @param na.rm a logical evaluating to \code{TRUE} or \code{FALSE} indicating
 #'   whether \code{NA} values should be stripped before the computation of the
 #'   mean profile proceeds.
@@ -15,7 +17,8 @@
 #'   higher depth resolution as specified in the variable tc17.paper.param.
 #' @author Thomas Münch
 #' @noRd
-makeHiResKohnenTrenches <- function(.var = "d18O", na.rm = FALSE) {
+makeHiResKohnenTrenches <- function(.var = "d18O", paper.range = TRUE,
+                                    na.rm = FALSE) {
 
   intpl <- function(x, newdepth) {
     tibble::tibble(depth = newdepth, y = approx(x$depth, x$y, newdepth)$y)
@@ -32,7 +35,10 @@ makeHiResKohnenTrenches <- function(.var = "d18O", na.rm = FALSE) {
 
   trPar <- tc17.paper.param
 
-  x <- range(getZ(t15.trench1)[trPar$ix])
+  # set range of T15 data
+  i.t15 <- if (paper.range) trPar$ix else 1 : length(getZ(t15.trench1))
+
+  x <- range(getZ(t15.trench1)[i.t15])
   depth_HiRes <- seq(x[1], x[2], by = trPar$hiRes)
 
   # T13 mean profiles
@@ -48,11 +54,11 @@ makeHiResKohnenTrenches <- function(.var = "d18O", na.rm = FALSE) {
   mean15.1 <- t15.trench1 %>%
     dplyr::filter(profileName != "T15-1-DUNE1") %>%
     makeMean(.var = .var, na.rm = na.rm, df = TRUE) %>%
-    dplyr::slice(trPar$ix) %>%
+    dplyr::slice(i.t15) %>%
     setNames(c("depth", "y"))
   mean15.2 <- t15.trench2 %>%
     makeMean(.var = .var, na.rm = na.rm, df = TRUE) %>%
-    dplyr::slice(trPar$ix) %>%
+    dplyr::slice(i.t15) %>%
     setNames(c("depth", "y"))
 
   # interpolate mean profiles onto higher depth resolution
