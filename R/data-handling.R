@@ -229,22 +229,23 @@ is.trench <- function(data, check = "full") {
 
 }
 
-#' Bottom of varying trench surface region
+#' Bottom of varying trench "surface" region
 #'
-#' Extract the value of the bin in vertical dimension ("depth") for which a
-#' complete horizontal data set across all trench profile positions is
+#' Extract the value of the bin in vertical dimension (e.g. along "depth") for
+#' which a complete horizontal data set across all trench profile positions is
 #' available.
 #'
 #' This function assumes that NA values at the start of a trench profile are due
 #' to tabulating the trench data on an absolute scale in vertical dimension, so
 #' that positions where the surface height is below the maximum surface height
-#' have no data. It extracts the value of the bin for which **all** profiles
-#' have a data value for the first time.
+#' have no data. It extracts the value of the bin for which for the first time
+#' **all** profiles have a data value.
 #'
 #' @param data a trench data set following the default structure used in the
 #'   package.
-#' @param .var character string with the name of a trench data variable.
-#' @param vscale  character string giving the name of the vertical scale
+#' @param .var character string with the name of a trench data variable for
+#'   which to check for missing values at the "surface".
+#' @param vscale character string giving the name of the vertical scale
 #'   variable used in the trench data; defaults to \code{"depth"}.
 #' @return value of \code{vscale} for the first vertical bin where all profiles
 #'   exhibit data in \code{.var}.
@@ -258,13 +259,13 @@ is.trench <- function(data, check = "full") {
 getFirstCompleteDepthBin <- function(data, .var = "d18O", vscale = "depth") {
 
   if (!vscale %in% colnames(data)) {
-    stop("Unknown column name for vertical scale.")
+    stop("Unknown column name for vertical scale.", call. = FALSE)
   }
   if (!.var %in% colnames(data)) {
-    stop("Unknown data variable.")
+    stop("Unknown data variable.", call. = FALSE)
   }
   if (!"profileName" %in% colnames(data)) {
-    stop("Need column 'profileName'.")
+    stop("Need column 'profileName'.", call. = FALSE)
   }
 
   data %>%
@@ -275,5 +276,37 @@ getFirstCompleteDepthBin <- function(data, .var = "d18O", vscale = "depth") {
     dplyr::ungroup() %>%
     dplyr::pull(vscale) %>%
     max(.)
+
+}
+
+#' Remove incomplete trench "surface" region
+#'
+#' When tabulating a trench data set on an absolute scale in vertical dimension
+#' (e.g. along "depth"), sampling positions have no data, i.e. are NA, where the
+#' vertical scale variable is below the maximum observed vertical scale across
+#' the trench. This function removes this incomplete "surface" region to get a
+#' trench data set without missing values.
+#'
+#' @inheritParams getFirstCompleteDepthBin
+#' @importFrom rlang .data
+#'
+#' @return the input trench data set with the "surface region" removed.
+#'
+#' @author Thomas Münch
+#' @seealso getFirstCompleteDepthBin
+#' @examples
+#' t13.trench2 %>% make2D()
+#' removeSurfaceRegion(t13.trench2) %>% make2D()
+#' @export
+#'
+removeSurfaceRegion <- function(data, .var = "d18O", vscale = "depth") {
+
+  if (!vscale %in% colnames(data)) {
+    stop("Unknown column name for vertical scale.", call. = FALSE)
+  }
+
+  data %>%
+    dplyr::filter(.data[[vscale]] >=
+                  getFirstCompleteDepthBin(., .var = .var, vscale = vscale))
 
 }

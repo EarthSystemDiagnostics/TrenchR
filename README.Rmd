@@ -178,15 +178,6 @@ and the trench surface profile:
 getSurfaceProfile(t13.trench2)
 ```
 
-For such undulating trench surfaces, `getFirstCompleteDepthBin` extracts the
-value of the first bin of the vertical scale dimension (e.g. "depth") for which
-a complete dataset across all trench profiles is available:
-
-```{r}
-getFirstCompleteDepthBin(t13.trench2)
-getFirstCompleteDepthBin(t15.trench1)
-```
-
 If you already might have an estimate of the horizontal autocorrelation ($a_1$)
 of your trench data at hand, you can use `getEffectiveTrenchDOF` to calculate
 the effective horizontal degrees of freedom of your trench dataset:
@@ -199,11 +190,7 @@ getEffectiveTrenchDOF(a1 = 0.5, positions = seq(0, 18, 2))
 
 ### Two-dimensional dataset
 
-The inherent two-dimensional structure of a trench dataset can be directly
-visualised in matrix form; while this matrix representation is currently not
-needed for using any of the below **TrenchR** functions, since they all accept the
-generic dataset structure as input, it might be handy for external functions
-and usage.
+A trench dataset can also be represented in matrix form:
 
 ```{r}
 make2D(t13.trench2)
@@ -211,11 +198,28 @@ make2D(t13.trench2)
 # Note: use simplify = TRUE to really have the output class `matrix`
 ```
 
+While this matrix representation is currently not needed for using any of the
+below `TrenchR` functions, since they all accept the generic dataset structure
+as input, it might be handy for external functions and usage, and it offers a
+straightforward way to visualise the inherent two-dimensional structure of a
+trench dataset.
+
 The default is to extract the data column labelled `d18O`; to extract any other
 data column, use
 
 ```{r}
 make2D(t13.trench2, .var = "dxs") # insert your data column name for `.var`
+```
+
+The 2D visualisation also shows that for such undulating trench surfaces as for
+T13-2, the first rows in horizontal direction of the trench data are
+incomplete, i.e. contain NA values, when viewed on the absolute vertical
+scale. However, if you require for some analysis a dataset without missing
+values, you can easily remove this incomplete "surface" region with the function
+`removeSurfaceRegion`:
+
+```{r}
+removeSurfaceRegion(t13.trench2) %>% make2D()
 ```
 
 ### Trench  mean

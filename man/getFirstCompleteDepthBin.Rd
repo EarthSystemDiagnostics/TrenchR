@@ -2,7 +2,7 @@
 % Please edit documentation in R/data-handling.R
 \name{getFirstCompleteDepthBin}
 \alias{getFirstCompleteDepthBin}
-\title{Bottom of varying trench surface region}
+\title{Bottom of varying trench "surface" region}
 \usage{
 getFirstCompleteDepthBin(data, .var = "d18O", vscale = "depth")
 }
@@ -10,7 +10,8 @@ getFirstCompleteDepthBin(data, .var = "d18O", vscale = "depth")
 \item{data}{a trench data set following the default structure used in the
 package.}
 
-\item{.var}{character string with the name of a trench data variable.}
+\item{.var}{character string with the name of a trench data variable for
+which to check for missing values at the "surface".}
 
 \item{vscale}{character string giving the name of the vertical scale
 variable used in the trench data; defaults to \code{"depth"}.}
@@ -20,16 +21,16 @@ value of \code{vscale} for the first vertical bin where all profiles
   exhibit data in \code{.var}.
 }
 \description{
-Extract the value of the bin in vertical dimension ("depth") for which a
-complete horizontal data set across all trench profile positions is
+Extract the value of the bin in vertical dimension (e.g. along "depth") for
+which a complete horizontal data set across all trench profile positions is
 available.
 }
 \details{
 This function assumes that NA values at the start of a trench profile are due
 to tabulating the trench data on an absolute scale in vertical dimension, so
 that positions where the surface height is below the maximum surface height
-have no data. It extracts the value of the bin for which **all** profiles
-have a data value for the first time.
+have no data. It extracts the value of the bin for which for the first time
+**all** profiles have a data value.
 }
 \examples{
 getFirstCompleteDepthBin(t13.trench1)

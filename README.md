@@ -93,9 +93,15 @@ proxy data samples within a profile:
 ``` r
 nrow(t13.trench2)
 #> [1] 152
+```
+
+``` r
 
 unique(t13.trench2$profileName)
 #> [1] "T13-2-01" "T13-2-02" "T13-2-03" "T13-2-04"
+```
+
+``` r
 unique(t13.trench2$sampleNumber)
 #>  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25
 #> [26] 26 27 28 29 30 31 32 33 34 35 36 37 38
@@ -218,18 +224,6 @@ getSurfaceProfile(t13.trench2)
 #> 4     40      0.5
 ```
 
-For such undulating trench surfaces, `getFirstCompleteDepthBin` extracts
-the value of the first bin of the vertical scale dimension
-(e.g. “depth”) for which a complete dataset across all trench profiles
-is available:
-
-``` r
-getFirstCompleteDepthBin(t13.trench2)
-#> [1] 10.5
-getFirstCompleteDepthBin(t15.trench1)
-#> [1] 19.5
-```
-
 If you already might have an estimate of the horizontal autocorrelation
 ($a_1$) of your trench data at hand, you can use `getEffectiveTrenchDOF`
 to calculate the effective horizontal degrees of freedom of your trench
@@ -238,6 +232,9 @@ dataset:
 ``` r
 getEffectiveTrenchDOF(a1 = 0.5, N = 10, delta = 2)
 #> [1] 6.338028
+```
+
+``` r
 # is equivalent to:
 getEffectiveTrenchDOF(a1 = 0.5, positions = seq(0, 18, 2))
 #> [1] 6.338028
@@ -245,11 +242,7 @@ getEffectiveTrenchDOF(a1 = 0.5, positions = seq(0, 18, 2))
 
 ### Two-dimensional dataset
 
-The inherent two-dimensional structure of a trench dataset can be
-directly visualised in matrix form; while this matrix representation is
-currently not needed for using any of the below **TrenchR** functions,
-since they all accept the generic dataset structure as input, it might
-be handy for external functions and usage.
+A trench dataset can also be represented in matrix form:
 
 ``` r
 make2D(t13.trench2)
@@ -267,9 +260,18 @@ make2D(t13.trench2)
 #>  9      -46.0      -40.5      -46.4      -39.2
 #> 10      -40.3      -39.0      -42.7      -39.5
 #> # ℹ 28 more rows
+```
+
+``` r
 
 # Note: use simplify = TRUE to really have the output class `matrix`
 ```
+
+While this matrix representation is currently not needed for using any
+of the below `TrenchR` functions, since they all accept the generic
+dataset structure as input, it might be handy for external functions and
+usage, and it offers a straightforward way to visualise the inherent
+two-dimensional structure of a trench dataset.
 
 The default is to extract the data column labelled `d18O`; to extract
 any other data column, use
@@ -290,6 +292,31 @@ make2D(t13.trench2, .var = "dxs") # insert your data column name for `.var`
 #>  9       10.5        5.9       11.4        1  
 #> 10        8.8        5.1        5.9        3.5
 #> # ℹ 28 more rows
+```
+
+The 2D visualisation also shows that for such undulating trench surfaces
+as for T13-2, the first rows in horizontal direction of the trench data
+are incomplete, i.e. contain NA values, when viewed on the absolute
+vertical scale. However, if you require for some analysis a dataset
+without missing values, you can easily remove this incomplete “surface”
+region with the function `removeSurfaceRegion`:
+
+``` r
+removeSurfaceRegion(t13.trench2) %>% make2D()
+#> # A tibble: 35 × 4
+#>    `T13-2-01` `T13-2-02` `T13-2-03` `T13-2-04`
+#>         <dbl>      <dbl>      <dbl>      <dbl>
+#>  1      -43.7      -37.8      -45.9      -48.0
+#>  2      -43.3      -42.3      -47.7      -47.0
+#>  3      -47.0      -47.0      -48.0      -46.3
+#>  4      -49.7      -49.3      -47.3      -42.2
+#>  5      -46.8      -47.4      -47.6      -39.8
+#>  6      -46.0      -40.5      -46.4      -39.2
+#>  7      -40.3      -39.0      -42.7      -39.5
+#>  8      -42.6      -42.0      -44.8      -41.1
+#>  9      -45.1      -43.8      -47.6      -45  
+#> 10      -46.8      -45.4      -47.6      -47.8
+#> # ℹ 25 more rows
 ```
 
 ### Trench mean
@@ -431,6 +458,9 @@ str(raw)
 #>  - attr(*, "dimnames")=List of 2
 #>   ..$ : chr [1:38] "T13-1-01" "T13-1-02" "T13-1-03" "T13-1-04" ...
 #>   ..$ : chr [1:4] "T13-2-01" "T13-2-02" "T13-2-03" "T13-2-04"
+```
+
+``` r
 str(opt)
 #> List of 2
 #>  $ cor: num [1:38, 1:4] 0.565 0.463 0.436 0.497 0.457 ...
@@ -441,9 +471,15 @@ str(opt)
 #>   ..- attr(*, "dimnames")=List of 2
 #>   .. ..$ : chr [1:38] "T13-1-01" "T13-1-02" "T13-1-03" "T13-1-04" ...
 #>   .. ..$ : chr [1:4] "T13-2-01" "T13-2-02" "T13-2-03" "T13-2-04"
+```
+
+``` r
 
 mean(raw)
 #> [1] 0.3316521
+```
+
+``` r
 mean(opt$cor)
 #> [1] 0.4960954
 ```

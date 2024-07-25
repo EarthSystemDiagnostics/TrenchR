@@ -237,3 +237,25 @@ test_that("extracting the bottom of the surface layer works", {
   expect_equal(getFirstCompleteDepthBin(foo), 3)
 
 })
+
+test_that("removal of surface region works", {
+
+  expect_error(removeSurfaceRegion(t13.trench1, .var = "foo"),
+               "Unknown data variable.")
+  expect_error(removeSurfaceRegion(t13.trench1, vscale = "foo"),
+               "Unknown column name for vertical scale.")
+  expect_error(
+    removeSurfaceRegion(dplyr::select(t13.trench1, -"profileName")),
+    "Need column 'profileName'.", fixed = TRUE)
+
+  expected <- make2D(t13.trench1, simplify = TRUE)[-(1 : 3), ]
+  actual <- removeSurfaceRegion(t13.trench1) %>% make2D(simplify = TRUE)
+
+  expect_equal(actual, expected)
+
+  expected <- make2D(t15.trench2, simplify = TRUE)[-(1 : 5), ]
+  actual <- removeSurfaceRegion(t15.trench2) %>% make2D(simplify = TRUE)
+
+  expect_equal(actual, expected)
+
+})
