@@ -87,3 +87,126 @@ test_that("gaussian kernel autocorrelation estimation works", {
   expect_equal(actual, expected)  
   
 })
+
+test_that("lag-1 autocorrelation estimation works", {
+
+  # test error checks
+
+  expect_error(calcEquidistantAC1(1, 1, 1),
+               "`x` must be a matrix.", fixed = TRUE)
+  expect_error(calcEquidistantAC1(matrix(NA, 5, 10), 1, 1),
+               "`x.no.surface` must be a matrix.", fixed = TRUE)
+
+  m <- "Dimensions of `x` and `x.no.surface` do not match."
+  expect_error(calcEquidistantAC1(matrix(NA, 5, 10), matrix(NA, 5, 7), 1),
+               m, fixed = TRUE)
+  expect_error(calcEquidistantAC1(matrix(NA, 5, 10), matrix(NA, 5, 13), 1),
+               m, fixed = TRUE)
+  expect_error(calcEquidistantAC1(matrix(NA, 5, 10), matrix(NA, 8, 10), 1),
+               m, fixed = TRUE)
+
+  m <- "`direction` must be set to `1` or `2`."
+  expect_error(calcEquidistantAC1(matrix(NA, 5, 10), matrix(NA, 2, 10), -1),
+               m, fixed = TRUE)
+  expect_error(calcEquidistantAC1(matrix(NA, 5, 10), matrix(NA, 2, 10), 6.2),
+               m, fixed = TRUE)
+
+  # ----------------------------------------------------------------------------
+  # case I: evenly spaced data
+
+  # I-a no NAs
+
+  nr <- 10
+  nc <- 3
+
+  x <- sapply(seq(nc), rnorm, n = nr)
+
+  av <- apply(x, 2, function(xx) {
+    stats::acf(xx, lag.max = 1, plot = FALSE)$acf[2]}) %>%
+    mean()
+
+  ah <- apply(x, 1, function(xx) {
+    stats::acf(xx, lag.max = 1, plot = FALSE)$acf[2]}) %>%
+    mean()
+
+  actual <- calcEquidistantAC1(x, x, direction = 2)
+  expect_equal(actual, av)
+
+  actual <- calcEquidistantAC1(x, x, direction = 1)
+  expect_equal(actual, ah)
+
+  # I-b internal NAs
+
+  x[6, 2] <- NA
+  x[9, 1] <- NA
+
+  av <- stats::acf(x[, -c(1, 2)], lag.max = 1, plot = FALSE)$acf[2]
+
+  ah <- apply(x[-c(6, 9), ], 1, function(xx) {
+    stats::acf(xx, lag.max = 1, plot = FALSE)$acf[2]}) %>%
+    mean()
+
+  expect_warning(
+    actual <- calcEquidistantAC1(x, x, direction = 2),
+    "2 column(s) removed containing NA values.", fixed = TRUE)
+  expect_equal(actual, av)
+
+  expect_warning(
+    actual <- calcEquidistantAC1(x, x, direction = 1),
+    "2 row(s) removed containing NA values.", fixed = TRUE)
+  expect_equal(actual, ah)
+
+  # I-c NAs from incomplete surface region (-> should only affect horizontal AC)
+
+  ns1 <- 0
+  ns2 <- 1
+  ns3 <- 3
+  x1 <- rnorm(nr - ns1)
+  x2 <- rnorm(nr - ns2)
+  x3 <- rnorm(nr - ns3)
+
+  x <- cbind(c(rep(NA, ns1), x1), c(rep(NA, ns2), x2), c(rep(NA, ns3), x3))
+
+  av <- c(stats::acf(x1, lag.max = 1, plot = FALSE)$acf[2],
+          stats::acf(x2, lag.max = 1, plot = FALSE)$acf[2],
+          stats::acf(x3, lag.max = 1, plot = FALSE)$acf[2]
+          ) %>%
+    mean()
+
+  ns <- max(c(ns1, ns2, ns3))
+  ah <- x[-(1 : ns), ] %>%
+    apply(1, function(xx) {
+      stats::acf(xx, lag.max = 1, plot = FALSE)$acf[2]}) %>%
+    mean()
+
+  actual <- calcEquidistantAC1(x, x[-(1 : ns), ], direction = 2)
+  expect_equal(actual, av)
+
+  actual <- calcEquidistantAC1(x, x[-(1 : ns), ], direction = 1)
+  expect_equal(actual, ah)
+
+  # I-d NAs from incomplete surface region + internal NAs
+
+  i <- 8
+  x2[i] <- NA
+  x <- cbind(c(rep(NA, ns1), x1), c(rep(NA, ns2), x2), c(rep(NA, ns3), x3))
+
+  av <- c(stats::acf(x1, lag.max = 1, plot = FALSE)$acf[2],
+          stats::acf(x3, lag.max = 1, plot = FALSE)$acf[2]
+          ) %>%
+    mean()
+
+  ah <- x[-c(1 : ns, i + ns2), ] %>%
+    apply(1, function(xx) {
+      stats::acf(xx, lag.max = 1, plot = FALSE)$acf[2]}) %>%
+    mean()
+
+  suppressWarnings(
+    actual <- calcEquidistantAC1(x, x[-(1 : ns), ], direction = 2))
+  expect_equal(actual, av)
+
+  suppressWarnings(
+    actual <- calcEquidistantAC1(x, x[-(1 : ns), ], direction = 1))
+  expect_equal(actual, ah)
+
+})

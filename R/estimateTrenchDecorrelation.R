@@ -135,3 +135,66 @@ nexcf <- function(x, pos, lag = 0, h = 0.25) {
   return(corr)
 
 }
+
+#' Calculate lag-1 autocorrelation for equidistant sampling positions
+#'
+#' Internal function called from \code{\link{estimateTrenchDecorrelation}}; not
+#' for stand-alone usage.
+#'
+#' @param x a trench dataset in matrix form as output by \code{\link{make2D}}.
+#' @param x.no.surface \code{x} without the potentially incomplete surface
+#'   region (e.g., as obtained by applying \code{\link{removeSurfaceRegion}} on
+#'   the underlying generic trench data before calling \code{make2D}).
+#' @param direction integer signalling in which direction to calculate the
+#'   average lag-1 autocorrelation: `1` for horizontal, `2` for vertical.
+#'
+#' @return the average lag-1 autocorrelation in the trench direction specified
+#'   by \code{direction}.
+#'
+#' @author Thomas Münch
+#' @noRd
+#'
+calcEquidistantAC1 <- function(x, x.no.surface, direction) {
+
+  if (!is.matrix(x)) stop("`x` must be a matrix.")
+  if (!is.matrix(x.no.surface)) stop("`x.no.surface` must be a matrix.")
+
+  if (ncol(x) != ncol(x.no.surface) | nrow(x.no.surface) > nrow(x)) {
+    stop("Dimensions of `x` and `x.no.surface` do not match.")
+  }
+
+  if (!direction %in% c(1, 2)) stop("`direction` must be set to `1` or `2`.")
+
+  # wrapper to calculate lag-1 autocorrelation
+  .acf <- function(x) {stats::acf(x, plot = FALSE, na.action = na.pass)$acf[2]}
+
+  # check if any internal NAs are present
+  has.na <- any(is.na(x.no.surface))
+
+  # which matrix to analyse depends on analysis direction and NA positions
+  if (direction == 1) x.analysis <- x.no.surface else x.analysis <- x
+
+  if (has.na) {
+
+    # remove rows/cols that contain internal NAs
+
+    na.indices <- which(is.na(x.no.surface), arr.ind = TRUE)[, direction] %>%
+      unique()
+    nna <- length(na.indices)
+
+    dirchar <- ifelse(direction == 1, "row(s)", "column(s)")
+    sprintf("%i %s removed containing NA values.", nna, dirchar) %>%
+        warning(call. = FALSE)
+
+    if (direction == 2) x.analysis <- t(x.analysis)
+
+    x.analysis <- x.analysis[-na.indices, , drop = FALSE]
+
+    if (direction == 2) x.analysis <- t(x.analysis)
+
+  }
+
+  apply(x.analysis, direction, .acf) %>%
+    mean()
+
+}
