@@ -7,10 +7,6 @@ test_that("gaussian kernel autocorrelation estimation works", {
 
   # test error checks
 
-  m <- "nexcf: No missing values allowed in `x`."
-  expect_error(nexcf(NA), m, fixed = TRUE)
-  expect_error(nexcf(c(NA, x[2 : 9], NA, NA), pos), m, fixed = TRUE)
-
   m <- "nexcf: Supply positions on which `x` is tabulated."
   expect_error(nexcf(x), m, fixed = TRUE)
 
@@ -56,6 +52,24 @@ test_that("gaussian kernel autocorrelation estimation works", {
   # result should be independent of lag order
 
   expect_equal(nexcf(x, pos, lag = 0 : 5), rev(nexcf(x, pos, lag = 5 : 0)))
+
+  # test removal of NA values
+
+  m <- "nexcf: Too many NAs to estimate autocorrelation."
+  expect_warning(a1 <- nexcf(NA), m, fixed = TRUE)
+  expect_equal(a1, NA)
+
+  x <- rnorm(7)
+  pos <- c(1, 2.3, 2.78, 3.3, 4.5, 5.03, 6.7)
+
+  expected <- nexcf(x, pos, lag = c(0, 1))[2]
+
+  x.withNA <- c(x[1 : 3], NA, x[4 : 7], NA)
+  pos.withNA <- c(pos[1 : 3], 3, pos[4 : 7], 7)
+
+  actual <- nexcf(x.withNA, pos.withNA, lag = c(0, 1))[2]
+
+  expect_equal(actual, expected)
 
   # test special case of T13-1 trench data to ensure consistency
 

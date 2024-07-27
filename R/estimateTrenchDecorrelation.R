@@ -3,7 +3,9 @@
 #' This function estimates the autocorrelation of a numeric data vector, based
 #' on the Pearson correlation coefficient and using the Gaussian kernel estimation
 #' technique of Rehfeld et al. (2011) to account for an irregular sampling
-#' spacing of the data.
+#' spacing of the data. NA values in the data are removed before estimation with
+#' the sampling spacing adjusted accordingly, but when the number of NAs exceeds
+#' 1/3 of the number of data points, autocorrelation is returned as NA.
 #'
 #' This function is adapted from the R port by Kira Rehfeld of the function of
 #' the same name from the MATLAB NESToolbox
@@ -18,6 +20,7 @@
 #'   vector, so the sampling positioning vector is required as additional input
 #'   to the function (but the code internally ensures that the data are sorted
 #'   according to the sampling positions)
+#' - handling of NA values in the data is introduced as described above
 #' - extended input error checking
 #' - using modernised R code
 #' - normalisation of sampling interval units is based on the original MATLAB
@@ -52,10 +55,17 @@ nexcf <- function(x, pos, lag = 0, h = 0.25) {
 
   # error checking
 
-  n <- length(lag)
+  nx <- length(x)
+  nl <- length(lag)
 
-  if (any(is.na(x)))
-    stop("nexcf: No missing values allowed in `x`.", call. = FALSE)
+  nna <- length(ina <- which(is.na(x)))
+
+  if (nna > (1 / 3) * nx) {
+
+    warning("nexcf: Too many NAs to estimate autocorrelation.", call. = FALSE)
+    return(rep(NA, nl))
+
+  }
 
   if (missing(pos))
     stop("nexcf: Supply positions on which `x` is tabulated.", call. = FALSE)
@@ -100,6 +110,14 @@ nexcf <- function(x, pos, lag = 0, h = 0.25) {
 
   }
 
+  # remove any NA values
+
+  if (nna) {
+
+    x <- x[-ina]
+    pos <- pos[-ina]
+  }
+
   # order `x` with respect to `pos`
 
   i <- sort.list(pos)
@@ -108,7 +126,7 @@ nexcf <- function(x, pos, lag = 0, h = 0.25) {
 
   # normalization factor for the positioning
 
-  dtlag <- ifelse(n == 1, 1, mean(diff(pos)))
+  dtlag <- ifelse(nl == 1, 1, mean(diff(pos)))
 
   tx <- pos / dtlag
   normlag <- lag / dtlag
@@ -127,10 +145,10 @@ nexcf <- function(x, pos, lag = 0, h = 0.25) {
   corr <- normlag %>%
     sapply(.kernel_estimate, p = pdist_xy, t = tdist_xy, h = h)
 
-  if (length(i <- which(is.na(corr))) == n)
+  if (length(i <- which(is.na(corr))) == nl)
     stop("nexcf: Could not estimate any autocorrelation values.", call. = FALSE)
 
-  if (n > 1 & any(lag == 0)) corr <- corr / corr[which(lag == 0)]
+  if (nl > 1 & any(lag == 0)) corr <- corr / corr[which(lag == 0)]
 
   return(corr)
 
