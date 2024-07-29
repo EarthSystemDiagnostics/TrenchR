@@ -4,6 +4,7 @@ Version: 1.0.0.9092
 Authors@R: c(
     person("Thomas", "Münch", email = "thomas.muench@awi.de",
            role = c("aut", "cre")),
+    person("Andrew", "Dolman", role = "ctb"),
     person("Kira", "Rehfeld", role = "cph",
            comment = "Author of included original code for nexcf function"))
 Description: This R package implements routines targeted at analysing and
