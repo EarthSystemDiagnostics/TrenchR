@@ -167,7 +167,10 @@ nexcf <- function(x, pos, lag = 0, h = 0.25) {
 #'   average lag-1 autocorrelation: `1` for horizontal, `2` for vertical.
 #'
 #' @return the average lag-1 autocorrelation in the trench direction specified
-#'   by \code{direction}.
+#'   by \code{direction}. Here, lag-1 corresponds to shifting the data vectors
+#'   by one index (base R `acf` estimation); the corresponding physical lag is
+#'   given by the distance between the sampling positions in the requested
+#'   trench \code{direction}.
 #'
 #' @author Thomas Münch
 #' @noRd
