@@ -323,3 +323,49 @@ test_that("lag-1 autocorrelation estimation works", {
   expect_equal(actual, 0.538069)
 
 })
+
+test_that("decorrelation length estimation works", {
+
+  # case I: equidistant in vertical, non-equidistant in horizontal diretion
+
+  x <- t13.trench1 %>% make2D(simplify = TRUE)
+  x.no.surface <- t13.trench1 %>% removeSurfaceRegion() %>%
+    make2D(simplify = TRUE)
+
+  suppressWarnings({
+    a1.h <- calcNonEquidistantAC1(x, pos = getX(t13.trench1), direction = 1)
+    a1.v <- calcEquidistantAC1(x, x.no.surface, direction = 2)
+    })
+
+  expected <- tibble::tibble(
+    direction = c("horizontal", "vertical"),
+    lambda = c(-1 / log(a1.h), -3 / log(a1.v))
+  )
+
+  actual <- suppressWarnings(estimateTrenchDecorrelation(t13.trench1))
+
+  expect_equal(actual, expected)
+
+  # case I: non-equidistant in vertical, equidistant in horizontal diretion
+
+  # remove rows to get non-equidistant vertical sampling
+  n <- sort(sample(1 : length(getZ(t15.trench2)), size = 70))
+  trench <- t15.trench2 %>% dplyr::slice(n, .by = "profilePosition")
+
+  x <- trench %>% make2D(simplify = TRUE)
+  x.no.surface <- trench %>% removeSurfaceRegion() %>%
+    make2D(simplify = TRUE)
+
+  a1.h <- calcEquidistantAC1(x, x.no.surface, direction = 1)
+  a1.v <- calcNonEquidistantAC1(x, pos = getZ(trench), direction = 2)
+
+  expected <- tibble::tibble(
+    direction = c("horizontal", "vertical"),
+    lambda = c(-5 / log(a1.h), -1 / log(a1.v))
+  )
+
+  actual <- estimateTrenchDecorrelation(trench)
+
+  expect_equal(actual, expected)
+
+})

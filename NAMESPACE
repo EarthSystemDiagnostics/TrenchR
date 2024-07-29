@@ -3,6 +3,7 @@
 export(estimateInterProfileCorrelation)
 export(estimateInterTrenchCorrelation)
 export(estimateSNR)
+export(estimateTrenchDecorrelation)
 export(estimateTrenchVariance)
 export(getEffectiveTrenchDOF)
 export(getFirstCompleteDepthBin)

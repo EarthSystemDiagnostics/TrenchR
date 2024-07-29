@@ -260,3 +260,108 @@ calcNonEquidistantAC1 <- function(x, pos, direction, lag = c(0, 1)) {
     .[2]
 
 }
+
+#' Horizontal and vertical decorrelation length of trench dataset
+#'
+#' Calculate the decorrelation length in horizontal and vertical direction of a
+#' trench dataset. For this, the lag-1 autocorrelation across each vertical and
+#' horizontal trench sampling position is estimated, averaged, and the
+#' decorrelation length ("lambda") is calculated assuming an AR1 autoregressive
+#' process:\cr
+#' \cr
+#' lambda = -1 * delta / log(a1),\cr
+#' \cr
+#' where a1 is the estimated average autocorrelation and delta the sampling
+#' resolution.
+#'
+#' The underlying autocorrelation estimation method works both for equidistantly
+#' and non-equidistantly sampled data.
+#'
+#' In the equidistant case, the method uses the base R \code{\link[stats]{acf}}
+#' function, which ignores leading or trailing NA values but cannot handle
+#' internal NAs. For that reason, any rows or columns of the trench dataset (as
+#' viewed in 2D matrix form) that contain internal NA values trigger a warning
+#' and are removed from the data before estimation.
+#'
+#' For non-equidistantly sampled data, the method utilizes the Gaussian kernel
+#' estimation technique of Rehfeld et al. (2011) to account for the irregular
+#' sampling. Here, NA values are generally allowed, but if more than 1/3 of the
+#' data points in a row or column are NA, the corresponding autocorrelation is
+#' set to NA with a warning. These NA values from problematic rows or columns do
+#' not influence the decorrelation length, since any NA values are removed from
+#' the individual autocorrelation estimates upon averaging, albeit the entire
+#' trench dataset contains too many NAs.
+#'
+#' @param .var character string with the name of the trench variable for which to
+#'   compute the decorrelation lengths; see also \code{\link{make2D}}.
+#' @inheritParams getZ
+#'
+#' @return a tibble of two variables: the \code{direction} of the decorrelation
+#'   length calculation as a character string ("horizontal" and "vertical"), and
+#'   the corresponding estimated decorrelation lengths ("\code{lambda}"),
+#'   measured in the same units as the respective sampling position.
+#'
+#' @author Thomas Münch
+#' @examples
+#'
+#' # data sampled irregulary in horizontal, regularly in vertical direction
+#' estimateTrenchDecorrelation(t13.trench1)
+#'   # <- the warnings originate from removing trench rows and columns which
+#'   # contain any NA, or too many NA values, depending on estimation method
+#'
+#' # data sampled regularly in both directions
+#' estimateTrenchDecorrelation(t15.trench2)
+#' estimateTrenchDecorrelation(t15.trench2, .var = "dxs")
+#'
+#' @seealso \code{\link[stats]{acf}}, \code{\link{make2D}}
+#' @references
+#' Rehfeld, K., Marwan, N., Heitzig, J., and Kurths, J.: Comparison of
+#'   correlation analysis techniques for irregularly sampled time series,
+#'   Nonlinear Proc. Geoph., 18(3), 389–404, doi:
+#'   https://doi.org/10.5194/npg18-389-2011, 2011
+#'
+#' @export
+#'
+estimateTrenchDecorrelation <- function(data, .var = "d18O", vscale = "depth") {
+
+  is.trench(data, check = "incl.pos")
+
+  # check for equidistance
+  has.horizontal.equidistance <- is.equidistant(pos.h <- getX(data))
+  has.vertical.equidistance   <- is.equidistant(pos.v <- getZ(data,
+                                                              vscale = vscale))
+
+  # trench 2D matrix
+  x <- make2D(data, .var = .var, simplify = TRUE)
+
+  # remove trench surface region if needed
+  if (has.horizontal.equidistance | has.vertical.equidistance) {
+
+    x.no.surface <- data %>%
+      removeSurfaceRegion(.var = .var, vscale = vscale) %>%
+      make2D(.var = .var, simplify = TRUE)
+  }
+
+  # get autocorrelation values
+  a1.h <- if (has.horizontal.equidistance) {
+            calcEquidistantAC1(x, x.no.surface, direction = 1)
+          } else {
+            calcNonEquidistantAC1(x, pos = pos.h, direction = 1)
+          }
+
+  a1.v <- if (has.vertical.equidistance) {
+            calcEquidistantAC1(x, x.no.surface, direction = 2)
+          } else {
+            calcNonEquidistantAC1(x, pos = pos.v, direction = 2)
+          }
+
+  # sampling resolutions depending on autocorrelation estimation method
+  dx <- if (has.horizontal.equidistance) pos.h[2] - pos.h[1] else 1
+  dz <- if (has.vertical.equidistance) pos.v[2] - pos.v[1] else 1
+
+  # estimated decorrelation length assuming AR1 process
+  lambda <- -1 * c(dx, dz) / log(c(a1.h, a1.v))
+
+  tibble::tibble(direction = c("horizontal", "vertical"), lambda = lambda)
+
+}
