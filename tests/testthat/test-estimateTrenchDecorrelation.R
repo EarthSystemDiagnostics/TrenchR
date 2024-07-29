@@ -104,6 +104,9 @@ test_that("gaussian kernel autocorrelation estimation works", {
 
 test_that("lag-1 autocorrelation estimation works", {
 
+  # ----------------------------------------------------------------------------
+  # case I: evenly spaced data
+
   # test error checks
 
   expect_error(calcEquidistantAC1(1, 1, 1),
@@ -124,9 +127,6 @@ test_that("lag-1 autocorrelation estimation works", {
                m, fixed = TRUE)
   expect_error(calcEquidistantAC1(matrix(NA, 5, 10), matrix(NA, 2, 10), 6.2),
                m, fixed = TRUE)
-
-  # ----------------------------------------------------------------------------
-  # case I: evenly spaced data
 
   # I-a no NAs
 
@@ -222,5 +222,104 @@ test_that("lag-1 autocorrelation estimation works", {
   suppressWarnings(
     actual <- calcEquidistantAC1(x, x[-(1 : ns), ], direction = 1))
   expect_equal(actual, ah)
+
+
+  # ----------------------------------------------------------------------------
+  # case II: non-equidistantly spaced data
+
+  # test error checks
+
+  expect_error(calcNonEquidistantAC1(1, 1, 1),
+               "`x` must be a matrix.", fixed = TRUE)
+
+  m <- "`direction` must be set to `1` or `2`."
+  expect_error(calcNonEquidistantAC1(matrix(NA, 5, 10), 1, -1),
+               m, fixed = TRUE)
+  expect_error(calcNonEquidistantAC1(matrix(NA, 5, 10), 1, 6.2),
+               m, fixed = TRUE)
+
+  m <- "Length of `pos` does not match requested dimension of data."
+  expect_error(
+    calcNonEquidistantAC1(matrix(NA, 5, 9), pos = 1 : 7, direction = 1),
+    m, fixed = TRUE)
+  expect_error(
+    calcNonEquidistantAC1(matrix(NA, 5, 7), pos = 1 : 7, direction = 2),
+    m, fixed = TRUE)
+
+  m <- "`lag` needs to be of length 2."
+  expect_error(
+    calcNonEquidistantAC1(matrix(NA, 5, 7), pos = 1 : 5,
+                          direction = 2, lag = 0),
+    m, fixed = TRUE)
+  expect_error(
+    calcNonEquidistantAC1(matrix(NA, 5, 7), pos = 1 : 5,
+                          direction = 2, lag = 0 : 5),
+    m, fixed = TRUE)
+
+  m <- "First element of `lag` must be 0."
+  expect_error(
+    calcNonEquidistantAC1(matrix(NA, 5, 7), pos = 1 : 5,
+                          direction = 2, lag = 1 : 2),
+    m, fixed = TRUE)
+
+  # test on T13-2 data
+
+  trench <- t13.trench2 %>% make2D(simplify = TRUE)
+
+  # vertical autocorrelation
+  # (could also be estimated with standard method due to equidistant sampling)
+  av <- sapply(seq(ncol(trench)), function(i) {
+
+    x <- as.numeric(na.omit(trench[, i]))
+    pos <- seq(0, by = 3, length.out = length(x))
+
+    nexcf(x, pos, lag = c(0, 3))[2]
+
+  })
+
+  expected <- mean(av)
+  actual   <- calcNonEquidistantAC1(trench, pos = getZ(t13.trench2),
+                                    direction = 2, lag = c(0, 3))
+
+  expect_equal(actual, expected)
+
+  # horizontal autocorrelation
+  # (doesn't actually make sense since too few profile positions)
+  pos <- getX(t13.trench2)
+  ah <- sapply(4 : nrow(trench), function(i) {
+
+    x <- trench[i, ]
+
+    nexcf(x, pos, lag = c(0, 1))[2]
+
+  })
+  ah <- c(
+    ah,
+    nexcf(trench[2, -2], pos[-2], lag = c(0, 1))[2], # depth sample 2
+    nexcf(trench[3, -2], pos[-2], lag = c(0, 1))[2]  # depth sample 3
+  )
+
+  expected <- mean(ah)
+  suppressWarnings( # warning from removal of first row (too many NAs)
+    actual <- calcNonEquidistantAC1(trench, pos = getX(t13.trench2),
+                                    direction = 1)
+  )
+
+  expect_equal(actual, expected)
+
+  # test case of T13-1 trench data (paper analysis) to ensure consistency
+  # (see also nexcf test above)
+
+  trench <- t13.trench1 %>%
+    removeSurfaceRegion() %>%
+    dplyr::filter(profileName != "T13-1-01") %>%
+    make2D(simplify = TRUE)
+
+  pos <- getX(t13.trench1)[-1]
+
+  actual <- calcNonEquidistantAC1(trench, pos, direction = 1) %>%
+    round(6)
+
+  expect_equal(actual, 0.538069)
 
 })

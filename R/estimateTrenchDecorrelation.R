@@ -216,3 +216,43 @@ calcEquidistantAC1 <- function(x, x.no.surface, direction) {
     mean()
 
 }
+
+#' Calculate lag-1 autocorrelation for non-equidistant sampling positions
+#'
+#' Internal function called from \code{\link{estimateTrenchDecorrelation}}; not
+#' for stand-alone usage.
+#'
+#' @param x a trench dataset in matrix form as output by \code{\link{make2D}}.
+#' @param pos numeric vector supplying the non-equidistant sampling positions
+#'   (e.g. spatial positions, observation time points) in the requested
+#'   `direction` of the trench dataset.
+#' @param direction integer signalling in which direction to calculate the
+#'   average lag-1 autocorrelation: `1` for horizontal, `2` for vertical.
+#' @param lag integer vector of lags for which autocorrelations are
+#'   estimated, measured in the same physical units as `pos`. Needs to be of the
+#'   form `lag = c(0, <lag-1>)`, where <lag-1> is the physical distance
+#'   corresponding to the desired lag-1 autocorrelation; defaults to `c(0, 1)`.
+#'
+#' @return the average lag-1 autocorrelation (i.e., corresponding to the second
+#'   entry of `lag`) in the trench direction specified by \code{direction}.
+#'
+#' @author Thomas Münch
+#' @noRd
+#'
+calcNonEquidistantAC1 <- function(x, pos, direction, lag = c(0, 1)) {
+
+  if (!is.matrix(x)) stop("`x` must be a matrix.")
+  if (!direction %in% c(1, 2)) stop("`direction` must be set to `1` or `2`.")
+
+  n <- if (direction == 1) ncol(x) else nrow(x)
+  if (length(pos) != n)
+    stop("Length of `pos` does not match requested dimension of data.")
+
+  if (length(lag) != 2) stop("`lag` needs to be of length 2.")
+  if (lag[1] != 0) stop("First element of `lag` must be 0.")
+
+  apply(x, direction, nexcf, pos = pos, lag = lag) %>%
+    rowMeans(na.rm = TRUE) %>%
+    .[2]
+
+}
