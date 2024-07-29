@@ -32,10 +32,11 @@
 #' @param pos numeric vector the same length of \code{x} supplying the
 #'   non-equidistant positions (e.g. spatial positions, observation time points)
 #'   at which \code{x} is tabulated.
-#' @param lag integer vector of lags for which autocorrelations are
-#'   estimated. Note that only if \code{lag} contains `0`, the function returns
-#'   true autocorrelations since only then all estimated kernel correlations can
-#'   be normalized to the lag-0 kernel correlation.
+#' @param lag integer vector of lags measured in the same physical units as
+#'   `pos` for which autocorrelations are estimated. Note that only if
+#'   \code{lag} contains `0`, the function returns true autocorrelations since
+#'   only then all estimated kernel correlations can be normalized to the lag-0
+#'   kernel correlation.
 #' @param h width of the Gaussian kernel to estimate correlations in normalised
 #'   units, defaults to 0.25 (Rehfeld et al., 2011); ideally, there should be no
 #'   need for adjustment.
