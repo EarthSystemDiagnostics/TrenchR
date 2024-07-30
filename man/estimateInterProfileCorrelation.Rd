@@ -10,7 +10,7 @@ estimateInterProfileCorrelation(
   profilePosition = NULL,
   .var = "d18O",
   rangeTol = 0.05,
-  a1 = 0
+  lambda = 0
 )
 }
 \arguments{
@@ -35,8 +35,10 @@ the \code{data} is passed as a generic trench data set.}
 given spacing d, all profile pairs separated by d * (1 +/- rangeTol) are
 analysed.}
 
-\item{a1}{horizontal autocorrelation of the trench data at lag 1 to obtain an
-effective number of profiles used for the error estimates (see details).}
+\item{lambda}{horizontal decorrelation length of the trench data to obtain an
+effective number of profiles used for the error estimates (see details);
+assumes an AR1 process for the horizontal data variations and must be
+measured in the same units as the inter-profile \code{distances}.}
 }
 \value{
 a tibble of five variables: the analysed profile spacings, the found
@@ -62,10 +64,10 @@ all pairs, and by the standard error. The latter is obtained from dividing
 the standard deviation by the square root of an effective number of
 observations, which is calculated from the number of found pairs and the
 average horizontal distance between the trench profiles for the given
-horizontal autocorrelation (see \code{\link{getEffectiveTrenchDOF}}). This is
-still an optimistic error estimate, since e.g. the correlation values from
-two profile pairs located at positions [1, 2] and [2, 3] are certainly not
-independent, even when accounting for autocorrelation.
+horizontal decorrelation length (see \code{\link{getEffectiveTrenchDOF}}).
+This is still an optimistic error estimate, since e.g. the correlation values
+from two profile pairs located at positions [1, 2] and [2, 3] are clearly
+not independent of each other, even when accounting for autocorrelation.
 }
 \examples{
 
@@ -79,6 +81,10 @@ IPC2 <- make2D(t13.trench2) \%>\%
     distances = c(10, 30))
 all.equal(IPC, IPC2) # by definition
 
+}
+\seealso{
+\code{\link{estimateTrenchDecorrelation}},
+  \code{\link{getEffectiveTrenchDOF}}
 }
 \author{
 Thomas Münch
