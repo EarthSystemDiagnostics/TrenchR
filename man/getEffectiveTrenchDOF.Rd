@@ -4,11 +4,24 @@
 \alias{getEffectiveTrenchDOF}
 \title{Effective degrees of freedom of autocorrelated trench profiles}
 \usage{
-getEffectiveTrenchDOF(a1, positions = NULL, N = length(positions), delta = 1)
+getEffectiveTrenchDOF(
+  lambda = NULL,
+  a1 = NULL,
+  positions = NULL,
+  N = length(positions),
+  delta = 1
+)
 }
 \arguments{
+\item{lambda}{horizontal decorrelation length of the assumed AR1 process
+measured in the same units as \code{positions}; if specified used to
+calculate the corresponding lag-1 autocorrelation via \code{a1 = exp(-1 /
+lambda)}.}
+
 \item{a1}{horizontal autocorrelation of the trench data at lag 1, where lag 1
-is measured relative to unit profile distance.}
+is measured relative to unit profile distance; only used if \code{lambda}
+is not specified, and specifying both \code{lambda} and \code{a1} gives an
+error.}
 
 \item{positions}{a vector of horizontal profile positions.}
 
@@ -26,9 +39,9 @@ number of effective degrees of freedom
 \description{
 Calculate the effective degrees of freedom for a set of trench profiles,
 either given by the number of profiles and their (constant) inter-profile
-distance, or given by the specific horizontal profile positions, when the
-horizontal data variations along the trench follow a first-order
-autoregressive process.
+distance, or given by the specific horizontal profile positions. This
+calculation assumes the horizontal data variations along the trench to follow
+a first-order autoregressive (AR1) process.
 }
 \examples{
 
@@ -36,8 +49,13 @@ getEffectiveTrenchDOF(a1 = 0.5, N = 10, delta = 2)
 # is equivalent:
 getEffectiveTrenchDOF(a1 = 0.5, positions = seq(0, 18, 2))
 
+# alternatively, one can specify a decorrelation length directly;
+# above a1 (measured at unit distace) corresponds to lambda = -1 / log(a1):
+getEffectiveTrenchDOF(lambda = -1 / log(0.5), N = 10, delta = 2)
+
 # for zero autocorrelation Neff = N:
-getEffectiveTrenchDOF(a1 = 0, N = 10, delta = 2)
+getEffectiveTrenchDOF(a1 = 0, N = 10, delta = 2) # or
+getEffectiveTrenchDOF(lambda = 0, N = 10, delta = 2)
 
 }
 \references{

@@ -132,7 +132,7 @@ estimateInterProfileCorrelation <- function(data, distances,
     stdErr[count]  <- ifelse(
       Nfound[count] == 0, as.numeric(NA),
       sd(tmp) /
-      sqrt(getEffectiveTrenchDOF(a1, N = Nfound[count], delta = distAvg)))
+      sqrt(getEffectiveTrenchDOF(a1 = a1, N = Nfound[count], delta = distAvg)))
 
     count <- count + 1
 
