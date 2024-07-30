@@ -1,5 +1,32 @@
 # Development of major version update 1.x.x
 
+# TrenchR 1.0.0.9092
+
+This version update implements the estimation of trench decorrelation lengths in
+horizontal and vertical direction via the new function
+`estimateTrenchDecorrelation()`.
+
+Further, the new function `removeSurfaceRegion()` is introduced, which is needed
+in `estimateTrenchDecorrelation()` and removes a possibly incomplete surface
+region of a trench dataset (due to the sampling on an absolute vertical scale).
+While this function uses `getFirstCompleteDepthBin()` under the hood, the latter
+function - although still exported - will probably no longer be needed much in
+daily work, in favour of the new function.
+
+Further updates:
+
+- new unexported utility function `is.equidistant` for determining whether
+  sampling positions are equidistant;
+- for calculating the effective number of degrees of freedom with the function
+`getEffectiveDOF`, it is now also possible to input the decorrelation length
+instead of the autocorrelation at lag-1. The latter is still possible, but using
+decorrelation length is preferred, since it automatically has the right units,
+while the AR1 coefficient depends on the sampling resolution of the data it was
+estimated on, so it might need rescaling, which the user would have to take care
+of;
+- based on the latter change, the function `estimateInterProfileCorrelation` now
+  requires the decorrelation length as input, no longer the AR1 coefficient.
+
 # TrenchR 1.0.0.9091
 
 - Internal function `makeHiResKohnenTrenches()` now includes the option to
