@@ -2,6 +2,16 @@ context("trench-DOF")
 
 test_that("calculating effective DOF works", {
 
+  msg <- "`lambda` must be of length 1 or `NULL`."
+  expect_error(getEffectiveTrenchDOF(lambda = 1 : 4), msg, fixed = TRUE)
+
+  msg <- "`a1` must be of length 1 or `NULL`."
+  expect_error(getEffectiveTrenchDOF(a1 = 1 : 4), msg, fixed = TRUE)
+
+  msg <- "Specify either `lambda` or `a1`."
+  expect_error(getEffectiveTrenchDOF(), msg, fixed = TRUE)
+  expect_error(getEffectiveTrenchDOF(lambda = 1.5, a1 = 0.5), msg, fixed = TRUE)
+
   msg <- "Specify number of profiles."
   expect_error(getEffectiveTrenchDOF(a1 = 0.5), msg)
   expect_error(getEffectiveTrenchDOF(a1 = 0.5, delta = 256), msg)
@@ -26,6 +36,13 @@ test_that("calculating effective DOF works", {
   expect_equal(getEffectiveTrenchDOF(a1 = 0, N = 2, delta = 1), 2)
   expect_equal(getEffectiveTrenchDOF(a1 = 0, N = 159, delta = 1), 159)
   expect_equal(getEffectiveTrenchDOF(a1 = 0, positions = c(1, 34, 78)), 3)
+  expect_equal(getEffectiveTrenchDOF(lambda = 0, positions = c(1, 34, 78)), 3)
+
+  # specifying lambda or a1 is equivalent
+  a1 <- 0.7
+  lambda <- -1 / log(a1)
+  expect_equal(getEffectiveTrenchDOF(a1 = a1, N = 10, delta = 1),
+               getEffectiveTrenchDOF(lambda = lambda, N = 10, delta = 1))
 
   # for uniform unit profile distances, DOF != generic DOF calculation
   expect_equal(getEffectiveTrenchDOF(a1 = 0.71, N = 1587),

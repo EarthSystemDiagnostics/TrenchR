@@ -64,15 +64,14 @@ indicates the position of the profile within the trench via its name, while the
 column `sampleNumber` labels the individual proxy data samples within a profile:
 
 ```{r}
-nrow(t13.trench2)
-
 unique(t13.trench2$profileName)
 unique(t13.trench2$sampleNumber)
+nrow(t13.trench2)
 ```
 
 thus, the trench `t13.trench2` contains four profiles labelled "T13-2-01",
 "T13-2-02", "T13-2-03", and "T13-2-04", and each profile includes 38 proxy
-samples.
+samples, making a total of 152 data points.
 
 In addition, you can provide information on the horizontal profile positions
 within the trench in a column named `profilePosition`, and, if applicable, on
@@ -153,32 +152,9 @@ and the trench surface profile:
 getSurfaceProfile(t13.trench2)
 ```
 
-For such undulating trench surfaces, `getFirstCompleteDepthBin` extracts the
-value of the first bin of the vertical scale dimension (e.g. "depth") for which
-a complete dataset across all trench profiles is available:
-
-```{r}
-getFirstCompleteDepthBin(t13.trench2)
-getFirstCompleteDepthBin(t15.trench1)
-```
-
-If you already might have an estimate of the horizontal autocorrelation ($a_1$)
-of your trench data at hand, you can use `getEffectiveTrenchDOF` to calculate
-the effective horizontal degrees of freedom of your trench dataset:
-
-```{r}
-getEffectiveTrenchDOF(a1 = 0.5, N = 10, delta = 2)
-# is equivalent to:
-getEffectiveTrenchDOF(a1 = 0.5, positions = seq(0, 18, 2))
-```
-
 ### Two-dimensional dataset
 
-The inherent two-dimensional structure of a trench dataset can be directly
-visualised in matrix form; while this matrix representation is currently not
-needed for using any of the below `TrenchR` functions, since they all accept the
-generic dataset structure as input, it might be handy for external functions
-and usage.
+A trench dataset can also be represented in matrix form:
 
 ```{r}
 make2D(t13.trench2)
@@ -186,11 +162,27 @@ make2D(t13.trench2)
 # Note: use simplify = TRUE to really have the output class `matrix`
 ```
 
+While this matrix representation is currently not needed for using any of the
+below `TrenchR` functions, since they all accept the generic dataset structure
+as input, it might be handy for external functions and usage, and it offers a
+straightforward way to visualise the inherent two-dimensional structure of a
+trench dataset.
+
 The default is to extract the data column labelled `d18O`; to extract any other
 data column, use
 
 ```{r}
 make2D(t13.trench2, .var = "dxs") # insert your data column name for `.var`
+```
+
+The 2D visualisation also shows that for such undulating trench surfaces as for
+T13-2, the first rows in horizontal direction of the trench data are
+incomplete, i.e. contain NA values, when viewed on the absolute vertical
+scale. However, if you require for some analysis a dataset without missing
+values, you can easily remove this incomplete "surface" region:
+
+```{r}
+removeSurfaceRegion(t13.trench2) %>% make2D()
 ```
 
 ### Trench  mean
@@ -203,25 +195,23 @@ makeMean(t13.trench2)
 ```
 
 As you can see, the default method is to output the mean profile as a data frame
-including the vertical scale column (here, "depth"); adjust the `vscale`
-argument if your dataset uses another name for the vertical scale
-column.
+including the vertical scale column, here "depth", which you can adjust with the
+`vscale` argument if your dataset uses another name for the vertical scale, and
+similarly to `make2D`, the function parameter `.var` controls for which data
+variable the mean profile is calculated.
 
-You can also output the mean profile as a normal vector:
+You can also output the mean profile as a normal vector,
 
 ```{r}
 makeMean(t13.trench2, df = FALSE)
 ```
 
-Analogously to R's `mean` function, you can control the handling of missing
+and analogously to R's `mean` function, you can control the handling of missing
 values,
 
 ```{r}
 makeMean(t13.trench2, df = FALSE, na.rm = TRUE)
 ```
-
-and similarly to `make2D`, the function parameter `.var` controls for which data
-variable the mean profile is calculated.
 
 ### Plotting a two-dimensional visualisation
 
@@ -243,6 +233,32 @@ plot2D(t13.trench1, xlim = c(-0.1, 46), ylim = c(114, 0), zlim = c(-55, -35),
 
 There are a couple more options to adjust and tweak the plot appearance, so have
 a look at the function documentation, `?plot2D`.
+
+### Trench decorrelation scales and effective degrees of freedom
+
+An insightful analysis for a trench dataset is to analyse the decorrelation
+length of the data in horizontal and/or vertical direction. For this, you can
+use the function `estimateTrenchDecorrelation`, which can handle both
+equidistantly and non-equidistantly sampled data (see
+`?estimateTrenchDecorrelation` for details on the underlying estimation
+methods):
+
+```{r}
+estimateTrenchDecorrelation(t15.trench2, .var = "d18O", vscale = "depth")
+```
+
+The decorrelation length in horizontal direction is related to the question how
+well neighbouring trench profiles are correlated; for this see also the section
+[Estimating trench correlations and signal-to-noise ratios] below.
+
+With a decorrelation length estimate, you can use `getEffectiveTrenchDOF` to
+calculate the effective degrees of freedom of your trench dataset, e.g.:
+
+```{r}
+getEffectiveTrenchDOF(lambda = 1.5, N = 10, delta = 2)
+# is equivalent to:
+getEffectiveTrenchDOF(lambda = 1.5, positions = seq(0, 18, 2))
+```
 
 ### Trench variance
 

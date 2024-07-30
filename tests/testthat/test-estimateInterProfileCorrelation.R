@@ -53,13 +53,15 @@ test_that("inter profile correlation calculation works", {
     distances = 1 : 3, N = c(2, 2, 1), cor = c(1, 0, -1),
     sd = c(0, sqrt(2), NA), se = c(0, 1, NA))
 
+  a1 <- 0.9
+  lambda <- -1 / log(a1)
   actual4 <- estimateInterProfileCorrelation(
-    as.matrix(trench), distances = 1 : 3, profilePosition, a1 = 0.9) %>%
+    as.matrix(trench), distances = 1 : 3, profilePosition, lambda = lambda) %>%
     round(digits = 5)
   actual5 <- estimateInterProfileCorrelation(
-    generic.trench, distances = 1 : 3, a1 = 0.9) %>%
+    generic.trench, distances = 1 : 3, lambda = lambda) %>%
     round(digits = 5)
-  dof <- getEffectiveTrenchDOF(a1 = 0.9, N = 2, delta = mean(diff(profilePosition)))
+  dof <- getEffectiveTrenchDOF(a1 = a1, N = 2, delta = mean(diff(profilePosition)))
   expected2 <- tibble::tibble(
     distances = 1 : 3, N = c(2, 2, 1), cor = c(1, 0, -1),
     sd = c(0, sqrt(2), NA), se = c(0, sqrt(2) / sqrt(dof), NA)) %>%
