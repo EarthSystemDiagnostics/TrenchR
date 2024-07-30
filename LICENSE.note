@@ -1,0 +1,7 @@
+The TrenchR package as a whole is distributed under GPL (>= 3). The TrenchR
+package includes other open source software components. The following is a list
+of these components:
+
+* nexcf: Code adapted from the R function nexcf, distributed to me by Kira
+  Rehfeld, which is a translation of the original MATLAB code available in the
+  NESToolbox (<https://tocsy.pik-potsdam.de/nest.php>): GPL-3
