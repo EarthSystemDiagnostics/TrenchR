@@ -1,5 +1,11 @@
 # Development of major version update 1.x.x
 
+# TrenchR 1.0.0.9093
+
+Bug fix in decorrelation length estimation when estimated `a1` coefficient is <=
+0; in such a case, the returned decorrelation length is now set to `NA` with a
+warning issued (#12).
+
 # TrenchR 1.0.0.9092
 
 This version update implements the estimation of trench decorrelation lengths in

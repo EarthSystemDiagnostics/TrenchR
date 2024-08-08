@@ -1,6 +1,6 @@
 Package: TrenchR
 Title: Analyse and Plot Trench-like Proxy Records
-Version: 1.0.0.9092
+Version: 1.0.0.9093
 Authors@R: c(
     person("Thomas", "Münch", email = "thomas.muench@awi.de",
            role = c("aut", "cre")),
