@@ -369,3 +369,33 @@ test_that("decorrelation length estimation works", {
   expect_equal(actual, expected)
 
 })
+
+test_that("in case of estimated a1 < 0 the user gets NA decorrelation", {
+
+  # by chance, negative a1 estimation happens for the following data in
+  # horizontal direction:
+  x <- dplyr::filter(t15.trench2, depth <= 175.5)
+
+  m <- "NA decorrelation length due to negative lag-1 autocorrelation estimate."
+  expect_warning(actual <- estimateTrenchDecorrelation(x), m)
+
+  # check that lambda is really NA and not NaN
+  expect_true(is.na(as.character(actual$lambda[1])))
+  expect_false(is.na(as.character(actual$lambda[2])))
+
+  # also check with synthetic data
+  n <- 1000
+  x1 <- tibble::tibble(sampleNumber = 1 : n, depth = 1 : n, profilePosition = 0,
+                       data = c(arima.sim(list(ar = -0.8), n)))
+  x2 <- tibble::tibble(sampleNumber = 1 : n, depth = 1 : n, profilePosition = 1,
+                       data = c(arima.sim(list(ar = -0.8), n)))
+  x3 <- tibble::tibble(sampleNumber = 1 : n, depth = 1 : n, profilePosition = 2,
+                       data = c(arima.sim(list(ar = -0.8), n)))
+
+  trench <- dplyr::bind_rows(profile1 = x1, profile2 = x2, profile3 = x3,
+                             .id = "profileName")
+
+  expect_warning(estimateTrenchDecorrelation(trench, .var = "data"), m)
+  expect_true(is.na(as.character(actual$lambda[1])))
+
+})
