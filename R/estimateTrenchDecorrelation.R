@@ -355,6 +355,14 @@ estimateTrenchDecorrelation <- function(data, .var = "d18O", vscale = "depth") {
             calcNonEquidistantAC1(x, pos = pos.v, direction = 2)
           }
 
+  if (a1.h <= 0) a1.h <- NA
+  if (a1.v <= 0) a1.v <- NA
+
+  if (is.na(a1.h) | is.na(a1.v)) {
+    warning("NA decorrelation length due to negative ",
+            "lag-1 autocorrelation estimate.", call. = FALSE)
+  }
+
   # sampling resolutions depending on autocorrelation estimation method
   dx <- if (has.horizontal.equidistance) pos.h[2] - pos.h[1] else 1
   dz <- if (has.vertical.equidistance) pos.v[2] - pos.v[1] else 1
