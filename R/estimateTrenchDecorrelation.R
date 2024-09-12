@@ -322,20 +322,34 @@ calcNonEquidistantAC1 <- function(x, pos, direction, lag = c(0, 1)) {
 #'
 #' @export
 #'
-estimateTrenchDecorrelation <- function(data, .var = "d18O", vscale = "depth") {
+estimateTrenchDecorrelation <- function(data,
+                                        direction = c("horizontal", "vertical"),
+                                        .var = "d18O", vscale = "depth") {
 
   is.trench(data, check = "incl.pos")
 
+  direction <- tryCatch(
+    {
+      direction <- match.arg(direction, c("horizontal", "vertical"))
+      c(horizontal = 1, vertical = 2)[[direction]]
+    },
+    error = function(cond) {
+      stop("'direction' must be one of 'horizontal' or 'vertical'.",
+           call. = FALSE)
+    }
+  )
+
   # check for equidistance
-  has.horizontal.equidistance <- is.equidistant(pos.h <- getX(data))
-  has.vertical.equidistance   <- is.equidistant(pos.v <- getZ(data,
-                                                              vscale = vscale))
+  has.equidistance <- if (direction == 1)
+                        is.equidistant(pos <- getX(data))
+                      else
+                        is.equidistant(pos <- getZ(data, vscale = vscale))
 
   # trench 2D matrix
   x <- make2D(data, .var = .var, simplify = TRUE)
 
   # remove trench surface region if needed
-  if (has.horizontal.equidistance | has.vertical.equidistance) {
+  if (has.equidistance) {
 
     x.no.surface <- data %>%
       removeSurfaceRegion(.var = .var, vscale = vscale) %>%
@@ -343,33 +357,26 @@ estimateTrenchDecorrelation <- function(data, .var = "d18O", vscale = "depth") {
   }
 
   # get autocorrelation values
-  a1.h <- if (has.horizontal.equidistance) {
-            calcEquidistantAC1(x, x.no.surface, direction = 1)
-          } else {
-            calcNonEquidistantAC1(x, pos = pos.h, direction = 1)
-          }
 
-  a1.v <- if (has.vertical.equidistance) {
-            calcEquidistantAC1(x, x.no.surface, direction = 2)
-          } else {
-            calcNonEquidistantAC1(x, pos = pos.v, direction = 2)
-          }
+  a1 <- if (has.equidistance) {
+          calcEquidistantAC1(x, x.no.surface, direction)
+        } else {
+          calcNonEquidistantAC1(x, pos = pos, direction)
+        }
 
-  if (a1.h <= 0) a1.h <- NA
-  if (a1.v <= 0) a1.v <- NA
-
-  if (is.na(a1.h) | is.na(a1.v)) {
+  if (a1 <= 0) {
     warning("NA decorrelation length due to negative ",
             "lag-1 autocorrelation estimate.", call. = FALSE)
+    a1 <- NA
   }
 
   # sampling resolutions depending on autocorrelation estimation method
-  dx <- if (has.horizontal.equidistance) pos.h[2] - pos.h[1] else 1
-  dz <- if (has.vertical.equidistance) pos.v[2] - pos.v[1] else 1
+  res <- if (has.equidistance) pos[2] - pos[1] else 1
 
   # estimated decorrelation length assuming AR1 process
-  lambda <- -1 * c(dx, dz) / log(c(a1.h, a1.v))
+  lambda <- -1 * res / log(a1)
 
-  tibble::tibble(direction = c("horizontal", "vertical"), lambda = lambda)
+  # return
+  if (direction == 1) c(horizontal = lambda) else c(vertical = lambda)
 
 }
