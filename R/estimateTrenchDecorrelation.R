@@ -261,10 +261,10 @@ calcNonEquidistantAC1 <- function(x, pos, direction, lag = c(0, 1)) {
 
 }
 
-#' Horizontal and vertical decorrelation length of trench dataset
+#' Horizontal or vertical decorrelation length of trench dataset
 #'
-#' Calculate the decorrelation length in horizontal and vertical direction of a
-#' trench dataset. For this, the lag-1 autocorrelation across each vertical and
+#' Calculate the decorrelation length in horizontal or vertical direction of a
+#' trench dataset. For this, the lag-1 autocorrelation across each vertical or
 #' horizontal trench sampling position is estimated, averaged, and the
 #' decorrelation length ("lambda") is calculated assuming an AR1 autoregressive
 #' process:\cr
@@ -279,38 +279,41 @@ calcNonEquidistantAC1 <- function(x, pos, direction, lag = c(0, 1)) {
 #'
 #' In the equidistant case, the method uses the base R \code{\link[stats]{acf}}
 #' function, which ignores leading or trailing NA values but cannot handle
-#' internal NAs. For that reason, any rows or columns of the trench dataset (as
-#' viewed in 2D matrix form) that contain internal NA values trigger a warning
-#' and are removed from the data before estimation.
+#' internal NAs. For that reason, any rows, or columns, of the trench dataset
+#' (as viewed in 2D matrix form) that contain internal NA values trigger a
+#' warning (see examples) and are removed from the data before estimation.
 #'
 #' For non-equidistantly sampled data, the method utilizes the Gaussian kernel
 #' estimation technique of Rehfeld et al. (2011) to account for the irregular
 #' sampling. Here, NA values are generally allowed, but if more than 1/3 of the
-#' data points in a row or column are NA, the corresponding autocorrelation is
-#' set to NA with a warning. These NA values from problematic rows or columns do
-#' not influence the decorrelation length, since any NA values are removed from
-#' the individual autocorrelation estimates upon averaging, albeit the entire
-#' trench dataset contains too many NAs.
+#' data points in a row, or column, are NA, the corresponding autocorrelation is
+#' set to NA with a warning (see examples). These NA values from problematic
+#' rows or columns do not influence the decorrelation length, since any NA
+#' values are removed from the individual autocorrelation estimates upon
+#' averaging, unless the entire trench dataset contains too many NAs.
 #'
+#' @param direction character string signalling for which trench direction to
+#'   compute the decorrelation length: "horizontal" (default) or "vertical".
 #' @param .var character string with the name of the trench variable for which to
-#'   compute the decorrelation lengths; see also \code{\link{make2D}}.
+#'   compute the decorrelation length; see also \code{\link{make2D}}.
 #' @inheritParams getZ
 #'
-#' @return a tibble of two variables: the \code{direction} of the decorrelation
-#'   length calculation as a character string ("horizontal" and "vertical"), and
-#'   the corresponding estimated decorrelation lengths ("\code{lambda}"),
-#'   measured in the same units as the respective sampling position.
+#' @return a named length-1 vector with the estimated decorrelation length in
+#'   the requested direction, measured in the same units as the respective
+#'   sampling position.
 #'
 #' @author Thomas Münch
 #' @examples
 #'
 #' # data sampled irregulary in horizontal, regularly in vertical direction
 #' estimateTrenchDecorrelation(t13.trench1)
+#' estimateTrenchDecorrelation(t13.trench1, direction = "vertical")
 #'   # <- the warnings originate from removing trench rows and columns which
 #'   # contain any NA, or too many NA values, depending on estimation method
 #'
 #' # data sampled regularly in both directions
-#' estimateTrenchDecorrelation(t15.trench2)
+#' estimateTrenchDecorrelation(t15.trench2, "horizontal")
+#' estimateTrenchDecorrelation(t15.trench2, "vertical")
 #' estimateTrenchDecorrelation(t15.trench2, .var = "dxs")
 #'
 #' @seealso \code{\link[stats]{acf}}, \code{\link{make2D}}
