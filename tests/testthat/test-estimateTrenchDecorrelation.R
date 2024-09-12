@@ -326,6 +326,10 @@ test_that("lag-1 autocorrelation estimation works", {
 
 test_that("decorrelation length estimation works", {
 
+  expect_error(estimateTrenchDecorrelation(t13.trench1, direction = "foo"),
+               "'direction' must be one of 'horizontal' or 'vertical'.",
+               fixed = TRUE)
+
   # case I: equidistant in vertical, non-equidistant in horizontal diretion
 
   x <- t13.trench1 %>% make2D(simplify = TRUE)
@@ -337,16 +341,17 @@ test_that("decorrelation length estimation works", {
     a1.v <- calcEquidistantAC1(x, x.no.surface, direction = 2)
     })
 
-  expected <- tibble::tibble(
-    direction = c("horizontal", "vertical"),
-    lambda = c(-1 / log(a1.h), -3 / log(a1.v))
-  )
+  expected1 <- c(horizontal = -1 / log(a1.h))
+  expected2 <- c(vertical = -3 / log(a1.v))
 
-  actual <- suppressWarnings(estimateTrenchDecorrelation(t13.trench1))
+  actual1 <- suppressWarnings(estimateTrenchDecorrelation(t13.trench1))
+  actual2 <- suppressWarnings(
+    estimateTrenchDecorrelation(t13.trench1, direction = "vertical"))
 
-  expect_equal(actual, expected)
+  expect_equal(actual1, expected1)
+  expect_equal(actual2, expected2)
 
-  # case I: non-equidistant in vertical, equidistant in horizontal diretion
+  # case II: non-equidistant in vertical, equidistant in horizontal diretion
 
   # remove rows to get non-equidistant vertical sampling
   n <- sort(sample(1 : length(getZ(t15.trench2)), size = 70))
@@ -359,14 +364,14 @@ test_that("decorrelation length estimation works", {
   a1.h <- calcEquidistantAC1(x, x.no.surface, direction = 1)
   a1.v <- calcNonEquidistantAC1(x, pos = getZ(trench), direction = 2)
 
-  expected <- tibble::tibble(
-    direction = c("horizontal", "vertical"),
-    lambda = c(-5 / log(a1.h), -1 / log(a1.v))
-  )
+  expected1 <- c(horizontal = -5 / log(a1.h))
+  expected2 <- c(vertical = -1 / log(a1.v))
 
-  actual <- estimateTrenchDecorrelation(trench)
+  actual1 <- estimateTrenchDecorrelation(trench)
+  actual2 <- estimateTrenchDecorrelation(trench, direction = "vertical")
 
-  expect_equal(actual, expected)
+  expect_equal(actual1, expected1)
+  expect_equal(actual2, expected2)
 
 })
 
@@ -380,8 +385,7 @@ test_that("in case of estimated a1 < 0 the user gets NA decorrelation", {
   expect_warning(actual <- estimateTrenchDecorrelation(x), m)
 
   # check that lambda is really NA and not NaN
-  expect_true(is.na(as.character(actual$lambda[1])))
-  expect_false(is.na(as.character(actual$lambda[2])))
+  expect_true(is.na(as.character(actual)))
 
   # also check with synthetic data
   n <- 1000
@@ -396,6 +400,6 @@ test_that("in case of estimated a1 < 0 the user gets NA decorrelation", {
                              .id = "profileName")
 
   expect_warning(estimateTrenchDecorrelation(trench, .var = "data"), m)
-  expect_true(is.na(as.character(actual$lambda[1])))
+  expect_true(is.na(as.character(actual)))
 
 })
