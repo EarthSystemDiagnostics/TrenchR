@@ -13,9 +13,10 @@
 #' @param .var character string with the name of the trench variable for which
 #'   to estimate the SNR; see also \code{\link{make2D}}. Only needed when the
 #'   \code{data} is passed as a generic trench data set.
-#' @param a1 horizontal autocorrelation of the trench data at lag 1, where lag 1
-#'   is measured relative to unit profile distance, used for the error estimate
-#'   (see \code{\link{estimateInterProfileCorrelation}}).
+#' @param lambda horizontal decorrelation length of the trench data to obtain an
+#'   effective number of profiles used for the error estimates (assuming an AR1
+#'   process, see the details in \code{\link{estimateInterProfileCorrelation}});
+#'   must be measured in the same units as the inter-profile \code{distances}.
 #' @param rangeTol relative tolerance allowed for inter-profile distances (see
 #'   \code{\link{estimateInterProfileCorrelation}}).
 #' @inheritParams estimateInterProfileCorrelation
@@ -26,17 +27,18 @@
 #' @examples
 #'
 #' distances <- c(10, 20, 30)
-#' estimateSNR(t15.trench1, distances, a1 = exp(-1 / 1.53))
-#' estimateSNR(t15.trench1, distances, a1 = exp(-1 / 1.53), .var = "dxs")
+#' estimateSNR(t15.trench1, distances, lambda = 1.6)
+#' estimateSNR(t15.trench1, distances, .var = "dxs", lambda = 1.6)
 #'
+#' @seealso \code{\link{estimateInterProfileCorrelation}}
 #' @export
 #'
 estimateSNR <- function(data, distances, profilePosition = NULL, .var = "d18O",
-                        a1 = 0, rangeTol = 0.05, ...) {
+                        lambda = 0, rangeTol = 0.05) {
 
   data %>%
     estimateInterProfileCorrelation(distances, profilePosition,
-                                    .var, rangeTol, a1) %>%
+                                    .var, rangeTol, lambda) %>%
     dplyr::summarise(cor = mean(.data$cor),
                      lim = sqrt(sum(.data$se^2, na.rm = TRUE)),
                      n = sum(complete.cases(.data$se))) %>%
