@@ -26,3 +26,25 @@ is.equidistant <- function(x) {
   if (is.logical(r)) return(TRUE) else return(FALSE)
 
 }
+
+#' Check if vectors are (nearly) equal
+#'
+#' Wrapper around \code{all.equal} returning always a logical value.
+#'
+#' @param x R object.
+#' @param y other R object, to be compared with \code{x}.
+#' @return a logical value: \code{TRUE} if \code{x} is equal to \code{y}
+#'   (applying the default numeric tolerance of \code{\link{all.equal}}),
+#'   \code{FALSE} otherwise (= when \code{all.equal} does not return a
+#'   logical).
+#'
+#' @author Thomas Münch
+#' @noRd
+#'
+is.identical <- function(x, y) {
+
+  r <- all.equal(x, y)
+
+  if (is.logical(r)) return(TRUE) else return(FALSE)
+
+}

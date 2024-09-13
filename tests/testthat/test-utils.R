@@ -25,3 +25,16 @@ test_that("function is.equidistant works", {
   expect_false(is.equidistant(runif(42)))
 
 })
+
+test_that("function is.identical works", {
+
+  expect_false(is.identical("a", "b"))
+  expect_false(is.identical(pi, pi + 0.1))
+  expect_false(is.identical(1 : 10, 1 : 17))
+  expect_false(is.identical(seq(1, 10, 1), seq(1, 20, 2)))
+
+  expect_true(is.identical("abc", "abc"))
+  expect_true(is.identical(pi, pi + 1e-8))
+  expect_true(is.identical(getZ(t15.trench1), getZ(t15.trench2)))
+
+})
