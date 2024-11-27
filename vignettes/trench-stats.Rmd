@@ -1,0 +1,288 @@
+---
+title: "Statistical analysis of trench data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Statistical analysis of trench data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  rmarkdown.html_vignette.check_title = FALSE,
+  comment = "#>"
+)
+
+library(TrenchR)
+library(dplyr)
+library(magrittr)
+library(knitr)
+```
+
+## Overview
+
+This vignette introduces the `TrenchR` functions which can be used to
+statistically analyse trench datasets, and shows how they can be used to
+reproduce the statistical summary table in Münch et al. (2017).
+
+## Trench summary
+
+`summarizeTrench()` retrieves information on the number and distances of sampled
+trench profiles, and on statistical data of a requested trench variable.
+
+Per default, information on the sampled profiles are returned:
+
+```{r}
+summarizeTrench(t13.trench1)
+```
+
+If you supply a trench variable, `summary()`-like information on that variable
+will be included:
+
+```{r}
+summarizeTrench(t13.trench1, .var = "d18O")
+```
+
+## Trench decorrelation scales and effective degrees of freedom
+
+An insightful analysis for a trench dataset is to analyse the decorrelation
+length of the data in horizontal and/or vertical direction. For this, you can
+use the function `estimateTrenchDecorrelation()`, which can handle both
+equidistantly and non-equidistantly sampled data (see the function's
+documentation for details on the underlying estimation methods):
+
+```{r}
+estimateTrenchDecorrelation(t15.trench2, .var = "d18O", vscale = "depth")
+```
+
+The decorrelation length in horizontal direction is related to the question how
+well neighbouring trench profiles are correlated; for this see also the section
+[Estimating trench correlations and signal-to-noise ratios] below.
+
+With a decorrelation length estimate in a given direction, you can use
+`getEffectiveTrenchDOF()` to calculate the effective degrees of freedom (DOF) of
+your trench dataset in that direction, e.g.
+
+```{r}
+getEffectiveTrenchDOF(lambda = 1.5, N = 10, delta = 2)
+```
+
+which is equivalent to
+
+```{r}
+getEffectiveTrenchDOF(lambda = 1.5, positions = seq(0, 18, 2))
+```
+
+## Trench variance
+
+The variances of the horizontal and vertical data variations in a trench can be
+assessed with
+
+```{r}
+estimateTrenchVariance(t13.trench2, .var = "d18O")
+```
+
+including confidence intervals based on the Chi-Squared distribution and the
+DOF in both trench directions. Default for the latter are the number of data
+points in the trench directions; to account for autocorrelation of the data the
+DOF can be supplied also manually (see also `getEffectiveTrenchDOF()` above).
+
+## Estimating trench correlations and signal-to-noise ratios
+
+An interesting application for a trench dataset is to study how the correlation
+between neighbouring profiles varies with their separation distance. In
+`TrenchR`, you can assess this question using
+`estimateInterProfileCorrelation()`, which calculates the average pairwise
+correlation between trench profiles for given separation distances (including
+some tolerance such that the inter-profile distances do not need to exactly
+match the asked distances):
+
+```{r}
+estimateInterProfileCorrelation(t13.trench2, distances = c(10, 30))
+```
+
+As you can see, the output gives the number of found profile pairs for each
+distance, their average correlation, and the associated standard deviation and
+standard error of the mean estimate (see `?estimateInterProfileCorrelation()`
+for details and more information on the error estimation).
+
+This inter-profile correlation can be used as a measure for the signal-to-noise
+ratio (SNR) of your trench dataset:
+
+```{r}
+estimateSNR(t13.trench2, distances = c(10, 30))
+```
+
+which is based on `estimateInterProfileCorrelation()` and is calculated from the
+mean across the average pairwise profile correlations evaluated at the given
+profile separation distances via $\mathrm{SNR} = \overline{c}\left(1 -
+\overline{c}\right)^{-1}$, where $\overline{c}$ is the mean correlation.
+
+To calculate the correlation between the individual profiles from two separate
+trenches (assuming the two trenches were sampled at the same time) you can use
+the function `estimateInterTrenchCorrelation()`:
+
+```{r}
+raw <- estimateInterTrenchCorrelation(t13.trench1, t13.trench2)
+opt <- estimateInterTrenchCorrelation(t13.trench1, t13.trench2,
+                                      optimize = TRUE, lag = -4 : 4)
+
+str(raw)
+str(opt)
+
+mean(raw)
+mean(opt$cor)
+```
+
+The first result is simply a matrix of the correlations for all possible pairs
+of profiles between the two trenches. In the second example, some vertical
+shifts of $\pm 4$ (depth) bins are allowed via the `lag` parameter in order to
+optimise (i.e. maximise) the correlations; the result in this case is a list of
+two matrices where the first matrix includes the optimised correlations between
+the profiles and the second matrix the lags for which the optimal correlations
+were observed.
+
+In addition to the individual profiles, you can also directly estimate the
+correlation between two trenches based on their mean profiles,
+
+```{r}
+getMeanProfileCorrelation(t13.trench1, t13.trench2, lag = -4 : 4)
+```
+
+which also returns the corresponding root-mean-square deviation
+(RMSD). Similarly to `estimateInterTrenchCorrelation()`, the `lag` parameter
+allows vertical shifts of the mean profiles relative to each other, and the
+function output displays the optimal correlation (and RMSD) across the given
+lags, where the `vscale_shift` gives the optimal lag in physical units, which is
+based on the `res` function parameter. This parameter per default uses the
+inherent resolution of the trench datasets, but you can specify a different
+resolution which the mean profiles are interpolated on prior to analysing the
+optimal correlation (note that you need to adjust the `lag` parameter in that
+case since that is measured relative to the resolution).
+
+## Reproducing Münch et al., 2017, Table 2
+
+In the following we use the above functions to reproduce the statistical results
+displayed in Table 2 of Münch et al. (2017) for comparing the `t13.trench1`,
+`t13.trench2`, `t15.trench2`, and `t15.trench2` datasets.
+
+We first define a wrapper function that collects all relevant results for a
+given trench dataaset in a single data frame:
+
+```{r fun_dev}
+#' Wrapper function to obtain statistical trench properties
+#' 
+#' @param x a trench dataset.
+#' @param lambda.h horizontal decorrelation length for dataset in `x`.
+#' @param lambda.v vertical decorrelation length for dataset in `x`.
+#' @param distances a vector of inter-profile distances for estimating the SNR.
+#' 
+getTrenchStats <- function(x, lambda.h, lambda.v, distances) {
+
+  # trench name from calling function
+  nm <- deparse(substitute(x))
+
+  # trench summary information
+  s <- summarizeTrench(x, .var = "d18O")
+
+  # effective degrees of freedom of trench
+  dof.h <- getEffectiveTrenchDOF(lambda = lambda.h,
+                                 positions = getX(x)) %>%
+    round(1)
+  dof.v <- getEffectiveTrenchDOF(lambda = lambda.v,
+                                 positions = getZ(x)) %>%
+    round(1)
+
+  # trench variances for d18O
+  d18O_var <- estimateTrenchVariance(x, .var = "d18O",
+                                     dof.h = dof.h,
+                                     dof.v = dof.v)
+
+  # signal-to-noise ratio for d18O
+  snr <- estimateSNR(x, distances, lambda = lambda.h)
+
+  trench_stats <- data.frame(
+
+    nprof = round(s$Nprofiles),
+    d_min = round(s$d_min, 1),
+    d_max = round(s$d_max, 1),
+    d18O_min = round(s$min),
+    d18O_max = round(s$max),
+    d18O_mean = round(s$mean, 1),
+    d18O_sd = round(s$sd, 1),
+    d18O_var_h = round(d18O_var$var[1], 1),
+    d18O_var_h_lower = round(d18O_var$lower[1], 1),
+    d18O_var_h_upper = round(d18O_var$upper[1], 1),
+    d18O_var_v = round(d18O_var$var[2], 1),
+    d18O_var_v_lower = round(d18O_var$lower[2], 1),
+    d18O_var_v_upper = round(d18O_var$upper[2], 1),
+    snr = round(snr$snr, 1),
+    snr_se = round(snr$se, 1)
+  )
+
+  trench_stats %>%
+    t() %>%
+    magrittr::set_colnames(nm)
+
+}
+```
+
+We define the input data as used in the paper, estimate the average
+decorrelation lengths, and then collect the results and print them as a table:
+
+```{r stats}
+# use data as in paper
+T13.1 <- dplyr::filter(t13.trench1, profileName != "T13-1-01")
+T13.2 <- t13.trench2
+T15.1 <- dplyr::filter(t15.trench1, depth <= 175.5, profileName != "T15-1-DUNE1")
+T15.2 <- dplyr::filter(t15.trench2, depth <= 175.5)
+
+# estimate decorrelation length of trench data
+# for horizontal direction, use densely sampled T13-1 trench
+lambda.h <- estimateTrenchDecorrelation(T13.1, "horizontal")
+# for vertical direction, average results for each trench season
+lambda.v.t13 <- mean(estimateTrenchDecorrelation(T13.1, "vertical"),
+                     estimateTrenchDecorrelation(T13.2, "vertical"))
+lambda.v.t15 <- mean(estimateTrenchDecorrelation(T15.1, "vertical"),
+                     estimateTrenchDecorrelation(T15.2, "vertical"))
+
+# get statistical results for all four trenches
+table_results <- cbind(
+  getTrenchStats(T13.1, lambda.h, lambda.v.t13, distances = seq(10, 35, 5)),
+  getTrenchStats(T13.2, lambda.h, lambda.v.t13, distances = c(10, 20, 30)),
+  getTrenchStats(T15.1, lambda.h, lambda.v.t15, distances = seq(10, 35, 5)),
+  getTrenchStats(T15.2, lambda.h, lambda.v.t15, distances = seq(10, 35, 5))
+)
+
+# print as a nice table
+knitr::kable(table_results)
+```
+
+We note that some of the error limits differ slightly from the corresponding
+values in the published table due to rounding differences and updates to the
+error estimation code.
+
+Finally, we obtain the optimal correlation and RMSD between the two trenches
+from each season:
+
+```{r}
+# get mean profile opimization and print as table
+c1 <- getMeanProfileCorrelation(T13.1, T13.2, lag = -4 : 4)
+c2 <- getMeanProfileCorrelation(T15.1, T15.2, res = 0.5, lag = -12 : 12)
+
+data.frame(shift = round(c(c1$vscale_shift, c2$vscale_shift), 2),
+           correlation = round(c(c1$correlation, c2$correlation), 2),
+           rmsd = round(c(c1$rmsd, c2$rmsd), 2)) %>%
+  t() %>%
+  magrittr::set_colnames(c("T13-1 vs T13-2", "T15-1 vs T15-2")) %>%
+  knitr::kable()
+
+```
+
+## References
+
+Münch, T., Kipfstuhl, S., Freitag, J., Meyer, H., and Laepple, T.: Constraints
+on post-depositional isotope modifications in East Antarctic firn from analysing
+temporal changes of isotope profiles, The Cryosphere, 11(5), 2175-2188, doi:
+[10.5194/tc-11-2175-2017](https://doi.org/10.5194/tc-11-2175-2017), 2017.
