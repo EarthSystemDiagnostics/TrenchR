@@ -42,8 +42,8 @@ your own data into this structure.
 
 ### The structure
 
-`TrenchR` comes with four trench datasets: `t13.trench1`, `t13.trench2`,
-`t15.trench1`, and `t15.trench2` (Münch et
+`TrenchR` comes with four trench datasets: `?t13.trench1`, `?t13.trench2`,
+`?t15.trench1`, and `?t15.trench2` (Münch et
 al. [2016](https://doi.org/10.5194/cp-12-1565-2016),
 [2017](https://doi.org/10.5194/tc-11-2175-2017)). Since `t13.trench2` is the
 smallest of these four, it is easiest to have a look at this dataset to
@@ -53,15 +53,15 @@ understand the generic structure:
 t13.trench2
 ```
 
-You can see that the generic dataset structure is nothing more than a `tibble`
-(it can also be a simple `data.frame`), however, with the individual proxy
+You can see that the generic dataset structure is nothing more than a `?tibble`
+(it can also be a simple `?data.frame`), however, with the individual proxy
 profiles bound consecutively by row and with a fixed nomenclature applied to the
 column names.
 
-The minimum requirement is a tibble with columns `profileName` and
-`sampleNumber` plus some actual data column. Here, the column `profileName`
-indicates the position of the profile within the trench via its name, while the
-column `sampleNumber` labels the individual proxy data samples within a profile:
+The minimum requirement are three columns: `profileName`, `sampleNumber` plus
+some actual data column. Here, the column `profileName` indicates the position
+of the profile within the trench via its name, while the column `sampleNumber`
+labels the individual proxy data samples within a profile:
 
 ```{r}
 unique(t13.trench2$profileName)
@@ -129,7 +129,7 @@ my_trench
 And now you are already good to go to apply all the nice `TrenchR` functions to
 your trench dataset!
 
-## Applying `TrenchR`
+## Obtain subsets and aggregate trench data
 
 ### Extracting trench information
 
@@ -163,8 +163,8 @@ make2D(t13.trench2)
 ```
 
 While this matrix representation is currently not needed for using any of the
-below `TrenchR` functions, since they all accept the generic dataset structure
-as input, it might be handy for external functions and usage, and it offers a
+`TrenchR` functions, since they all accept the generic dataset structure as
+input, it might be handy for external functions and usage, and it offers a
 straightforward way to visualise the inherent two-dimensional structure of a
 trench dataset.
 
@@ -177,8 +177,8 @@ make2D(t13.trench2, .var = "dxs") # insert your data column name for `.var`
 
 The 2D visualisation also shows that for such undulating trench surfaces as for
 T13-2, the first rows in horizontal direction of the trench data are
-incomplete, i.e. contain NA values, when viewed on the absolute vertical
-scale. However, if you require for some analysis a dataset without missing
+incomplete, i.e. contain `NA` values, when viewed on the absolute vertical
+scale. However, if, for some analysis, you require a dataset without missing
 values, you can easily remove this incomplete "surface" region:
 
 ```{r}
@@ -195,10 +195,10 @@ makeMean(t13.trench2)
 ```
 
 As you can see, the default method is to output the mean profile as a data frame
-including the vertical scale column, here "depth", which you can adjust with the
-`vscale` argument if your dataset uses another name for the vertical scale, and
-similarly to `make2D`, the function parameter `.var` controls for which data
-variable the mean profile is calculated.
+including the vertical scale column, here `"depth"`, which you can adjust with
+the `vscale` argument if your dataset uses another name for the vertical scale,
+and similarly to `make2D()`, the function parameter `.var` controls for which
+data variable the mean profile is calculated.
 
 You can also output the mean profile as a normal vector,
 
@@ -206,17 +206,17 @@ You can also output the mean profile as a normal vector,
 makeMean(t13.trench2, df = FALSE)
 ```
 
-and analogously to R's `mean` function, you can control the handling of missing
-values,
+and analogously to R's `mean()` function, you can control the handling of
+missing values,
 
 ```{r}
 makeMean(t13.trench2, df = FALSE, na.rm = TRUE)
 ```
 
-### Plotting a two-dimensional visualisation
+## Plotting a two-dimensional visualisation
 
 The two-dimensional proxy data variations can be directly visualised using the
-function `plot2D`, either as a filled image plot,
+function `plot2D()`, either as a filled image plot,
 
 ```{r, fig.height = 5.25, fig.width = 7}
 plot2D(t13.trench1, xlim = c(-0.1, 46), ylim = c(114, 0), zlim = c(-55, -35),
@@ -231,101 +231,8 @@ plot2D(t13.trench1, xlim = c(-0.1, 46), ylim = c(114, 0), zlim = c(-55, -35),
        filledContour = TRUE, fill = TRUE)
 ```
 
-There are a couple more options to adjust and tweak the plot appearance, so have
-a look at the function documentation, `?plot2D`.
-
-### Trench decorrelation scales and effective degrees of freedom
-
-An insightful analysis for a trench dataset is to analyse the decorrelation
-length of the data in horizontal and/or vertical direction. For this, you can
-use the function `estimateTrenchDecorrelation`, which can handle both
-equidistantly and non-equidistantly sampled data (see
-`?estimateTrenchDecorrelation` for details on the underlying estimation
-methods):
-
-```{r}
-estimateTrenchDecorrelation(t15.trench2, .var = "d18O", vscale = "depth")
-```
-
-The decorrelation length in horizontal direction is related to the question how
-well neighbouring trench profiles are correlated; for this see also the section
-[Estimating trench correlations and signal-to-noise ratios] below.
-
-With a decorrelation length estimate, you can use `getEffectiveTrenchDOF` to
-calculate the effective degrees of freedom of your trench dataset, e.g.:
-
-```{r}
-getEffectiveTrenchDOF(lambda = 1.5, N = 10, delta = 2)
-# is equivalent to:
-getEffectiveTrenchDOF(lambda = 1.5, positions = seq(0, 18, 2))
-```
-
-### Trench variance
-
-The variance of the horizontal and vertical data variations can be assessed with
-
-```{r}
-estimateTrenchVariance(t13.trench2, .var = "d18O")
-```
-
-including confidence intervals based on the Chi-Squared distribution and the
-number of effective degrees of freedom (DOF) in both trench directions. Default
-for the latter are the number of data points in the trench directions; to
-account for autocorrelation of the data the DOF can be supplied also manually
-(see also `getEffectiveTrenchDOF` above).
-
-### Estimating trench correlations and signal-to-noise ratios
-
-An interesting application for a trench dataset is to study how the correlation
-between neighbouring profiles varies with their separation distance. In
-`TrenchR`, you can assess this question using `estimateInterProfileCorrelation`,
-which calculates the average pairwise correlation between trench profiles for
-given separation distances (including some tolerance so that the inter-profile
-distances do not all need to exactly match the asked distances): 
-
-```{r}
-estimateInterProfileCorrelation(t13.trench2, distances = c(10, 30))
-```
-
-As you can see, the output gives the number of found profile pairs for each
-distance, their average correlation, and the associated standard deviation and
-standard error of the mean estimate. See `?estimateInterProfileCorrelation` for
-details and more information on the error estimation.
-
-You can also calculate the correlation between profiles from two separate
-trenches (assuming the two trenches were sampled at the same time):
-
-```{r}
-raw <- estimateInterTrenchCorrelation(t13.trench1, t13.trench2)
-opt <- estimateInterTrenchCorrelation(t13.trench1, t13.trench2,
-                                      optimize = TRUE, lag = -4 : 4)
-
-str(raw)
-str(opt)
-
-mean(raw)
-mean(opt$cor)
-```
-
-The first result is simply a matrix of the correlations for all possible pairs
-of profiles between the two trenches. In the second example, some vertical
-shifts of $\pm 4$ (depth) bins are allowed via the `lag` parameter in order to
-optimise (i.e. maximise) the correlations; the result in this case is a list of
-two matrices where the first matrix includes the optimised correlations between
-the profiles and the second matrix the lags for which the optimal correlations
-were observed.
-
-Finally, you can estimate the signal-to-noise ratio of your trench dataset:
-
-```{r}
-estimateSNR(t13.trench2, distances = c(10, 30))
-```
-
-which is internally based on `estimateInterProfileCorrelation` and calculates
-the signal-to-noise ratio (SNR) from the mean across the average pairwise
-profile correlations evaluated at the given profile separation distances via
-$\mathrm{SNR} = \overline{c}\left(1 - \overline{c}\right)^{-1}$, where
-$\overline{c}$ is the mean correlation.
+See `?plot2D()` for a couple more options to adjust and tweak the plot
+appearance.
 
 ## References
 
