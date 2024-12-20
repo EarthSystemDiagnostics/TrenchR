@@ -1,6 +1,6 @@
 Package: TrenchR
 Title: Analyse and Plot Trench-like Proxy Records
-Version: 1.0.0.9093
+Version: 1.0.0.9100
 Authors@R: c(
     person("Thomas", "Münch", email = "thomas.muench@awi.de",
            role = c("aut", "cre")),
@@ -21,6 +21,7 @@ Imports:
     dplyr (>= 1.1.3),
     geosphere,
     grfxtools (>= 0.5.0),
+    magrittr,
     prxytools (>= 0.4.0),
     RColorBrewer,
     rlang (>= 1.1.1),

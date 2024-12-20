@@ -1,5 +1,46 @@
 # Development of major version update 1.x.x
 
+# TrenchR 1.0.0.9100
+
+Adds new user function `summarizeBin()` to calculate summary values of a trench
+mean profile partitioned into differently sized bins, e.g. an annual mean time
+series from an depth-age relationship.
+
+# TrenchR 1.0.0.9099
+
+Adds a new vignette on statistical trench data analysis, which also reproduces
+Münch et al. (2017) Table 2. With this new vignette, the statistical analyses in
+the package introductory vignette are now better suited here, and accordingly
+have been moved from there to the new vignette.
+
+# TrenchR 1.0.0.9098
+
+Adds new user function `getMeanProfileCorrelation()` to calculate the mean
+profiles for two trench datasets and obtain the correlation between them,
+optionally allowing for relative shifts between the profiles and/or for
+interpolation onto a higher resolution.
+
+# TrenchR 1.0.0.9097
+
+Adds new user function `summarizeTrench()` to retrieve summary information on a
+trench dataset.
+
+# TrenchR 1.0.0.9096
+
+Adds utility function `is.identical()` to check whether two vectors are (nearly)
+equal.
+
+# TrenchR 1.0.0.9095
+
+Bug fix in `estimateSNR()`: required input is now correctly `lambda` instead of
+`a1` parameter previously.
+
+# TrenchR 1.0.0.9094
+
+In decorrelation length estimation, the decorrelation length is no longer
+returned automatically for both trench directions, but only for that direction
+requested by the new function parameter `direction` (#15).
+
 # TrenchR 1.0.0.9093
 
 Bug fix in decorrelation length estimation when estimated `a1` coefficient is <=
