@@ -174,3 +174,15 @@ NULL
 #' The Cryosphere, 11(5), 2175-2188, doi:10.5194/tc-11-2175-2017, 2017.
 #' @name Muench2017
 NULL
+
+#' Citations for Münch et al. (2016, 2017)
+#' @references
+#' Münch, T., et al., Regional climate signal vs. local noise: a two-dimensional
+#' view of water isotopes in Antarctic firn at Kohnen Station, Dronning Maud
+#' Land, Clim. Past, 12(7), 1565-1581, doi:10.5194/cp-12-1565-2016, 2016.
+#'
+#' Münch, T., et al., Constraints on post-depositional isotope modifications
+#' in East Antarctic firn from analysing temporal changes of isotope profiles,
+#' The Cryosphere, 11(5), 2175-2188, doi:10.5194/tc-11-2175-2017, 2017.
+#' @name MuenchTrenchPaper
+NULL

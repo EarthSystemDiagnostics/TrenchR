@@ -2,9 +2,14 @@
 #'
 #' Calculate the effective degrees of freedom for a set of trench profiles,
 #' either given by the number of profiles and their (constant) inter-profile
-#' distance, or given by the specific horizontal profile positions. This
+#' distance, or given by their specific horizontal profile positions. This
 #' calculation assumes the horizontal data variations along the trench to follow
 #' a first-order autoregressive (AR1) process.
+#'
+#' The effective degrees of freedom, `N_eff`, returned by this function are
+#' the inverse of the quantity `sigma^{*2}_{i}` in Münch et al. (2016),
+#' Eq. (A12): `sigma^{*2}_{i} = 1 / N_eff`; see also Eq. (1) in Münch et
+#' al. (2017).
 #'
 #' @param lambda horizontal decorrelation length of the assumed AR1 process
 #'   measured in the same units as \code{positions}; if specified used to
@@ -37,7 +42,7 @@
 #' getEffectiveTrenchDOF(lambda = 0, N = 10, delta = 2)
 #'
 #' @author Thomas Münch
-#' @inherit Muench2016 references
+#' @inherit MuenchTrenchPaper references
 #' @export
 #'
 getEffectiveTrenchDOF <- function(lambda = NULL, a1 = NULL, positions = NULL,

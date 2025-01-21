@@ -1,5 +1,11 @@
 # Development of major version update 1.x.x
 
+# TrenchR 1.0.0.9101
+
+- Adds new user function `estimateStackCorrelation()` to estimate the expected
+  correlation between trench profiles stacks and a reference signal.
+- Add some math details in documentation of `getEffectiveTrenchDOF()`.
+
 # TrenchR 1.0.0.9100
 
 Adds new user function `summarizeBin()` to calculate summary values of a trench

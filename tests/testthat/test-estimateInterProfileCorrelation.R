@@ -18,11 +18,12 @@ test_that("error checking works", {
 
   msg <- "Need a vector of profile positions."
   expect_error(
-    estimateInterProfileCorrelation(matrix(nrow = 2, ncol = 2), distances = 1),
+    estimateInterProfileCorrelation(matrix(NA_real_, nrow = 2, ncol = 2),
+                                    distances = 1),
     msg, fixed = TRUE)
   msg <- "Number of profile positions does not match columns in data."
   expect_error(
-    estimateInterProfileCorrelation(matrix(nrow = 2, ncol = 2),
+    estimateInterProfileCorrelation(matrix(NA_real_, nrow = 2, ncol = 2),
                                     distances = 1, profilePosition = 1),
     msg, fixed = TRUE)
   msg <- "Non-numeric columns in data."
